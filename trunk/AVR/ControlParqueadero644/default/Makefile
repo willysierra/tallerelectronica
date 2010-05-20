@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = ControlParqueadero644.o lcd_HD44780_4.o 
+OBJECTS = ControlParqueadero644.o lcd_HD44780_4.o USART.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -50,6 +50,9 @@ ControlParqueadero644.o: ../ControlParqueadero644.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 lcd_HD44780_4.o: ../includes/lcd_HD44780_4.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+USART.o: ../includes/USART.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

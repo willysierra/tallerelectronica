@@ -49,12 +49,12 @@
  * ---------------------------------------------------------------
  */
 
-#define LCD_CMD_PORT C
-#define LCD_DTA_PORT B
+#define LCD_CMD_PORT A
+#define LCD_DTA_PORT A
 
-#define LCD_RS PORT7
-#define LCD_RW PORT1
-#define LCD_E  PORT0
+#define LCD_RS PORT1
+#define LCD_RW PORT2
+#define LCD_E  PORT3
 
 
 /* Se debe garantizar que los pines de control se encuentren consecutivos y en 
@@ -62,10 +62,10 @@
    Ejemplo: Data4=Port2, Data5=Port3, Data6=Port4, Data7=Port5 */
 
 
-#define LCD_D4 PORT0
-#define LCD_D5 PORT1
-#define LCD_D6 PORT2
-#define LCD_D7 PORT3
+#define LCD_D4 PORT4
+#define LCD_D5 PORT5
+#define LCD_D6 PORT6
+#define LCD_D7 PORT7
 
 
 
@@ -102,5 +102,27 @@
 #define LCD_DSPCTR_D 1
 #define LCD_DSPCTR_C 0
 #define LCD_DSPCTR_B 0
+
+
+
+/*
+ * ---------------------------------------------------------------
+ * Definicion de parametros relacionados con el modulo USART0,
+ * usado para la comunicacion del modulo RF
+ * ---------------------------------------------------------------
+ */
+
+#define BAUD_0 9600
+
+
+ /*
+ * ---------------------------------------------------------------
+ * Definicion de parametros relacionados con el modulo USART1,
+ * usado para la comunicacion entre los dos microcontroladores
+ * ---------------------------------------------------------------
+ */
+
+#define BAUD_1 9600
+
 
 #endif /* _DEFINES_H */
