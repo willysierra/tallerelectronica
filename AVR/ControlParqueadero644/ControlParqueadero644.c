@@ -34,6 +34,11 @@
 
 
 //  ------------------------------------------------------------------------
+//	DECLARACION DE METODOS / PROCEDIMIENTOS INTERNOS
+//  ------------------------------------------------------------------------
+void initHardware();
+
+//  ------------------------------------------------------------------------
 //	PROGRAMA PRINCIPAL DEL SISITEMA
 //  ------------------------------------------------------------------------
 
@@ -41,24 +46,127 @@ int main(void) {
 
 
 	_delay_ms(40);
-	LCD_init();
+	initHardware();
+
+
+	
+	
+	
 
 	//LCD_enviarDTA('E');LCD_esperarListo();
 
 	LCD_linea1Pos0();
 	LCD_esperarListo();
-	LCD_enviarDTA('1');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+
 
 	LCD_linea2Pos0(); LCD_esperarListo();
-	LCD_enviarDTA('2');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+
+
+
+
 
 	LCD_linea3Pos0(); LCD_esperarListo();
-	LCD_enviarDTA('3');LCD_esperarListo();
+		LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+
+
+
 
 	LCD_linea4Pos0(); LCD_esperarListo();
-	LCD_enviarDTA('4');LCD_esperarListo();
+		LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(' ');LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+
 
 	while(1){
 	}
+
+}
+
+
+
+
+/**
+ * Metodo que se encarga de la inicializacion del hardware del proyecto. Dentro del 
+ * hardware se encuentran tanto los periféricos externos como los internos del micro.
+ * @PARAM:  Ninguno
+ * @PRE:    Ninguno
+ * @POST:   Se inicializa el hardware. Listo para uso rutinario
+ * @RETURN: Void
+ */
+void initHardware(){
+
+	// Inicializamos el LCD
+	LCD_init();
+
+	// Inicializamos el Teclado Matricial
+	KBR_DDR  = 0x0F; 
+	KBR_PORT = 0x00;
+
+	// Inicializamos Puerto Serial Sincrono (USART-1) para comunicación con micro alterno
+
+	// Inicializamos Puerto Serial Asincrono (UART-0) para modulo RF
+	
 
 }

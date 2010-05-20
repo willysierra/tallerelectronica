@@ -111,8 +111,8 @@ void LCD_esperarListo(void);
 #define LCD_encender() LCD_enviarCMD((0x0C | (LCD_DSPCTR_C?0x02:0x00) | (LCD_DSPCTR_B?0x01:0x00) ))
 #define LCD_apagar() LCD_enviarCMD((0x08 | (LCD_DSPCTR_C?0x02:0x00) | (LCD_DSPCTR_B?0x01:0x00) ))
 #define LCD_linea1Pos0() LCD_enviarCMD(0x80)
-#define LCD_linea3Pos0() LCD_enviarCMD(0xC0)
-#define LCD_linea2Pos0() LCD_enviarCMD(0x94)
+#define LCD_linea2Pos0() LCD_enviarCMD(0xC0)
+#define LCD_linea3Pos0() LCD_enviarCMD(0x94)
 #define LCD_linea4Pos0() LCD_enviarCMD(0xD4)
 
 
