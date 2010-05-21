@@ -3,23 +3,23 @@ ControlParqueadero644.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000052e  00000000  00000000  00000054  2**1
+  0 .text         00000538  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .debug_aranges 00000040  00000000  00000000  00000582  2**0
+  1 .debug_aranges 00000060  00000000  00000000  0000058c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  2 .debug_pubnames 00000087  00000000  00000000  000005c2  2**0
+  2 .debug_pubnames 000000a8  00000000  00000000  000005ec  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   0000057b  00000000  00000000  00000649  2**0
+  3 .debug_info   000005b4  00000000  00000000  00000694  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 0000027e  00000000  00000000  00000bc4  2**0
+  4 .debug_abbrev 000002be  00000000  00000000  00000c48  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   000006ae  00000000  00000000  00000e42  2**0
+  5 .debug_line   0000071e  00000000  00000000  00000f06  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  000000a0  00000000  00000000  000014f0  2**2
+  6 .debug_frame  000000c0  00000000  00000000  00001624  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001d5  00000000  00000000  00001590  2**0
+  7 .debug_str    000001e7  00000000  00000000  000016e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    00000141  00000000  00000000  00001765  2**0
+  8 .debug_loc    00000141  00000000  00000000  000018cb  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -62,7 +62,7 @@ Disassembly of section .text:
   78:	de bf       	out	0x3e, r29	; 62
   7a:	cd bf       	out	0x3d, r28	; 61
   7c:	0e 94 4a 00 	call	0x94	; 0x94 <main>
-  80:	0c 94 95 02 	jmp	0x52a	; 0x52a <_exit>
+  80:	0c 94 9a 02 	jmp	0x534	; 0x534 <_exit>
 
 00000084 <__bad_interrupt>:
   84:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -798,8 +798,23 @@ _delay_loop_2(uint16_t __count)
  526:	0f 91       	pop	r16
  528:	08 95       	ret
 
-0000052a <_exit>:
- 52a:	f8 94       	cli
+0000052a <USART_init>:
+ * @RETURN: Void
+ */
+void USART_init(uint8_t puerto, uint8_t as){
 
-0000052c <__stop_program>:
- 52c:	ff cf       	rjmp	.-2      	; 0x52c <__stop_program>
+	// Nos aseguramos que la USART se encuentre inactiva
+	UCSR0B = 0x00;
+ 52a:	10 92 c1 00 	sts	0x00C1, r1
+	UCSR0A = 0x00;
+ 52e:	10 92 c0 00 	sts	0x00C0, r1
+
+
+}
+ 532:	08 95       	ret
+
+00000534 <_exit>:
+ 534:	f8 94       	cli
+
+00000536 <__stop_program>:
+ 536:	ff cf       	rjmp	.-2      	; 0x536 <__stop_program>
