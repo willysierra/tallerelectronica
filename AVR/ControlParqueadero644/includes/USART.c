@@ -56,4 +56,13 @@
  */
 void USART_init(uint8_t puerto, uint8_t as){
 
+	// Nos aseguramos que la USART se encuentre inactiva
+	UCSR0B = 0x00;
+	UCSR0A = 0x00;
+
+	// Asignamos el valor del valor de la tasa de transmision en baudios
+	UBRR0L=UBRRVAL;			//Parte baja del byte
+	UBRR0H=(UBRRVAL>>8);	//PArte alta del byte
+
+
 }

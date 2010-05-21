@@ -104,25 +104,4 @@
 #define LCD_DSPCTR_B 0
 
 
-
-/*
- * ---------------------------------------------------------------
- * Definicion de parametros relacionados con el modulo USART0,
- * usado para la comunicacion del modulo RF
- * ---------------------------------------------------------------
- */
-
-#define BAUD_0 9600
-
-
- /*
- * ---------------------------------------------------------------
- * Definicion de parametros relacionados con el modulo USART1,
- * usado para la comunicacion entre los dos microcontroladores
- * ---------------------------------------------------------------
- */
-
-#define BAUD_1 9600
-
-
 #endif /* _DEFINES_H */

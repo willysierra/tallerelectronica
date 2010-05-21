@@ -39,6 +39,68 @@
 #ifndef _USART_H_
 #define _USART_H_
 
+//-------------------------------------------------------------------------------
+//  PARAMAETROS DE CONFIGURACION QUE PUEDEN SER MODIFICADOS POR EL USUARIO
+//-------------------------------------------------------------------------------
+
+/**
+ *  Tasa de transmision en Baudios
+ */
+#define BAUDRATE 9600
+
+/**
+ * ASY_SYN=1  Selecciona el modo de operacion asincrono de la USART
+ * ASY_SYN=0  Selecciona el modo de operacion sincrono de la USART
+ */
+#define ASY_SYN 1
+
+
+/**
+ * INT_TX_COMPLETA=1  Se genera una interrupcion(Si estan habilitadas globalmente) cuando
+ *                    se completa la transmisión de lo que se encuentra en el registro de salida
+ * ITN_TX_COMPLETA=0  No se genera la interrupcion
+ */
+#define INT_TX_COMPLETA 1
+
+/**
+ * INT_RX_COMPLETA=1  Se genera una interrupcion(Si estan habilitadas globalmente) cuando
+ *                    se completa la recepcion de un dato en la USART
+ * INT_RX_COMPLETA=0  No se genera la interrupcion
+ */
+#define INT_RX_COMPLETA 0
+
+/**
+ * SPEED_2X=1  Se habilita el doble de velocidad de transmision si se esta trabajanod en modo
+ *             asincrono. Tener en cuenta que se realizaran menos muestro, por lo que solo debe
+ *             activarse con un BAUDRATE adecuado y en medios de bajo ruido.
+ * SPEED_2X=0  Velocidad de transmision normal
+ */
+#define SPEED_2X 0
+
+/**
+ * CONTROL_PARIEDAD=0  No se realiza ningun tipo de control de pariedad en la informacion transmitida
+ * CONTROL_PARIEDAD=1  Se genera automaticamente un bit de pariedad PAR al enviar un dato y el
+ *                     receptor se encarga de comprobarlo. Esta dato se revisa manualmente.
+ * CONTROL_PARIEDAD=2  Se genera automaticamente un bit de pariedad IMPAR al enviar un dato y el
+ *                     receptor se encarga de comprobarlo. Esta dato se revisa manualmente.
+ */
+#define CONTROL_PARIEDAD 1
+
+/**
+ * Se define el numero de bits de STOP que se envia en cada comunicacion. Puede tomar el valor de 1 o 2
+ */
+#define NUM_STOP 1
+
+
+//-------------------------------------------------------------------------------
+//  FUNCIONES OFRECIDAS QUE PUEDEN SER LLAMADAS POR EL USUARIO
+//-------------------------------------------------------------------------------
+
+/**
+ * Se define el valor del registro que controla la tasa de transimision en baudios
+ */
+#define UBRRVAL ((F_CPU/(BAUDRATE*16UL))-1)
+
 
 /**
  * USAR_init
