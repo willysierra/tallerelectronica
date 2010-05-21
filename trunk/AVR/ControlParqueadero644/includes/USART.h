@@ -60,14 +60,14 @@
  *                    se completa la transmisión de lo que se encuentra en el registro de salida
  * ITN_TX_COMPLETA=0  No se genera la interrupcion
  */
-#define INT_TX_COMPLETA 1
+#define INT_TX_COMPLETA 0
 
 /**
  * INT_RX_COMPLETA=1  Se genera una interrupcion(Si estan habilitadas globalmente) cuando
  *                    se completa la recepcion de un dato en la USART
  * INT_RX_COMPLETA=0  No se genera la interrupcion
  */
-#define INT_RX_COMPLETA 0
+#define INT_RX_COMPLETA 1
 
 /**
  * SPEED_2X=1  Se habilita el doble de velocidad de transmision si se esta trabajanod en modo
@@ -91,6 +91,18 @@
  */
 #define NUM_STOP 1
 
+/**
+ * Se define el tamañao en bits que conforma cada caracter enviado por la USART en cada una de las 
+ * transimisiones. Este valor puede tomar valores de 5,6,7,8 y 9 bits. 
+ */
+#define CHAR_SIZE 8
+
+/**
+ * Se define la polaridad del reloj (Unicamente cuando se trabaja en modo sincrono). 
+ * CLK_POL=0 Salida de Tx en flanco de subida, Rx en flanco de bajada
+ * CLK_POL=1 Salida de Tx en flanco de bajada, Rx en flanco de subida
+ */
+#define CLK_POL 0
 
 //-------------------------------------------------------------------------------
 //  FUNCIONES OFRECIDAS QUE PUEDEN SER LLAMADAS POR EL USUARIO
@@ -108,13 +120,70 @@
  * parametro y en el modo selecccionado (Sincrono o asincrono), configurando la velocidad
  * y demás parámetros con la definicion de las constantes en el archivo de definiciones
  *
- * @PARAMS: uint8_t puerto -> Numero del modulo Usart (Generalmente 0 o 1)
- *          uint8_t as     -> Establece el modulo Sincrono o Asincrono
+ * @PARAMS: Ninguno
  * @PRE:    Los parametros se encuentran bien definidos
  * @POST:   Se inicializa el puerto USART seleccionado en el modo seleccionado, quedando
  *          listo para enviar y recibir datos.
  * @RETURN: Void
  */
-void USART_init(uint8_t puerto, uint8_t as);
+void USART0_init();
+
+
+/**
+ * USART0_EnableTx
+ * @PARAMS: Ninguno
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_EnableTx();
+
+/**
+ * USART0_DisableTx
+ * @PARAMS: Ninguno
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_DisableTx();
+
+/**
+ * USART0_EnableRx
+ * @PARAMS: Ninguno
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para Recepsion 
+ * @RETURN: Void
+ */
+void USART0_EnableRx();
+
+
+/**
+ * USART0_DisableRx
+ * @PARAMS: Ninguno
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para Recepcion 
+ * @RETURN: Void
+ */
+ void USART0_DisableRx();
+
+
+ /**
+  * USART0_Enviar
+  * @PARAMS: uint8_t dato -> Dato que se desea enviar
+  * @PRE:    El puerto USART0 se encuentra configurado y habilitado para el envio de mensajes
+  * @POST:   Se coloca el mensaje en el buffer de salida de la USART0
+  * @RETURN: Void
+  */
+void USART0_Enviar(uint8_t dato);
+
+
+/**
+ * USART0_Recibir
+ * @PARAMS: Ninguno
+ * @PRE:    El puerto USART0 se encuentra configurado y habilitado para la recepcion de mensajes
+ * @POST:   Se retorno el mensaje que se almaceno en el buffer de entrada de la USART0
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t USART0_Recibir();
 
 #endif /* _USART_H */

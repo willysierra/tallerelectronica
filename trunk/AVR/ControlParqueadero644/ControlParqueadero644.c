@@ -27,6 +27,7 @@
 #include <avr/eeprom.h>		// EEPROM Handling
 
 #include "includes/lcd_HD44780_4.h"
+#include "includes/USART.h"
 
 //  ------------------------------------------------------------------------
 //	VARIABLES GLOBALES DEL SISTEMA / BUFFERS
@@ -38,6 +39,24 @@
 //  ------------------------------------------------------------------------
 void initHardware();
 
+/**
+ *  Manejo de la interrupcion generada cuando la USART0 recibe un dato
+ */
+ISR(USART0_RX_vect) 
+{
+	uint8_t dato;
+	dato = USART0_Recibir();
+	LCD_enviarDTA(dato);LCD_esperarListo();
+}
+
+
+ISR(USART0_TX_vect) 
+{
+	LCD_enviarDTA(' ');LCD_esperarListo();
+
+}
+
+
 //  ------------------------------------------------------------------------
 //	PROGRAMA PRINCIPAL DEL SISITEMA
 //  ------------------------------------------------------------------------
@@ -47,99 +66,16 @@ int main(void) {
 
 	_delay_ms(40);
 	initHardware();
-
+	sei();	// Enable the Global Interrupt Enable flag so that interrupts can be processed 
 
 	
+	LCD_linea1Pos0();LCD_esperarListo();
+	uint8_t dato = '0';
 	
-	
-
-	//LCD_enviarDTA('E');LCD_esperarListo();
-
-	LCD_linea1Pos0();
-	LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-
-
-	LCD_linea2Pos0(); LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-
-
-
-
-
-	LCD_linea3Pos0(); LCD_esperarListo();
-		LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-
-
-
-
-	LCD_linea4Pos0(); LCD_esperarListo();
-		LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(' ');LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-
-
 	while(1){
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		USART0_Enviar(dato++);
+
 	}
 
 }
@@ -164,9 +100,13 @@ void initHardware(){
 	KBR_DDR  = 0x0F; 
 	KBR_PORT = 0x00;
 
-	// Inicializamos Puerto Serial Sincrono (USART-1) para comunicación con micro alterno
-
-	// Inicializamos Puerto Serial Asincrono (UART-0) para modulo RF
-	
-
+	// Inicializamos Puerto Serial Sincrono (USART0) para comunicacion por modulo RF
+	USART0_init();
+	USART0_EnableTx();
+	USART0_EnableRx();
 }
+
+
+
+
+
