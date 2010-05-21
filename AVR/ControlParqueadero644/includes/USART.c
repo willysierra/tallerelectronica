@@ -12,7 +12,7 @@
  * Version (Revision):	0.1 (2)
  *
  * Descripcion:	Libreria que facilita el uso del modulo de comunicación
- *              asincrona y asincrona de los microcontroladores ATmega
+ *              asincrona y asincrona de los microcontroladores ATmega 48/88/168/644
  *
  *
  * --------------------------------------------------------------------
@@ -171,7 +171,7 @@ void USART0_Enviar(uint8_t dato){
 uint8_t USART0_Recibir(){
 
 	// Se espera a que se reciba un mensaje si esta no ha llegado todavia
-	//while ( !(UCSR0A & (1<<RXC0)) );
+	while ( !(UCSR0A & (1<<RXC0)) );
 
 	return UDR0;
 }
