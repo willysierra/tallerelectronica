@@ -44,15 +44,14 @@ void initHardware();
  */
 ISR(USART0_RX_vect) 
 {
-	uint8_t dato;
-	dato = USART0_Recibir();
-	LCD_enviarDTA(dato);LCD_esperarListo();
+	LCD_enviarDTA('X');LCD_esperarListo();
 }
 
 
 ISR(USART0_TX_vect) 
 {
-	LCD_enviarDTA(' ');LCD_esperarListo();
+	uint8_t dato;
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
 
 }
 
@@ -103,7 +102,6 @@ void initHardware(){
 	// Inicializamos Puerto Serial Sincrono (USART0) para comunicacion por modulo RF
 	USART0_init();
 	USART0_EnableTx();
-	USART0_EnableRx();
 }
 
 

@@ -2,6 +2,13 @@ Archive member included because of file (symbol)
 
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o (exit)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                              ControlDiplayExterno.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+estado              0x1               ControlDiplayExterno.o
 
 Memory Configuration
 
@@ -19,6 +26,7 @@ Linker script and memory map
 Address of section .data set to 0x800100
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
 LOAD ControlDiplayExterno.o
+LOAD USART.o
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
@@ -113,7 +121,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000       0x8a
+.text           0x00000000      0x300
  *(.vectors)
  .vectors       0x00000000       0x68 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
                 0x00000000                __vectors
@@ -151,6 +159,8 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init3)
  *(.init3)
  *(.init4)
+ .init4         0x00000074       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x00000074                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -161,47 +171,60 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x00000074        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
+ .init9         0x00000084        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  *(.init9)
  *(.text)
- .text          0x0000007c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
-                0x0000007c                __vector_22
-                0x0000007c                __vector_1
-                0x0000007c                __vector_24
-                0x0000007c                __vector_12
-                0x0000007c                __bad_interrupt
-                0x0000007c                __vector_6
-                0x0000007c                __vector_3
-                0x0000007c                __vector_23
-                0x0000007c                __vector_25
-                0x0000007c                __vector_11
-                0x0000007c                __vector_13
-                0x0000007c                __vector_17
-                0x0000007c                __vector_19
-                0x0000007c                __vector_7
-                0x0000007c                __vector_5
-                0x0000007c                __vector_4
-                0x0000007c                __vector_9
-                0x0000007c                __vector_2
-                0x0000007c                __vector_21
-                0x0000007c                __vector_15
-                0x0000007c                __vector_8
-                0x0000007c                __vector_14
-                0x0000007c                __vector_10
-                0x0000007c                __vector_16
-                0x0000007c                __vector_18
-                0x0000007c                __vector_20
- .text          0x00000080        0x6 ControlDiplayExterno.o
-                0x00000080                main
- .text          0x00000086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000086                . = ALIGN (0x2)
+ .text          0x0000008c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
+                0x0000008c                __vector_22
+                0x0000008c                __vector_1
+                0x0000008c                __vector_24
+                0x0000008c                __vector_12
+                0x0000008c                __bad_interrupt
+                0x0000008c                __vector_6
+                0x0000008c                __vector_3
+                0x0000008c                __vector_23
+                0x0000008c                __vector_25
+                0x0000008c                __vector_11
+                0x0000008c                __vector_13
+                0x0000008c                __vector_17
+                0x0000008c                __vector_19
+                0x0000008c                __vector_7
+                0x0000008c                __vector_5
+                0x0000008c                __vector_4
+                0x0000008c                __vector_9
+                0x0000008c                __vector_2
+                0x0000008c                __vector_21
+                0x0000008c                __vector_15
+                0x0000008c                __vector_8
+                0x0000008c                __vector_14
+                0x0000008c                __vector_10
+                0x0000008c                __vector_16
+                0x0000008c                __vector_20
+ .text          0x00000090      0x1ee ControlDiplayExterno.o
+                0x00000164                initHardware
+                0x00000090                enviarDato
+                0x0000017c                main
+                0x00000112                enviarHora
+                0x000001b0                __vector_18
+ .text          0x0000027e       0x7e USART.o
+                0x000002de                USART0_Enviar
+                0x000002c6                USART0_EnableRx
+                0x000002ba                USART0_DisableTx
+                0x000002ae                USART0_EnableTx
+                0x0000027e                USART0_init
+                0x000002ee                USART0_Recibir
+                0x000002d2                USART0_DisableRx
+ .text          0x000002fc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text          0x000002fc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x000002fc                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00000086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000086                . = ALIGN (0x2)
+ .text.libgcc   0x000002fc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x000002fc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x000002fc                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000086                exit
-                0x00000086                _exit
+ .fini9         0x000002fc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000002fc                exit
+                0x000002fc                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -220,16 +243,18 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000086        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x000002fc        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000008a                _etext = .
+                0x00000300                _etext = .
 
-.data           0x00800100        0x0 load address 0x0000008a
+.data           0x00800100        0x0 load address 0x00000300
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  .data          0x00800100        0x0 ControlDiplayExterno.o
+ .data          0x00800100        0x0 USART.o
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
@@ -238,24 +263,28 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00800100                _edata = .
                 0x00800100                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x0
+.bss            0x00800100        0x1
                 0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  .bss           0x00800100        0x0 ControlDiplayExterno.o
+ .bss           0x00800100        0x0 USART.o
  .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
-                0x00800100                PROVIDE (__bss_end, .)
-                0x0000008a                __data_load_start = LOADADDR (.data)
-                0x0000008a                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800100        0x1 ControlDiplayExterno.o
+                0x00800100                estado
+                0x00800101                PROVIDE (__bss_end, .)
+                0x00000300                __data_load_start = LOADADDR (.data)
+                0x00000300                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800100        0x0
-                0x00800100                PROVIDE (__noinit_start, .)
+.noinit         0x00800101        0x0
+                0x00800101                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800100                PROVIDE (__noinit_end, .)
-                0x00800100                _end = .
-                0x00800100                PROVIDE (__heap_start, .)
+                0x00800101                PROVIDE (__noinit_end, .)
+                0x00800101                _end = .
+                0x00800101                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -306,41 +335,53 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x20
+.debug_aranges  0x00000000       0x40
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 ControlDiplayExterno.o
+ .debug_aranges
+                0x00000020       0x20 USART.o
 
 .debug_pubnames
-                0x00000000       0x1b
+                0x00000000       0xfe
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000       0x1b ControlDiplayExterno.o
+                0x00000000       0x65 ControlDiplayExterno.o
+ .debug_pubnames
+                0x00000065       0x99 USART.o
 
-.debug_info     0x00000000       0x7d
+.debug_info     0x00000000      0x364
  *(.debug_info)
- .debug_info    0x00000000       0x7d ControlDiplayExterno.o
+ .debug_info    0x00000000      0x25d ControlDiplayExterno.o
+ .debug_info    0x0000025d      0x107 USART.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000       0x41
+.debug_abbrev   0x00000000      0x1df
  *(.debug_abbrev)
- .debug_abbrev  0x00000000       0x41 ControlDiplayExterno.o
+ .debug_abbrev  0x00000000      0x15a ControlDiplayExterno.o
+ .debug_abbrev  0x0000015a       0x85 USART.o
 
-.debug_line     0x00000000       0x6b
+.debug_line     0x00000000      0x878
  *(.debug_line)
- .debug_line    0x00000000       0x6b ControlDiplayExterno.o
+ .debug_line    0x00000000      0x6fa ControlDiplayExterno.o
+ .debug_line    0x000006fa      0x17e USART.o
 
-.debug_frame    0x00000000       0x20
+.debug_frame    0x00000000       0xe0
  *(.debug_frame)
- .debug_frame   0x00000000       0x20 ControlDiplayExterno.o
+ .debug_frame   0x00000000       0x60 ControlDiplayExterno.o
+ .debug_frame   0x00000060       0x80 USART.o
 
-.debug_str      0x00000000       0xb5
+.debug_str      0x00000000      0x1d1
  *(.debug_str)
- .debug_str     0x00000000       0xb5 ControlDiplayExterno.o
-                                 0xee (size before relaxing)
+ .debug_str     0x00000000      0x152 ControlDiplayExterno.o
+                                0x18b (size before relaxing)
+ .debug_str     0x00000152       0x7f USART.o
+                                0x156 (size before relaxing)
 
-.debug_loc
+.debug_loc      0x00000000       0x6f
  *(.debug_loc)
+ .debug_loc     0x00000000       0x51 ControlDiplayExterno.o
+ .debug_loc     0x00000051       0x1e USART.o
 
 .debug_macinfo
  *(.debug_macinfo)

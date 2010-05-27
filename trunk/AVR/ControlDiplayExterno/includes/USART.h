@@ -60,14 +60,14 @@
  *                    se completa la transmisión de lo que se encuentra en el registro de salida
  * ITN_TX_COMPLETA=0  No se genera la interrupcion
  */
-#define INT_TX_COMPLETA 1
+#define INT_TX_COMPLETA 0
 
 /**
  * INT_RX_COMPLETA=1  Se genera una interrupcion(Si estan habilitadas globalmente) cuando
  *                    se completa la recepcion de un dato en la USART
  * INT_RX_COMPLETA=0  No se genera la interrupcion
  */
-#define INT_RX_COMPLETA 0
+#define INT_RX_COMPLETA 1
 
 /**
  * SPEED_2X=1  Se habilita el doble de velocidad de transmision si se esta trabajanod en modo

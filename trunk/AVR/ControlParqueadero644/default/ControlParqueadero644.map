@@ -115,7 +115,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x538
+.text           0x00000000      0x3d0
  *(.vectors)
  .vectors       0x00000000       0x70 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
                 0x00000000                __vectors
@@ -167,7 +167,6 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init9)
  *(.text)
  .text          0x00000084        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
-                0x00000084                __vector_22
                 0x00000084                __vector_1
                 0x00000084                __vector_24
                 0x00000084                __vector_12
@@ -194,26 +193,33 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00000084                __vector_10
                 0x00000084                __vector_16
                 0x00000084                __vector_18
-                0x00000084                __vector_20
- .text          0x00000088      0x36c ControlParqueadero644.o
+ .text          0x00000088      0x190 ControlParqueadero644.o
+                0x0000009c                __vector_22
                 0x00000088                initHardware
-                0x00000094                main
- .text          0x000003f4      0x136 lcd_HD44780_4.o
-                0x00000494                LCD_init
-                0x0000046a                LCD_recibirByte
-                0x00000488                LCD_esperarListo
-                0x0000041e                LCD_enviarByte
- .text          0x0000052a        0xa USART.o
-                0x0000052a                USART_init
- .text          0x00000534        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000534                . = ALIGN (0x2)
+                0x0000013c                main
+                0x000000ec                __vector_20
+ .text          0x00000218      0x136 lcd_HD44780_4.o
+                0x000002b8                LCD_init
+                0x0000028e                LCD_recibirByte
+                0x000002ac                LCD_esperarListo
+                0x00000242                LCD_enviarByte
+ .text          0x0000034e       0x7e USART.o
+                0x000003ae                USART0_Enviar
+                0x00000396                USART0_EnableRx
+                0x0000038a                USART0_DisableTx
+                0x0000037e                USART0_EnableTx
+                0x0000034e                USART0_init
+                0x000003be                USART0_Recibir
+                0x000003a2                USART0_DisableRx
+ .text          0x000003cc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000003cc                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00000534        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000534                . = ALIGN (0x2)
+ .text.libgcc   0x000003cc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000003cc                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000534        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x00000534                exit
-                0x00000534                _exit
+ .fini9         0x000003cc        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000003cc                exit
+                0x000003cc                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -232,11 +238,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000534        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x000003cc        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x00000538                _etext = .
+                0x000003d0                _etext = .
 
-.data           0x00800100        0x0 load address 0x00000538
+.data           0x00800100        0x0 load address 0x000003d0
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
@@ -263,8 +269,8 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.bss*)
  *(COMMON)
                 0x00800100                PROVIDE (__bss_end, .)
-                0x00000538                __data_load_start = LOADADDR (.data)
-                0x00000538                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000003d0                __data_load_start = LOADADDR (.data)
+                0x000003d0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800100        0x0
                 0x00800100                PROVIDE (__noinit_start, .)
@@ -332,55 +338,59 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00000040       0x20 USART.o
 
 .debug_pubnames
-                0x00000000       0xa8
+                0x00000000      0x140
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000       0x2c ControlParqueadero644.o
+                0x00000000       0x4c ControlParqueadero644.o
  .debug_pubnames
-                0x0000002c       0x5b lcd_HD44780_4.o
+                0x0000004c       0x5b lcd_HD44780_4.o
  .debug_pubnames
-                0x00000087       0x21 USART.o
+                0x000000a7       0x99 USART.o
 
-.debug_info     0x00000000      0x5b4
+.debug_info     0x00000000      0x94e
  *(.debug_info)
- .debug_info    0x00000000      0x136 ControlParqueadero644.o
- .debug_info    0x00000136      0x3e7 lcd_HD44780_4.o
- .debug_info    0x0000051d       0x97 USART.o
+ .debug_info    0x00000000      0x460 ControlParqueadero644.o
+ .debug_info    0x00000460      0x3e7 lcd_HD44780_4.o
+ .debug_info    0x00000847      0x107 USART.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x2be
+.debug_abbrev   0x00000000      0x348
  *(.debug_abbrev)
- .debug_abbrev  0x00000000       0xd2 ControlParqueadero644.o
- .debug_abbrev  0x000000d2      0x182 lcd_HD44780_4.o
- .debug_abbrev  0x00000254       0x6a USART.o
+ .debug_abbrev  0x00000000      0x141 ControlParqueadero644.o
+ .debug_abbrev  0x00000141      0x182 lcd_HD44780_4.o
+ .debug_abbrev  0x000002c3       0x85 USART.o
 
-.debug_line     0x00000000      0x71e
+.debug_line     0x00000000      0x750
  *(.debug_line)
- .debug_line    0x00000000      0x389 ControlParqueadero644.o
- .debug_line    0x00000389      0x2e7 lcd_HD44780_4.o
- .debug_line    0x00000670       0xae USART.o
+ .debug_line    0x00000000      0x2eb ControlParqueadero644.o
+ .debug_line    0x000002eb      0x2e7 lcd_HD44780_4.o
+ .debug_line    0x000005d2      0x17e USART.o
 
-.debug_frame    0x00000000       0xc0
+.debug_frame    0x00000000      0x140
  *(.debug_frame)
- .debug_frame   0x00000000       0x30 ControlParqueadero644.o
- .debug_frame   0x00000030       0x70 lcd_HD44780_4.o
- .debug_frame   0x000000a0       0x20 USART.o
+ .debug_frame   0x00000000       0x50 ControlParqueadero644.o
+ .debug_frame   0x00000050       0x70 lcd_HD44780_4.o
+ .debug_frame   0x000000c0       0x80 USART.o
 
-.debug_str      0x00000000      0x1e7
+.debug_str      0x00000000      0x25e
  *(.debug_str)
- .debug_str     0x00000000      0x101 ControlParqueadero644.o
-                                0x13a (size before relaxing)
- .debug_str     0x00000101       0xc0 lcd_HD44780_4.o
-                                0x1c8 (size before relaxing)
- .debug_str     0x000001c1       0x26 USART.o
-                                 0xf3 (size before relaxing)
+ .debug_str     0x00000000      0x12c ControlParqueadero644.o
+                                0x165 (size before relaxing)
+ .debug_str     0x0000012c       0xb3 lcd_HD44780_4.o
+                                0x1ce (size before relaxing)
+ .debug_str     0x000001df       0x7f USART.o
+                                0x157 (size before relaxing)
 
-.debug_loc      0x00000000      0x141
+.debug_loc      0x00000000      0x35d
  *(.debug_loc)
- .debug_loc     0x00000000       0x30 ControlParqueadero644.o
- .debug_loc     0x00000030      0x111 lcd_HD44780_4.o
+ .debug_loc     0x00000000      0x22e ControlParqueadero644.o
+ .debug_loc     0x0000022e      0x111 lcd_HD44780_4.o
+ .debug_loc     0x0000033f       0x1e USART.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(ControlParqueadero644.elf elf32-avr)
 LOAD linker stubs
+
+.debug_ranges   0x00000000       0x48
+ .debug_ranges  0x00000000       0x48 ControlParqueadero644.o
