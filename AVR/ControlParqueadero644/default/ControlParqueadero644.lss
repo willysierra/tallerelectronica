@@ -3,23 +3,25 @@ ControlParqueadero644.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000538  00000000  00000000  00000054  2**1
+  0 .text         000003d0  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .debug_aranges 00000060  00000000  00000000  0000058c  2**0
+  1 .debug_aranges 00000060  00000000  00000000  00000424  2**0
                   CONTENTS, READONLY, DEBUGGING
-  2 .debug_pubnames 000000a8  00000000  00000000  000005ec  2**0
+  2 .debug_pubnames 00000140  00000000  00000000  00000484  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   000005b4  00000000  00000000  00000694  2**0
+  3 .debug_info   0000094e  00000000  00000000  000005c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 000002be  00000000  00000000  00000c48  2**0
+  4 .debug_abbrev 00000348  00000000  00000000  00000f12  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   0000071e  00000000  00000000  00000f06  2**0
+  5 .debug_line   00000750  00000000  00000000  0000125a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  000000c0  00000000  00000000  00001624  2**2
+  6 .debug_frame  00000140  00000000  00000000  000019ac  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    000001e7  00000000  00000000  000016e4  2**0
+  7 .debug_str    0000025e  00000000  00000000  00001aec  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    00000141  00000000  00000000  000018cb  2**0
+  8 .debug_loc    0000035d  00000000  00000000  00001d4a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_ranges 00000048  00000000  00000000  000020a7  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -45,9 +47,9 @@ Disassembly of section .text:
   44:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
   48:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
   4c:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
-  50:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
+  50:	0c 94 76 00 	jmp	0xec	; 0xec <__vector_20>
   54:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
-  58:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
+  58:	0c 94 4e 00 	jmp	0x9c	; 0x9c <__vector_22>
   5c:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
   60:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
   64:	0c 94 42 00 	jmp	0x84	; 0x84 <__bad_interrupt>
@@ -61,8 +63,8 @@ Disassembly of section .text:
   76:	d0 e1       	ldi	r29, 0x10	; 16
   78:	de bf       	out	0x3e, r29	; 62
   7a:	cd bf       	out	0x3d, r28	; 61
-  7c:	0e 94 4a 00 	call	0x94	; 0x94 <main>
-  80:	0c 94 9a 02 	jmp	0x534	; 0x534 <_exit>
+  7c:	0e 94 9e 00 	call	0x13c	; 0x13c <main>
+  80:	0c 94 e6 01 	jmp	0x3cc	; 0x3cc <_exit>
 
 00000084 <__bad_interrupt>:
   84:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -74,7 +76,7 @@ void initHardware(){
 
 	// Inicializamos el LCD
 	LCD_init();
-  88:	0e 94 4a 02 	call	0x494	; 0x494 <LCD_init>
+  88:	0e 94 5c 01 	call	0x2b8	; 0x2b8 <LCD_init>
 
 	// Inicializamos el Teclado Matricial
 	KBR_DDR  = 0x0F; 
@@ -82,739 +84,810 @@ void initHardware(){
   8e:	8a b9       	out	0x0a, r24	; 10
 	KBR_PORT = 0x00;
   90:	1b b8       	out	0x0b, r1	; 11
-	// Inicializamos Puerto Serial Sincrono (USART-1) para comunicación con micro alterno
 
-	// Inicializamos Puerto Serial Asincrono (UART-0) para modulo RF
-	
+	// Inicializamos Puerto Serial Sincrono (USART0) para comunicacion por modulo RF
+	USART0_init();
+  92:	0e 94 a7 01 	call	0x34e	; 0x34e <USART0_init>
+	USART0_EnableTx();
+  96:	0e 94 bf 01 	call	0x37e	; 0x37e <USART0_EnableTx>
+}
+  9a:	08 95       	ret
+
+0000009c <__vector_22>:
+	LCD_enviarDTA('X');LCD_esperarListo();
+}
+
+
+ISR(USART0_TX_vect) 
+{
+  9c:	1f 92       	push	r1
+  9e:	0f 92       	push	r0
+  a0:	0f b6       	in	r0, 0x3f	; 63
+  a2:	0f 92       	push	r0
+  a4:	11 24       	eor	r1, r1
+  a6:	2f 93       	push	r18
+  a8:	3f 93       	push	r19
+  aa:	4f 93       	push	r20
+  ac:	5f 93       	push	r21
+  ae:	6f 93       	push	r22
+  b0:	7f 93       	push	r23
+  b2:	8f 93       	push	r24
+  b4:	9f 93       	push	r25
+  b6:	af 93       	push	r26
+  b8:	bf 93       	push	r27
+  ba:	ef 93       	push	r30
+  bc:	ff 93       	push	r31
+	uint8_t dato;
+	LCD_enviarDTA(0xFF);LCD_esperarListo();
+  be:	8f ef       	ldi	r24, 0xFF	; 255
+  c0:	61 e0       	ldi	r22, 0x01	; 1
+  c2:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
+  c6:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 
 }
-  92:	08 95       	ret
+  ca:	ff 91       	pop	r31
+  cc:	ef 91       	pop	r30
+  ce:	bf 91       	pop	r27
+  d0:	af 91       	pop	r26
+  d2:	9f 91       	pop	r25
+  d4:	8f 91       	pop	r24
+  d6:	7f 91       	pop	r23
+  d8:	6f 91       	pop	r22
+  da:	5f 91       	pop	r21
+  dc:	4f 91       	pop	r20
+  de:	3f 91       	pop	r19
+  e0:	2f 91       	pop	r18
+  e2:	0f 90       	pop	r0
+  e4:	0f be       	out	0x3f, r0	; 63
+  e6:	0f 90       	pop	r0
+  e8:	1f 90       	pop	r1
+  ea:	18 95       	reti
 
-00000094 <main>:
+000000ec <__vector_20>:
+
+/**
+ *  Manejo de la interrupcion generada cuando la USART0 recibe un dato
+ */
+ISR(USART0_RX_vect) 
+{
+  ec:	1f 92       	push	r1
+  ee:	0f 92       	push	r0
+  f0:	0f b6       	in	r0, 0x3f	; 63
+  f2:	0f 92       	push	r0
+  f4:	11 24       	eor	r1, r1
+  f6:	2f 93       	push	r18
+  f8:	3f 93       	push	r19
+  fa:	4f 93       	push	r20
+  fc:	5f 93       	push	r21
+  fe:	6f 93       	push	r22
+ 100:	7f 93       	push	r23
+ 102:	8f 93       	push	r24
+ 104:	9f 93       	push	r25
+ 106:	af 93       	push	r26
+ 108:	bf 93       	push	r27
+ 10a:	ef 93       	push	r30
+ 10c:	ff 93       	push	r31
+	LCD_enviarDTA('X');LCD_esperarListo();
+ 10e:	88 e5       	ldi	r24, 0x58	; 88
+ 110:	61 e0       	ldi	r22, 0x01	; 1
+ 112:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
+ 116:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
+}
+ 11a:	ff 91       	pop	r31
+ 11c:	ef 91       	pop	r30
+ 11e:	bf 91       	pop	r27
+ 120:	af 91       	pop	r26
+ 122:	9f 91       	pop	r25
+ 124:	8f 91       	pop	r24
+ 126:	7f 91       	pop	r23
+ 128:	6f 91       	pop	r22
+ 12a:	5f 91       	pop	r21
+ 12c:	4f 91       	pop	r20
+ 12e:	3f 91       	pop	r19
+ 130:	2f 91       	pop	r18
+ 132:	0f 90       	pop	r0
+ 134:	0f be       	out	0x3f, r0	; 63
+ 136:	0f 90       	pop	r0
+ 138:	1f 90       	pop	r1
+ 13a:	18 95       	reti
+
+0000013c <main>:
 
 //  ------------------------------------------------------------------------
 //	PROGRAMA PRINCIPAL DEL SISITEMA
 //  ------------------------------------------------------------------------
 
 int main(void) {
-  94:	80 e9       	ldi	r24, 0x90	; 144
-  96:	91 e0       	ldi	r25, 0x01	; 1
+ 13c:	1f 93       	push	r17
+ 13e:	cf 93       	push	r28
+ 140:	df 93       	push	r29
+ 142:	80 e9       	ldi	r24, 0x90	; 144
+ 144:	91 e0       	ldi	r25, 0x01	; 1
     milliseconds can be achieved.
  */
 void
 _delay_loop_2(uint16_t __count)
 {
 	__asm__ volatile (
-  98:	28 ec       	ldi	r18, 0xC8	; 200
-  9a:	30 e0       	ldi	r19, 0x00	; 0
-  9c:	f9 01       	movw	r30, r18
-  9e:	31 97       	sbiw	r30, 0x01	; 1
-  a0:	f1 f7       	brne	.-4      	; 0x9e <main+0xa>
+ 146:	28 ec       	ldi	r18, 0xC8	; 200
+ 148:	30 e0       	ldi	r19, 0x00	; 0
+ 14a:	f9 01       	movw	r30, r18
+ 14c:	31 97       	sbiw	r30, 0x01	; 1
+ 14e:	f1 f7       	brne	.-4      	; 0x14c <main+0x10>
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
 		{
 			// wait 1/10 ms
 			_delay_loop_2(((F_CPU) / 4e3) / 10);
 			__ticks --;
-  a2:	01 97       	sbiw	r24, 0x01	; 1
+ 150:	01 97       	sbiw	r24, 0x01	; 1
 		__ticks = 1;
 	else if (__tmp > 65535)
 	{
 		//	__ticks = requested delay in 1/10 ms
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
-  a4:	d9 f7       	brne	.-10     	; 0x9c <main+0x8>
+ 152:	d9 f7       	brne	.-10     	; 0x14a <main+0xe>
 
 
 	_delay_ms(40);
 	initHardware();
-  a6:	0e 94 44 00 	call	0x88	; 0x88 <initHardware>
+ 154:	0e 94 44 00 	call	0x88	; 0x88 <initHardware>
+	sei();	// Enable the Global Interrupt Enable flag so that interrupts can be processed 
+ 158:	78 94       	sei
+
 	
+	LCD_linea1Pos0();LCD_esperarListo();
+ 15a:	80 e8       	ldi	r24, 0x80	; 128
+ 15c:	60 e0       	ldi	r22, 0x00	; 0
+ 15e:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
+ 162:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
+ 166:	80 e3       	ldi	r24, 0x30	; 48
+ 168:	c8 ec       	ldi	r28, 0xC8	; 200
+ 16a:	d0 e0       	ldi	r29, 0x00	; 0
+ 16c:	28 ee       	ldi	r18, 0xE8	; 232
+ 16e:	33 e0       	ldi	r19, 0x03	; 3
+ 170:	fe 01       	movw	r30, r28
+ 172:	31 97       	sbiw	r30, 0x01	; 1
+ 174:	f1 f7       	brne	.-4      	; 0x172 <main+0x36>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 176:	21 50       	subi	r18, 0x01	; 1
+ 178:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 17a:	d1 f7       	brne	.-12     	; 0x170 <main+0x34>
+ 17c:	28 ee       	ldi	r18, 0xE8	; 232
+ 17e:	33 e0       	ldi	r19, 0x03	; 3
+ 180:	fe 01       	movw	r30, r28
+ 182:	31 97       	sbiw	r30, 0x01	; 1
+ 184:	f1 f7       	brne	.-4      	; 0x182 <main+0x46>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 186:	21 50       	subi	r18, 0x01	; 1
+ 188:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 18a:	d1 f7       	brne	.-12     	; 0x180 <main+0x44>
+ 18c:	28 ee       	ldi	r18, 0xE8	; 232
+ 18e:	33 e0       	ldi	r19, 0x03	; 3
+ 190:	fe 01       	movw	r30, r28
+ 192:	31 97       	sbiw	r30, 0x01	; 1
+ 194:	f1 f7       	brne	.-4      	; 0x192 <main+0x56>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 196:	21 50       	subi	r18, 0x01	; 1
+ 198:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 19a:	d1 f7       	brne	.-12     	; 0x190 <main+0x54>
+ 19c:	28 ee       	ldi	r18, 0xE8	; 232
+ 19e:	33 e0       	ldi	r19, 0x03	; 3
+ 1a0:	fe 01       	movw	r30, r28
+ 1a2:	31 97       	sbiw	r30, 0x01	; 1
+ 1a4:	f1 f7       	brne	.-4      	; 0x1a2 <main+0x66>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1a6:	21 50       	subi	r18, 0x01	; 1
+ 1a8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1aa:	d1 f7       	brne	.-12     	; 0x1a0 <main+0x64>
+ 1ac:	28 ee       	ldi	r18, 0xE8	; 232
+ 1ae:	33 e0       	ldi	r19, 0x03	; 3
+ 1b0:	fe 01       	movw	r30, r28
+ 1b2:	31 97       	sbiw	r30, 0x01	; 1
+ 1b4:	f1 f7       	brne	.-4      	; 0x1b2 <main+0x76>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1b6:	21 50       	subi	r18, 0x01	; 1
+ 1b8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1ba:	d1 f7       	brne	.-12     	; 0x1b0 <main+0x74>
+ 1bc:	28 ee       	ldi	r18, 0xE8	; 232
+ 1be:	33 e0       	ldi	r19, 0x03	; 3
+ 1c0:	fe 01       	movw	r30, r28
+ 1c2:	31 97       	sbiw	r30, 0x01	; 1
+ 1c4:	f1 f7       	brne	.-4      	; 0x1c2 <main+0x86>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1c6:	21 50       	subi	r18, 0x01	; 1
+ 1c8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1ca:	d1 f7       	brne	.-12     	; 0x1c0 <main+0x84>
+ 1cc:	28 ee       	ldi	r18, 0xE8	; 232
+ 1ce:	33 e0       	ldi	r19, 0x03	; 3
+ 1d0:	fe 01       	movw	r30, r28
+ 1d2:	31 97       	sbiw	r30, 0x01	; 1
+ 1d4:	f1 f7       	brne	.-4      	; 0x1d2 <main+0x96>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1d6:	21 50       	subi	r18, 0x01	; 1
+ 1d8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1da:	d1 f7       	brne	.-12     	; 0x1d0 <main+0x94>
+ 1dc:	28 ee       	ldi	r18, 0xE8	; 232
+ 1de:	33 e0       	ldi	r19, 0x03	; 3
+ 1e0:	fe 01       	movw	r30, r28
+ 1e2:	31 97       	sbiw	r30, 0x01	; 1
+ 1e4:	f1 f7       	brne	.-4      	; 0x1e2 <main+0xa6>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1e6:	21 50       	subi	r18, 0x01	; 1
+ 1e8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1ea:	d1 f7       	brne	.-12     	; 0x1e0 <main+0xa4>
+ 1ec:	28 ee       	ldi	r18, 0xE8	; 232
+ 1ee:	33 e0       	ldi	r19, 0x03	; 3
+ 1f0:	fe 01       	movw	r30, r28
+ 1f2:	31 97       	sbiw	r30, 0x01	; 1
+ 1f4:	f1 f7       	brne	.-4      	; 0x1f2 <main+0xb6>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 1f6:	21 50       	subi	r18, 0x01	; 1
+ 1f8:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 1fa:	d1 f7       	brne	.-12     	; 0x1f0 <main+0xb4>
+ 1fc:	28 ee       	ldi	r18, 0xE8	; 232
+ 1fe:	33 e0       	ldi	r19, 0x03	; 3
+ 200:	fe 01       	movw	r30, r28
+ 202:	31 97       	sbiw	r30, 0x01	; 1
+ 204:	f1 f7       	brne	.-4      	; 0x202 <main+0xc6>
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+ 206:	21 50       	subi	r18, 0x01	; 1
+ 208:	30 40       	sbci	r19, 0x00	; 0
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+ 20a:	d1 f7       	brne	.-12     	; 0x200 <main+0xc4>
+	uint8_t dato = '0';
 	
+	while(1){
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		USART0_Enviar(dato++);
+ 20c:	18 2f       	mov	r17, r24
+ 20e:	1f 5f       	subi	r17, 0xFF	; 255
+ 210:	0e 94 d7 01 	call	0x3ae	; 0x3ae <USART0_Enviar>
+ 214:	81 2f       	mov	r24, r17
+ 216:	aa cf       	rjmp	.-172    	; 0x16c <main+0x30>
 
-	//LCD_enviarDTA('E');LCD_esperarListo();
-
-	LCD_linea1Pos0();
-  aa:	80 e8       	ldi	r24, 0x80	; 128
-  ac:	60 e0       	ldi	r22, 0x00	; 0
-  ae:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-	LCD_esperarListo();
-  b2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  b6:	8f ef       	ldi	r24, 0xFF	; 255
-  b8:	61 e0       	ldi	r22, 0x01	; 1
-  ba:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  be:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  c2:	8f ef       	ldi	r24, 0xFF	; 255
-  c4:	61 e0       	ldi	r22, 0x01	; 1
-  c6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  ca:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  ce:	8f ef       	ldi	r24, 0xFF	; 255
-  d0:	61 e0       	ldi	r22, 0x01	; 1
-  d2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  d6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  da:	8f ef       	ldi	r24, 0xFF	; 255
-  dc:	61 e0       	ldi	r22, 0x01	; 1
-  de:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  e2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  e6:	8f ef       	ldi	r24, 0xFF	; 255
-  e8:	61 e0       	ldi	r22, 0x01	; 1
-  ea:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  ee:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
-  f2:	80 e2       	ldi	r24, 0x20	; 32
-  f4:	61 e0       	ldi	r22, 0x01	; 1
-  f6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
-  fa:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
-  fe:	8f ef       	ldi	r24, 0xFF	; 255
- 100:	61 e0       	ldi	r22, 0x01	; 1
- 102:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 106:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 10a:	80 e2       	ldi	r24, 0x20	; 32
- 10c:	61 e0       	ldi	r22, 0x01	; 1
- 10e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 112:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 116:	80 e2       	ldi	r24, 0x20	; 32
- 118:	61 e0       	ldi	r22, 0x01	; 1
- 11a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 11e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 122:	80 e2       	ldi	r24, 0x20	; 32
- 124:	61 e0       	ldi	r22, 0x01	; 1
- 126:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 12a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 12e:	8f ef       	ldi	r24, 0xFF	; 255
- 130:	61 e0       	ldi	r22, 0x01	; 1
- 132:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 136:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 13a:	80 e2       	ldi	r24, 0x20	; 32
- 13c:	61 e0       	ldi	r22, 0x01	; 1
- 13e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 142:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 146:	8f ef       	ldi	r24, 0xFF	; 255
- 148:	61 e0       	ldi	r22, 0x01	; 1
- 14a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 14e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 152:	8f ef       	ldi	r24, 0xFF	; 255
- 154:	61 e0       	ldi	r22, 0x01	; 1
- 156:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 15a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 15e:	8f ef       	ldi	r24, 0xFF	; 255
- 160:	61 e0       	ldi	r22, 0x01	; 1
- 162:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 166:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 16a:	8f ef       	ldi	r24, 0xFF	; 255
- 16c:	61 e0       	ldi	r22, 0x01	; 1
- 16e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 172:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-
-
-	LCD_linea2Pos0(); LCD_esperarListo();
- 176:	80 ec       	ldi	r24, 0xC0	; 192
- 178:	60 e0       	ldi	r22, 0x00	; 0
- 17a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 17e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 182:	80 e2       	ldi	r24, 0x20	; 32
- 184:	61 e0       	ldi	r22, 0x01	; 1
- 186:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 18a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 18e:	80 e2       	ldi	r24, 0x20	; 32
- 190:	61 e0       	ldi	r22, 0x01	; 1
- 192:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 196:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 19a:	8f ef       	ldi	r24, 0xFF	; 255
- 19c:	61 e0       	ldi	r22, 0x01	; 1
- 19e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1a2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1a6:	80 e2       	ldi	r24, 0x20	; 32
- 1a8:	61 e0       	ldi	r22, 0x01	; 1
- 1aa:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1ae:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1b2:	80 e2       	ldi	r24, 0x20	; 32
- 1b4:	61 e0       	ldi	r22, 0x01	; 1
- 1b6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1ba:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1be:	80 e2       	ldi	r24, 0x20	; 32
- 1c0:	61 e0       	ldi	r22, 0x01	; 1
- 1c2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1c6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 1ca:	8f ef       	ldi	r24, 0xFF	; 255
- 1cc:	61 e0       	ldi	r22, 0x01	; 1
- 1ce:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1d2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1d6:	80 e2       	ldi	r24, 0x20	; 32
- 1d8:	61 e0       	ldi	r22, 0x01	; 1
- 1da:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1de:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1e2:	80 e2       	ldi	r24, 0x20	; 32
- 1e4:	61 e0       	ldi	r22, 0x01	; 1
- 1e6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1ea:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 1ee:	80 e2       	ldi	r24, 0x20	; 32
- 1f0:	61 e0       	ldi	r22, 0x01	; 1
- 1f2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 1f6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 1fa:	8f ef       	ldi	r24, 0xFF	; 255
- 1fc:	61 e0       	ldi	r22, 0x01	; 1
- 1fe:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 202:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 206:	80 e2       	ldi	r24, 0x20	; 32
- 208:	61 e0       	ldi	r22, 0x01	; 1
- 20a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 20e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 212:	8f ef       	ldi	r24, 0xFF	; 255
- 214:	61 e0       	ldi	r22, 0x01	; 1
- 216:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 21a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 21e:	80 e2       	ldi	r24, 0x20	; 32
- 220:	61 e0       	ldi	r22, 0x01	; 1
- 222:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 226:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 22a:	80 e2       	ldi	r24, 0x20	; 32
- 22c:	61 e0       	ldi	r22, 0x01	; 1
- 22e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 232:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 236:	80 e2       	ldi	r24, 0x20	; 32
- 238:	61 e0       	ldi	r22, 0x01	; 1
- 23a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 23e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 242:	8f ef       	ldi	r24, 0xFF	; 255
- 244:	61 e0       	ldi	r22, 0x01	; 1
- 246:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 24a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-
-
-
-
-
-	LCD_linea3Pos0(); LCD_esperarListo();
- 24e:	84 e9       	ldi	r24, 0x94	; 148
- 250:	60 e0       	ldi	r22, 0x00	; 0
- 252:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 256:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-		LCD_enviarDTA(' ');LCD_esperarListo();
- 25a:	80 e2       	ldi	r24, 0x20	; 32
- 25c:	61 e0       	ldi	r22, 0x01	; 1
- 25e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 262:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 266:	80 e2       	ldi	r24, 0x20	; 32
- 268:	61 e0       	ldi	r22, 0x01	; 1
- 26a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 26e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 272:	8f ef       	ldi	r24, 0xFF	; 255
- 274:	61 e0       	ldi	r22, 0x01	; 1
- 276:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 27a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 27e:	80 e2       	ldi	r24, 0x20	; 32
- 280:	61 e0       	ldi	r22, 0x01	; 1
- 282:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 286:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 28a:	80 e2       	ldi	r24, 0x20	; 32
- 28c:	61 e0       	ldi	r22, 0x01	; 1
- 28e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 292:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 296:	80 e2       	ldi	r24, 0x20	; 32
- 298:	61 e0       	ldi	r22, 0x01	; 1
- 29a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 29e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2a2:	8f ef       	ldi	r24, 0xFF	; 255
- 2a4:	61 e0       	ldi	r22, 0x01	; 1
- 2a6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2aa:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2ae:	8f ef       	ldi	r24, 0xFF	; 255
- 2b0:	61 e0       	ldi	r22, 0x01	; 1
- 2b2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2b6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2ba:	8f ef       	ldi	r24, 0xFF	; 255
- 2bc:	61 e0       	ldi	r22, 0x01	; 1
- 2be:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2c2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2c6:	8f ef       	ldi	r24, 0xFF	; 255
- 2c8:	61 e0       	ldi	r22, 0x01	; 1
- 2ca:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2ce:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2d2:	8f ef       	ldi	r24, 0xFF	; 255
- 2d4:	61 e0       	ldi	r22, 0x01	; 1
- 2d6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2da:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 2de:	80 e2       	ldi	r24, 0x20	; 32
- 2e0:	61 e0       	ldi	r22, 0x01	; 1
- 2e2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2e6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 2ea:	8f ef       	ldi	r24, 0xFF	; 255
- 2ec:	61 e0       	ldi	r22, 0x01	; 1
- 2ee:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2f2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 2f6:	80 e2       	ldi	r24, 0x20	; 32
- 2f8:	61 e0       	ldi	r22, 0x01	; 1
- 2fa:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 2fe:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 302:	80 e2       	ldi	r24, 0x20	; 32
- 304:	61 e0       	ldi	r22, 0x01	; 1
- 306:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 30a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 30e:	80 e2       	ldi	r24, 0x20	; 32
- 310:	61 e0       	ldi	r22, 0x01	; 1
- 312:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 316:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 31a:	8f ef       	ldi	r24, 0xFF	; 255
- 31c:	61 e0       	ldi	r22, 0x01	; 1
- 31e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 322:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-
-
-
-
-	LCD_linea4Pos0(); LCD_esperarListo();
- 326:	84 ed       	ldi	r24, 0xD4	; 212
- 328:	60 e0       	ldi	r22, 0x00	; 0
- 32a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 32e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-		LCD_enviarDTA(' ');LCD_esperarListo();
- 332:	80 e2       	ldi	r24, 0x20	; 32
- 334:	61 e0       	ldi	r22, 0x01	; 1
- 336:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 33a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 33e:	80 e2       	ldi	r24, 0x20	; 32
- 340:	61 e0       	ldi	r22, 0x01	; 1
- 342:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 346:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 34a:	8f ef       	ldi	r24, 0xFF	; 255
- 34c:	61 e0       	ldi	r22, 0x01	; 1
- 34e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 352:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 356:	80 e2       	ldi	r24, 0x20	; 32
- 358:	61 e0       	ldi	r22, 0x01	; 1
- 35a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 35e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 362:	80 e2       	ldi	r24, 0x20	; 32
- 364:	61 e0       	ldi	r22, 0x01	; 1
- 366:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 36a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 36e:	80 e2       	ldi	r24, 0x20	; 32
- 370:	61 e0       	ldi	r22, 0x01	; 1
- 372:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 376:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 37a:	8f ef       	ldi	r24, 0xFF	; 255
- 37c:	61 e0       	ldi	r22, 0x01	; 1
- 37e:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 382:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 386:	80 e2       	ldi	r24, 0x20	; 32
- 388:	61 e0       	ldi	r22, 0x01	; 1
- 38a:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 38e:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 392:	80 e2       	ldi	r24, 0x20	; 32
- 394:	61 e0       	ldi	r22, 0x01	; 1
- 396:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 39a:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 39e:	80 e2       	ldi	r24, 0x20	; 32
- 3a0:	61 e0       	ldi	r22, 0x01	; 1
- 3a2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3a6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 3aa:	8f ef       	ldi	r24, 0xFF	; 255
- 3ac:	61 e0       	ldi	r22, 0x01	; 1
- 3ae:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3b2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(' ');LCD_esperarListo();
- 3b6:	80 e2       	ldi	r24, 0x20	; 32
- 3b8:	61 e0       	ldi	r22, 0x01	; 1
- 3ba:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3be:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 3c2:	8f ef       	ldi	r24, 0xFF	; 255
- 3c4:	61 e0       	ldi	r22, 0x01	; 1
- 3c6:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3ca:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 3ce:	8f ef       	ldi	r24, 0xFF	; 255
- 3d0:	61 e0       	ldi	r22, 0x01	; 1
- 3d2:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3d6:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 3da:	8f ef       	ldi	r24, 0xFF	; 255
- 3dc:	61 e0       	ldi	r22, 0x01	; 1
- 3de:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3e2:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
- 3e6:	8f ef       	ldi	r24, 0xFF	; 255
- 3e8:	61 e0       	ldi	r22, 0x01	; 1
- 3ea:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
- 3ee:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
- 3f2:	ff cf       	rjmp	.-2      	; 0x3f2 <main+0x35e>
-
-000003f4 <LCD_enviarNibble>:
+00000218 <LCD_enviarNibble>:
  *			uint8_t rs -> Selector de registro LCD (1:Instruccion, 0:Dato)
  * @PRE: n y rs se encuentran bien definidos
  * @POS: Se envian los datos al LCD
  * @Return: Void
  */
 static void LCD_enviarNibble(uint8_t n, uint8_t rs){
- 3f4:	98 2f       	mov	r25, r24
+ 218:	98 2f       	mov	r25, r24
 
 	LCD_CMD_PORT_OUT &= ~_BV(LCD_RW);
- 3f6:	12 98       	cbi	0x02, 2	; 2
+ 21a:	12 98       	cbi	0x02, 2	; 2
 
 	if (rs)
- 3f8:	66 23       	and	r22, r22
- 3fa:	11 f0       	breq	.+4      	; 0x400 <LCD_enviarNibble+0xc>
+ 21c:	66 23       	and	r22, r22
+ 21e:	11 f0       	breq	.+4      	; 0x224 <LCD_enviarNibble+0xc>
 		LCD_CMD_PORT_OUT |= _BV(LCD_RS);
- 3fc:	11 9a       	sbi	0x02, 1	; 2
- 3fe:	01 c0       	rjmp	.+2      	; 0x402 <LCD_enviarNibble+0xe>
+ 220:	11 9a       	sbi	0x02, 1	; 2
+ 222:	01 c0       	rjmp	.+2      	; 0x226 <LCD_enviarNibble+0xe>
 	else
 		LCD_CMD_PORT_OUT &= ~_BV(LCD_RS);
- 400:	11 98       	cbi	0x02, 1	; 2
+ 224:	11 98       	cbi	0x02, 1	; 2
 	
 	LCD_DTA_PORT_OUT &= ~LCD_DTA_BITS;
- 402:	82 b1       	in	r24, 0x02	; 2
- 404:	8f 70       	andi	r24, 0x0F	; 15
- 406:	82 b9       	out	0x02, r24	; 2
+ 226:	82 b1       	in	r24, 0x02	; 2
+ 228:	8f 70       	andi	r24, 0x0F	; 15
+ 22a:	82 b9       	out	0x02, r24	; 2
 	LCD_DTA_PORT_OUT |= (n<<LCD_D4) & LCD_DTA_BITS;
- 408:	82 b1       	in	r24, 0x02	; 2
- 40a:	92 95       	swap	r25
- 40c:	90 7f       	andi	r25, 0xF0	; 240
- 40e:	89 2b       	or	r24, r25
- 410:	82 b9       	out	0x02, r24	; 2
+ 22c:	82 b1       	in	r24, 0x02	; 2
+ 22e:	92 95       	swap	r25
+ 230:	90 7f       	andi	r25, 0xF0	; 240
+ 232:	89 2b       	or	r24, r25
+ 234:	82 b9       	out	0x02, r24	; 2
 
 static inline uint8_t LCD_pulsoEnable(bool lectura){
 	
 	uint8_t dato;
 	
 	LCD_CMD_PORT_OUT |= _BV(LCD_E);
- 412:	13 9a       	sbi	0x02, 3	; 2
+ 236:	13 9a       	sbi	0x02, 3	; 2
     can be achieved.
 */
 void
 _delay_loop_1(uint8_t __count)
 {
 	__asm__ volatile (
- 414:	81 e0       	ldi	r24, 0x01	; 1
- 416:	8a 95       	dec	r24
- 418:	f1 f7       	brne	.-4      	; 0x416 <LCD_enviarNibble+0x22>
+ 238:	81 e0       	ldi	r24, 0x01	; 1
+ 23a:	8a 95       	dec	r24
+ 23c:	f1 f7       	brne	.-4      	; 0x23a <LCD_enviarNibble+0x22>
 	if(lectura)
 		dato = LCD_DTA_PORT_IN & LCD_DTA_BITS;
 	else
 		dato = 0x00;
 
 	LCD_CMD_PORT_OUT &= ~_BV(LCD_E);
- 41a:	13 98       	cbi	0x02, 3	; 2
+ 23e:	13 98       	cbi	0x02, 3	; 2
 	
 	LCD_DTA_PORT_OUT &= ~LCD_DTA_BITS;
 	LCD_DTA_PORT_OUT |= (n<<LCD_D4) & LCD_DTA_BITS;
 	//LCD_DTA_PORT_OUT |= ((n<<LCD_D4)& LCD_DTA_BITS);
 	(void)LCD_pulsoEnable(false);
 }
- 41c:	08 95       	ret
+ 240:	08 95       	ret
 
-0000041e <LCD_enviarByte>:
+00000242 <LCD_enviarByte>:
  * @PRE: Los parametros se encuentran bien definidos
  * @POS: Se envian dos nibbles para completar el dato/instruccion en el controlador del LCD
  * @RETURN: Void
  */
 
 void LCD_enviarByte(uint8_t by, uint8_t rs){
- 41e:	0f 93       	push	r16
- 420:	1f 93       	push	r17
- 422:	18 2f       	mov	r17, r24
- 424:	06 2f       	mov	r16, r22
+ 242:	0f 93       	push	r16
+ 244:	1f 93       	push	r17
+ 246:	18 2f       	mov	r17, r24
+ 248:	06 2f       	mov	r16, r22
 
 	LCD_enviarNibble(by>>4, rs);		// Enviamos la parte alta b[7..4]
- 426:	82 95       	swap	r24
- 428:	8f 70       	andi	r24, 0x0F	; 15
- 42a:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
+ 24a:	82 95       	swap	r24
+ 24c:	8f 70       	andi	r24, 0x0F	; 15
+ 24e:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
 	LCD_enviarNibble(by & 0x0F, rs);	// Enviamos la parte baja b[3..0]
- 42e:	81 2f       	mov	r24, r17
- 430:	8f 70       	andi	r24, 0x0F	; 15
- 432:	60 2f       	mov	r22, r16
- 434:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
+ 252:	81 2f       	mov	r24, r17
+ 254:	8f 70       	andi	r24, 0x0F	; 15
+ 256:	60 2f       	mov	r22, r16
+ 258:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
 }
- 438:	1f 91       	pop	r17
- 43a:	0f 91       	pop	r16
- 43c:	08 95       	ret
+ 25c:	1f 91       	pop	r17
+ 25e:	0f 91       	pop	r16
+ 260:	08 95       	ret
 
-0000043e <LCD_recibirNibble>:
+00000262 <LCD_recibirNibble>:
  */
 static uint8_t LCD_recibirNibble(uint8_t rs){
 	
 	uint8_t dato;
 
 	LCD_CMD_PORT_OUT |= _BV(LCD_RW);
- 43e:	12 9a       	sbi	0x02, 2	; 2
+ 262:	12 9a       	sbi	0x02, 2	; 2
 
 	LCD_DTA_PORT_DDR &= ~LCD_DTA_BITS;
- 440:	91 b1       	in	r25, 0x01	; 1
- 442:	9f 70       	andi	r25, 0x0F	; 15
- 444:	91 b9       	out	0x01, r25	; 1
+ 264:	91 b1       	in	r25, 0x01	; 1
+ 266:	9f 70       	andi	r25, 0x0F	; 15
+ 268:	91 b9       	out	0x01, r25	; 1
 
 	if (rs)
- 446:	88 23       	and	r24, r24
- 448:	11 f0       	breq	.+4      	; 0x44e <LCD_recibirNibble+0x10>
+ 26a:	88 23       	and	r24, r24
+ 26c:	11 f0       	breq	.+4      	; 0x272 <LCD_recibirNibble+0x10>
 		LCD_CMD_PORT_OUT |= _BV(LCD_RS);
- 44a:	11 9a       	sbi	0x02, 1	; 2
- 44c:	01 c0       	rjmp	.+2      	; 0x450 <LCD_recibirNibble+0x12>
+ 26e:	11 9a       	sbi	0x02, 1	; 2
+ 270:	01 c0       	rjmp	.+2      	; 0x274 <LCD_recibirNibble+0x12>
 	else
 		LCD_CMD_PORT_OUT &= ~_BV(LCD_RS);
- 44e:	11 98       	cbi	0x02, 1	; 2
+ 272:	11 98       	cbi	0x02, 1	; 2
 
 static inline uint8_t LCD_pulsoEnable(bool lectura){
 	
 	uint8_t dato;
 	
 	LCD_CMD_PORT_OUT |= _BV(LCD_E);
- 450:	13 9a       	sbi	0x02, 3	; 2
- 452:	81 e0       	ldi	r24, 0x01	; 1
- 454:	8a 95       	dec	r24
- 456:	f1 f7       	brne	.-4      	; 0x454 <LCD_recibirNibble+0x16>
+ 274:	13 9a       	sbi	0x02, 3	; 2
+ 276:	81 e0       	ldi	r24, 0x01	; 1
+ 278:	8a 95       	dec	r24
+ 27a:	f1 f7       	brne	.-4      	; 0x278 <LCD_recibirNibble+0x16>
 		#endif /* F_CPU > 2000000UL */
 		#endif /* F_CPU > 1000000UL */
 	#endif /* F_CPU > 4000000UL */
 
 	if(lectura)
 		dato = LCD_DTA_PORT_IN & LCD_DTA_BITS;
- 458:	80 b1       	in	r24, 0x00	; 0
+ 27c:	80 b1       	in	r24, 0x00	; 0
 	else
 		dato = 0x00;
 
 	LCD_CMD_PORT_OUT &= ~_BV(LCD_E);
- 45a:	13 98       	cbi	0x02, 3	; 2
+ 27e:	13 98       	cbi	0x02, 3	; 2
 	else
 		LCD_CMD_PORT_OUT &= ~_BV(LCD_RS);
 	
 	dato = LCD_pulsoEnable(true);
 
 	LCD_DTA_PORT_DDR |= LCD_DTA_BITS;
- 45c:	91 b1       	in	r25, 0x01	; 1
- 45e:	90 6f       	ori	r25, 0xF0	; 240
- 460:	91 b9       	out	0x01, r25	; 1
+ 280:	91 b1       	in	r25, 0x01	; 1
+ 282:	90 6f       	ori	r25, 0xF0	; 240
+ 284:	91 b9       	out	0x01, r25	; 1
 	LCD_CMD_PORT_OUT &= ~_BV(LCD_RW);
- 462:	12 98       	cbi	0x02, 2	; 2
+ 286:	12 98       	cbi	0x02, 2	; 2
 
 	return (dato & LCD_DTA_BITS)>>LCD_D4;
 
 
 }
- 464:	82 95       	swap	r24
- 466:	8f 70       	andi	r24, 0x0F	; 15
- 468:	08 95       	ret
+ 288:	82 95       	swap	r24
+ 28a:	8f 70       	andi	r24, 0x0F	; 15
+ 28c:	08 95       	ret
 
-0000046a <LCD_recibirByte>:
+0000028e <LCD_recibirByte>:
  * @PRE: Los parametros se encuentran bien definidos
  * @POS: Se reciben dos nibbles para completar el dato/instruccion proveniente del controlador del LCD
  * @RETURN: Void
  */
 
 uint8_t LCD_recibirByte(uint8_t rs){
- 46a:	0f 93       	push	r16
- 46c:	1f 93       	push	r17
- 46e:	18 2f       	mov	r17, r24
+ 28e:	0f 93       	push	r16
+ 290:	1f 93       	push	r17
+ 292:	18 2f       	mov	r17, r24
 	
 	uint8_t dato;
 	dato = LCD_recibirNibble(rs) << 4;
- 470:	0e 94 1f 02 	call	0x43e	; 0x43e <LCD_recibirNibble>
- 474:	08 2f       	mov	r16, r24
- 476:	02 95       	swap	r16
- 478:	00 7f       	andi	r16, 0xF0	; 240
+ 294:	0e 94 31 01 	call	0x262	; 0x262 <LCD_recibirNibble>
+ 298:	08 2f       	mov	r16, r24
+ 29a:	02 95       	swap	r16
+ 29c:	00 7f       	andi	r16, 0xF0	; 240
 	dato |= LCD_recibirNibble(rs);
- 47a:	81 2f       	mov	r24, r17
- 47c:	0e 94 1f 02 	call	0x43e	; 0x43e <LCD_recibirNibble>
+ 29e:	81 2f       	mov	r24, r17
+ 2a0:	0e 94 31 01 	call	0x262	; 0x262 <LCD_recibirNibble>
 	return dato;
 
 }
- 480:	80 2b       	or	r24, r16
- 482:	1f 91       	pop	r17
- 484:	0f 91       	pop	r16
- 486:	08 95       	ret
+ 2a4:	80 2b       	or	r24, r16
+ 2a6:	1f 91       	pop	r17
+ 2a8:	0f 91       	pop	r16
+ 2aa:	08 95       	ret
 
-00000488 <LCD_esperarListo>:
+000002ac <LCD_esperarListo>:
 /**
  * Este metodo genera una espera activa mientras se encuentra activada la bandera de ocupado
  * del controlador del LCD.
  */
 void LCD_esperarListo(void){
 	while( LCD_recibirByte(0) & LCD_BUSYFLAG);
- 488:	80 e0       	ldi	r24, 0x00	; 0
- 48a:	0e 94 35 02 	call	0x46a	; 0x46a <LCD_recibirByte>
- 48e:	87 fd       	sbrc	r24, 7
- 490:	fb cf       	rjmp	.-10     	; 0x488 <LCD_esperarListo>
+ 2ac:	80 e0       	ldi	r24, 0x00	; 0
+ 2ae:	0e 94 47 01 	call	0x28e	; 0x28e <LCD_recibirByte>
+ 2b2:	87 fd       	sbrc	r24, 7
+ 2b4:	fb cf       	rjmp	.-10     	; 0x2ac <LCD_esperarListo>
 }
- 492:	08 95       	ret
+ 2b6:	08 95       	ret
 
-00000494 <LCD_init>:
+000002b8 <LCD_init>:
  * @PRE: El voltaje ya se debe haber estabilizado tanto en el micro como en el LCD
  * @POS: Se inicializa el protocolo de comunicacion con el controlador del LCD con 
  *		 las opciones escogidas en el archivo 'defines.h'
  * @RETURN: Void
  */
 void LCD_init(void){
- 494:	0f 93       	push	r16
- 496:	1f 93       	push	r17
+ 2b8:	0f 93       	push	r16
+ 2ba:	1f 93       	push	r17
 	
 	LCD_CMD_PORT_DDR |= _BV(LCD_RS)|_BV(LCD_RW)|_BV(LCD_E);
- 498:	81 b1       	in	r24, 0x01	; 1
- 49a:	8e 60       	ori	r24, 0x0E	; 14
- 49c:	81 b9       	out	0x01, r24	; 1
+ 2bc:	81 b1       	in	r24, 0x01	; 1
+ 2be:	8e 60       	ori	r24, 0x0E	; 14
+ 2c0:	81 b9       	out	0x01, r24	; 1
 	LCD_DTA_PORT_DDR |= LCD_DTA_BITS;
- 49e:	81 b1       	in	r24, 0x01	; 1
- 4a0:	80 6f       	ori	r24, 0xF0	; 240
- 4a2:	81 b9       	out	0x01, r24	; 1
+ 2c2:	81 b1       	in	r24, 0x01	; 1
+ 2c4:	80 6f       	ori	r24, 0xF0	; 240
+ 2c6:	81 b9       	out	0x01, r24	; 1
     milliseconds can be achieved.
  */
 void
 _delay_loop_2(uint16_t __count)
 {
 	__asm__ volatile (
- 4a4:	80 e4       	ldi	r24, 0x40	; 64
- 4a6:	9c e9       	ldi	r25, 0x9C	; 156
- 4a8:	01 97       	sbiw	r24, 0x01	; 1
- 4aa:	f1 f7       	brne	.-4      	; 0x4a8 <LCD_init+0x14>
+ 2c8:	80 e4       	ldi	r24, 0x40	; 64
+ 2ca:	9c e9       	ldi	r25, 0x9C	; 156
+ 2cc:	01 97       	sbiw	r24, 0x01	; 1
+ 2ce:	f1 f7       	brne	.-4      	; 0x2cc <LCD_init+0x14>
 	_delay_ms(20);
 
 	// Se realiza una inicializacion por instrucciones para evitar problemas si
 	// la fuente no es capaz de generar una inicializacion por reset automatico
 
 	LCD_enviarNibble(0x03, 0);
- 4ac:	83 e0       	ldi	r24, 0x03	; 3
- 4ae:	60 e0       	ldi	r22, 0x00	; 0
- 4b0:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
- 4b4:	80 e1       	ldi	r24, 0x10	; 16
- 4b6:	97 e2       	ldi	r25, 0x27	; 39
- 4b8:	01 97       	sbiw	r24, 0x01	; 1
- 4ba:	f1 f7       	brne	.-4      	; 0x4b8 <LCD_init+0x24>
+ 2d0:	83 e0       	ldi	r24, 0x03	; 3
+ 2d2:	60 e0       	ldi	r22, 0x00	; 0
+ 2d4:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
+ 2d8:	80 e1       	ldi	r24, 0x10	; 16
+ 2da:	97 e2       	ldi	r25, 0x27	; 39
+ 2dc:	01 97       	sbiw	r24, 0x01	; 1
+ 2de:	f1 f7       	brne	.-4      	; 0x2dc <LCD_init+0x24>
 	_delay_ms(5);
 	LCD_enviarNibble(0x03, 0);
- 4bc:	83 e0       	ldi	r24, 0x03	; 3
- 4be:	60 e0       	ldi	r22, 0x00	; 0
- 4c0:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
- 4c4:	08 ee       	ldi	r16, 0xE8	; 232
- 4c6:	13 e0       	ldi	r17, 0x03	; 3
- 4c8:	c8 01       	movw	r24, r16
- 4ca:	01 97       	sbiw	r24, 0x01	; 1
- 4cc:	f1 f7       	brne	.-4      	; 0x4ca <LCD_init+0x36>
+ 2e0:	83 e0       	ldi	r24, 0x03	; 3
+ 2e2:	60 e0       	ldi	r22, 0x00	; 0
+ 2e4:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
+ 2e8:	08 ee       	ldi	r16, 0xE8	; 232
+ 2ea:	13 e0       	ldi	r17, 0x03	; 3
+ 2ec:	c8 01       	movw	r24, r16
+ 2ee:	01 97       	sbiw	r24, 0x01	; 1
+ 2f0:	f1 f7       	brne	.-4      	; 0x2ee <LCD_init+0x36>
 	_delay_ms(0.5);
 	LCD_enviarNibble(0x03, 0);
- 4ce:	83 e0       	ldi	r24, 0x03	; 3
- 4d0:	60 e0       	ldi	r22, 0x00	; 0
- 4d2:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
- 4d6:	c8 01       	movw	r24, r16
- 4d8:	01 97       	sbiw	r24, 0x01	; 1
- 4da:	f1 f7       	brne	.-4      	; 0x4d8 <LCD_init+0x44>
+ 2f2:	83 e0       	ldi	r24, 0x03	; 3
+ 2f4:	60 e0       	ldi	r22, 0x00	; 0
+ 2f6:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
+ 2fa:	c8 01       	movw	r24, r16
+ 2fc:	01 97       	sbiw	r24, 0x01	; 1
+ 2fe:	f1 f7       	brne	.-4      	; 0x2fc <LCD_init+0x44>
 	_delay_ms(0.5);
 
 
 	LCD_enviarNibble( LCD_FNSET>>4, 0);
- 4dc:	82 e0       	ldi	r24, 0x02	; 2
- 4de:	60 e0       	ldi	r22, 0x00	; 0
- 4e0:	0e 94 fa 01 	call	0x3f4	; 0x3f4 <LCD_enviarNibble>
+ 300:	82 e0       	ldi	r24, 0x02	; 2
+ 302:	60 e0       	ldi	r22, 0x00	; 0
+ 304:	0e 94 0c 01 	call	0x218	; 0x218 <LCD_enviarNibble>
 	LCD_esperarListo();
- 4e4:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 308:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 	LCD_enviarByte( LCD_FNSET, 0);
- 4e8:	88 e2       	ldi	r24, 0x28	; 40
- 4ea:	60 e0       	ldi	r22, 0x00	; 0
- 4ec:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
+ 30c:	88 e2       	ldi	r24, 0x28	; 40
+ 30e:	60 e0       	ldi	r22, 0x00	; 0
+ 310:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
 	LCD_esperarListo();
- 4f0:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 314:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 	LCD_enviarByte( LCD_DSPCTR, 0);
- 4f4:	8c e0       	ldi	r24, 0x0C	; 12
- 4f6:	60 e0       	ldi	r22, 0x00	; 0
- 4f8:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
+ 318:	8c e0       	ldi	r24, 0x0C	; 12
+ 31a:	60 e0       	ldi	r22, 0x00	; 0
+ 31c:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
 	LCD_esperarListo();
- 4fc:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 320:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 	LCD_enviarByte( LCD_ENTMOD, 0);
- 500:	86 e0       	ldi	r24, 0x06	; 6
- 502:	60 e0       	ldi	r22, 0x00	; 0
- 504:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
+ 324:	86 e0       	ldi	r24, 0x06	; 6
+ 326:	60 e0       	ldi	r22, 0x00	; 0
+ 328:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
 	LCD_esperarListo();
- 508:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 32c:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 	LCD_enviarByte( 0x01, 0);
- 50c:	81 e0       	ldi	r24, 0x01	; 1
- 50e:	60 e0       	ldi	r22, 0x00	; 0
- 510:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
+ 330:	81 e0       	ldi	r24, 0x01	; 1
+ 332:	60 e0       	ldi	r22, 0x00	; 0
+ 334:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
 	LCD_esperarListo();
- 514:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 338:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 	LCD_enviarByte( 0x02, 0);
- 518:	82 e0       	ldi	r24, 0x02	; 2
- 51a:	60 e0       	ldi	r22, 0x00	; 0
- 51c:	0e 94 0f 02 	call	0x41e	; 0x41e <LCD_enviarByte>
+ 33c:	82 e0       	ldi	r24, 0x02	; 2
+ 33e:	60 e0       	ldi	r22, 0x00	; 0
+ 340:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
 	LCD_esperarListo();
- 520:	0e 94 44 02 	call	0x488	; 0x488 <LCD_esperarListo>
+ 344:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
 
 }
- 524:	1f 91       	pop	r17
- 526:	0f 91       	pop	r16
- 528:	08 95       	ret
+ 348:	1f 91       	pop	r17
+ 34a:	0f 91       	pop	r16
+ 34c:	08 95       	ret
 
-0000052a <USART_init>:
+0000034e <USART0_init>:
  * @RETURN: Void
  */
-void USART_init(uint8_t puerto, uint8_t as){
+void USART0_init(){
 
-	// Nos aseguramos que la USART se encuentre inactiva
+	// Nos aseguramos que la USART se encuentre inactiva y configuracion default
+	UCSR0A = 0x20;
+ 34e:	80 e2       	ldi	r24, 0x20	; 32
+ 350:	80 93 c0 00 	sts	0x00C0, r24
 	UCSR0B = 0x00;
- 52a:	10 92 c1 00 	sts	0x00C1, r1
-	UCSR0A = 0x00;
- 52e:	10 92 c0 00 	sts	0x00C0, r1
+ 354:	e1 ec       	ldi	r30, 0xC1	; 193
+ 356:	f0 e0       	ldi	r31, 0x00	; 0
+ 358:	10 82       	st	Z, r1
+	UCSR0C = 0x06;
+ 35a:	a2 ec       	ldi	r26, 0xC2	; 194
+ 35c:	b0 e0       	ldi	r27, 0x00	; 0
+ 35e:	86 e0       	ldi	r24, 0x06	; 6
+ 360:	8c 93       	st	X, r24
+	
 
+	// Asignamos el valor del valor de la tasa de transmision en baudios
+	UBRR0L=UBRRVAL;			//Parte baja del byte
+ 362:	8f ec       	ldi	r24, 0xCF	; 207
+ 364:	80 93 c4 00 	sts	0x00C4, r24
+	UBRR0H=(UBRRVAL>>8);	//Parte alta del byte
+ 368:	10 92 c5 00 	sts	0x00C5, r1
+		case 7: UCSR0C &= ~(_BV(UCSZ00));break;
+		case 9: UCSR0B|= _BV(UCSZ02);break;
+		default:break;
+	}
+
+	UCSR0B |= (INT_TX_COMPLETA)?_BV(TXCIE0):0;
+ 36c:	80 81       	ld	r24, Z
+ 36e:	80 64       	ori	r24, 0x40	; 64
+ 370:	80 83       	st	Z, r24
+	UCSR0B |= (INT_RX_COMPLETA)?_BV(RXCIE0):0;
+ 372:	80 81       	ld	r24, Z
+ 374:	80 83       	st	Z, r24
+
+	switch(CONTROL_PARIEDAD){
+		case 1: UCSR0C |= _BV(UPM01); break;
+ 376:	8c 91       	ld	r24, X
+ 378:	80 62       	ori	r24, 0x20	; 32
+ 37a:	8c 93       	st	X, r24
+		default: break;
+	}
+
+	if(NUM_STOP==2) UCSR0C |= _BV(USBS0);
+	if(CLK_POL) UCSR0C |= _BV(UCPOL0);
+}
+ 37c:	08 95       	ret
+
+0000037e <USART0_EnableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_EnableTx(){
+	UCSR0B |= _BV(TXEN0);
+ 37e:	e1 ec       	ldi	r30, 0xC1	; 193
+ 380:	f0 e0       	ldi	r31, 0x00	; 0
+ 382:	80 81       	ld	r24, Z
+ 384:	88 60       	ori	r24, 0x08	; 8
+ 386:	80 83       	st	Z, r24
+}
+ 388:	08 95       	ret
+
+0000038a <USART0_DisableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_DisableTx(){
+	UCSR0B &= ~_BV(TXEN0);
+ 38a:	e1 ec       	ldi	r30, 0xC1	; 193
+ 38c:	f0 e0       	ldi	r31, 0x00	; 0
+ 38e:	80 81       	ld	r24, Z
+ 390:	87 7f       	andi	r24, 0xF7	; 247
+ 392:	80 83       	st	Z, r24
+}
+ 394:	08 95       	ret
+
+00000396 <USART0_EnableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para Recepsion 
+ * @RETURN: Void
+ */
+void USART0_EnableRx(){
+	UCSR0B |= _BV(RXEN0);
+ 396:	e1 ec       	ldi	r30, 0xC1	; 193
+ 398:	f0 e0       	ldi	r31, 0x00	; 0
+ 39a:	80 81       	ld	r24, Z
+ 39c:	80 61       	ori	r24, 0x10	; 16
+ 39e:	80 83       	st	Z, r24
+}
+ 3a0:	08 95       	ret
+
+000003a2 <USART0_DisableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para Recepcion 
+ * @RETURN: Void
+ */
+ void USART0_DisableRx(){
+ 	UCSR0B &= ~_BV(RXEN0);
+ 3a2:	e1 ec       	ldi	r30, 0xC1	; 193
+ 3a4:	f0 e0       	ldi	r31, 0x00	; 0
+ 3a6:	80 81       	ld	r24, Z
+ 3a8:	8f 7e       	andi	r24, 0xEF	; 239
+ 3aa:	80 83       	st	Z, r24
+ }
+ 3ac:	08 95       	ret
+
+000003ae <USART0_Enviar>:
+  * @PARAMS uint8_t dato -> Dato que se desea enviar
+  * @PRE:   El puerto USART0 se encuentra configurado y habilitado para el envio de mensajes+
+  * @POST:  Se coloca el mensaje en el buffer de salida de la USART0
+  * @RETURN: Void
+  */
+void USART0_Enviar(uint8_t dato){
+ 3ae:	98 2f       	mov	r25, r24
+
+	// Espera a que se se termina la transmision anterior si esta en curso
+	while ( !( UCSR0A & (1<<UDRE0)) );
+ 3b0:	80 91 c0 00 	lds	r24, 0x00C0
+ 3b4:	85 ff       	sbrs	r24, 5
+ 3b6:	fc cf       	rjmp	.-8      	; 0x3b0 <USART0_Enviar+0x2>
+
+	// Coloca el dato a enviar en el buffer de salida
+	UDR0 = dato;
+ 3b8:	90 93 c6 00 	sts	0x00C6, r25
 
 }
- 532:	08 95       	ret
+ 3bc:	08 95       	ret
 
-00000534 <_exit>:
- 534:	f8 94       	cli
+000003be <USART0_Recibir>:
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t USART0_Recibir(){
 
-00000536 <__stop_program>:
- 536:	ff cf       	rjmp	.-2      	; 0x536 <__stop_program>
+	// Se espera a que se reciba un mensaje si esta no ha llegado todavia
+	while ( !(UCSR0A & (1<<RXC0)) );
+ 3be:	80 91 c0 00 	lds	r24, 0x00C0
+ 3c2:	87 ff       	sbrs	r24, 7
+ 3c4:	fc cf       	rjmp	.-8      	; 0x3be <USART0_Recibir>
+
+	return UDR0;
+ 3c6:	80 91 c6 00 	lds	r24, 0x00C6
+}
+ 3ca:	08 95       	ret
+
+000003cc <_exit>:
+ 3cc:	f8 94       	cli
+
+000003ce <__stop_program>:
+ 3ce:	ff cf       	rjmp	.-2      	; 0x3ce <__stop_program>

@@ -40,7 +40,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 INCLUDES = -I"C:\Users\Manuel Vieda\Documents\Taller de Electronica\AVR\ControlDiplayExterno\." 
 
 ## Objects that must be built in order to link
-OBJECTS = ControlDiplayExterno.o 
+OBJECTS = ControlDiplayExterno.o USART.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -50,6 +50,9 @@ all: $(TARGET) ControlDiplayExterno.hex ControlDiplayExterno.eep ControlDiplayEx
 
 ## Compile
 ControlDiplayExterno.o: ../ControlDiplayExterno.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+USART.o: ../includes/USART.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
