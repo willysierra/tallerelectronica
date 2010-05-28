@@ -1,0 +1,647 @@
+
+ControlParqueadero168.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000002a0  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .debug_aranges 00000080  00000000  00000000  000002f4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  2 .debug_pubnames 00000136  00000000  00000000  00000374  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_info   00000720  00000000  00000000  000004aa  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_abbrev 00000332  00000000  00000000  00000bca  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_line   000006ec  00000000  00000000  00000efc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_frame  00000120  00000000  00000000  000015e8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_str    0000023d  00000000  00000000  00001708  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_loc    000001c0  00000000  00000000  00001945  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   8:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+   c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  10:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  14:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  18:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  1c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  20:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  24:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  28:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  2c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  30:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  34:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  38:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  3c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  40:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  44:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  48:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  4c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  50:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  54:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  58:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  5c:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  60:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+  64:	0c 94 3e 00 	jmp	0x7c	; 0x7c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d4 e0       	ldi	r29, 0x04	; 4
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+  74:	0e 94 4c 00 	call	0x98	; 0x98 <main>
+  78:	0c 94 4e 01 	jmp	0x29c	; 0x29c <_exit>
+
+0000007c <__bad_interrupt>:
+  7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000080 <initHardware>:
+ * @POST:   Se inicializa el hardware. Listo para uso rutinario
+ * @RETURN: Void
+ */
+void initHardware(){
+
+DDRD = 0xFF;
+  80:	8f ef       	ldi	r24, 0xFF	; 255
+  82:	8a b9       	out	0x0a, r24	; 10
+PORTD = 0xFF;
+  84:	8b b9       	out	0x0b, r24	; 11
+PORTD  = 0xAA;
+  86:	8a ea       	ldi	r24, 0xAA	; 170
+  88:	8b b9       	out	0x0b, r24	; 11
+
+	
+	SPI_init();
+  8a:	0e 94 e3 00 	call	0x1c6	; 0x1c6 <SPI_init>
+	
+PORTD = 0x55;
+  8e:	85 e5       	ldi	r24, 0x55	; 85
+  90:	8b b9       	out	0x0b, r24	; 11
+SD_init();
+  92:	0e 94 ab 00 	call	0x156	; 0x156 <SD_init>
+
+
+}
+  96:	08 95       	ret
+
+00000098 <main>:
+
+//  ------------------------------------------------------------------------
+//	PROGRAMA PRINCIPAL DEL SISITEMA
+//  ------------------------------------------------------------------------
+
+int main(void) {
+  98:	80 e9       	ldi	r24, 0x90	; 144
+  9a:	91 e0       	ldi	r25, 0x01	; 1
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+  9c:	28 ec       	ldi	r18, 0xC8	; 200
+  9e:	30 e0       	ldi	r19, 0x00	; 0
+  a0:	f9 01       	movw	r30, r18
+  a2:	31 97       	sbiw	r30, 0x01	; 1
+  a4:	f1 f7       	brne	.-4      	; 0xa2 <main+0xa>
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+		{
+			// wait 1/10 ms
+			_delay_loop_2(((F_CPU) / 4e3) / 10);
+			__ticks --;
+  a6:	01 97       	sbiw	r24, 0x01	; 1
+		__ticks = 1;
+	else if (__tmp > 65535)
+	{
+		//	__ticks = requested delay in 1/10 ms
+		__ticks = (uint16_t) (__ms * 10.0);
+		while(__ticks)
+  a8:	d9 f7       	brne	.-10     	; 0xa0 <main+0x8>
+
+
+	_delay_ms(40);
+	initHardware();
+  aa:	0e 94 40 00 	call	0x80	; 0x80 <initHardware>
+  ae:	ff cf       	rjmp	.-2      	; 0xae <main+0x16>
+
+000000b0 <SD_EnviarComando>:
+
+}
+
+
+
+uint8_t SD_EnviarComando(uint8_t cmd,  uint32_t arg){
+  b0:	cf 92       	push	r12
+  b2:	df 92       	push	r13
+  b4:	ef 92       	push	r14
+  b6:	ff 92       	push	r15
+  b8:	0f 93       	push	r16
+  ba:	1f 93       	push	r17
+  bc:	7a 01       	movw	r14, r20
+  be:	8b 01       	movw	r16, r22
+
+
+	PORTD = 0x00;
+  c0:	1b b8       	out	0x0b, r1	; 11
+	
+	uint8_t res;
+
+
+	SD_CS_ASSERT;
+  c2:	2a 98       	cbi	0x05, 2	; 5
+  c4:	38 ec       	ldi	r19, 0xC8	; 200
+  c6:	c3 2e       	mov	r12, r19
+  c8:	d1 2c       	mov	r13, r1
+  ca:	c6 01       	movw	r24, r12
+  cc:	01 97       	sbiw	r24, 0x01	; 1
+  ce:	f1 f7       	brne	.-4      	; 0xcc <SD_EnviarComando+0x1c>
+	_delay_us(100);
+
+	PORTD = 0x01;
+  d0:	81 e0       	ldi	r24, 0x01	; 1
+  d2:	8b b9       	out	0x0b, r24	; 11
+
+	SPI_Enviar((0x40));
+  d4:	80 e4       	ldi	r24, 0x40	; 64
+  d6:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(arg>>24);
+  da:	81 2f       	mov	r24, r17
+  dc:	99 27       	eor	r25, r25
+  de:	aa 27       	eor	r26, r26
+  e0:	bb 27       	eor	r27, r27
+  e2:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(arg>>16);
+  e6:	c8 01       	movw	r24, r16
+  e8:	aa 27       	eor	r26, r26
+  ea:	bb 27       	eor	r27, r27
+  ec:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(arg>>8);
+  f0:	bb 27       	eor	r27, r27
+  f2:	a1 2f       	mov	r26, r17
+  f4:	90 2f       	mov	r25, r16
+  f6:	8f 2d       	mov	r24, r15
+  f8:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(arg);
+  fc:	8e 2d       	mov	r24, r14
+  fe:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+
+	
+	SPI_Enviar(0x95);
+ 102:	85 e9       	ldi	r24, 0x95	; 149
+ 104:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+
+	PORTD = 0x02;
+ 108:	82 e0       	ldi	r24, 0x02	; 2
+ 10a:	8b b9       	out	0x0b, r24	; 11
+ 10c:	c6 01       	movw	r24, r12
+ 10e:	01 97       	sbiw	r24, 0x01	; 1
+ 110:	f1 f7       	brne	.-4      	; 0x10e <SD_EnviarComando+0x5e>
+
+	_delay_us(100);
+	res = SPI_Recibir();
+ 112:	0e 94 08 01 	call	0x210	; 0x210 <SPI_Recibir>
+ 116:	08 2f       	mov	r16, r24
+
+	PORTD = 0x03;
+ 118:	83 e0       	ldi	r24, 0x03	; 3
+ 11a:	8b b9       	out	0x0b, r24	; 11
+ 11c:	10 e0       	ldi	r17, 0x00	; 0
+ 11e:	04 c0       	rjmp	.+8      	; 0x128 <SD_EnviarComando+0x78>
+
+	uint8_t i =0x00;
+	while((i<0x6F)&(res==0xFF)){
+		i++;
+ 120:	1f 5f       	subi	r17, 0xFF	; 255
+		res = SPI_Recibir();
+ 122:	0e 94 08 01 	call	0x210	; 0x210 <SPI_Recibir>
+ 126:	08 2f       	mov	r16, r24
+	res = SPI_Recibir();
+
+	PORTD = 0x03;
+
+	uint8_t i =0x00;
+	while((i<0x6F)&(res==0xFF)){
+ 128:	1f 36       	cpi	r17, 0x6F	; 111
+ 12a:	10 f4       	brcc	.+4      	; 0x130 <SD_EnviarComando+0x80>
+ 12c:	0f 3f       	cpi	r16, 0xFF	; 255
+ 12e:	c1 f3       	breq	.-16     	; 0x120 <SD_EnviarComando+0x70>
+		i++;
+		res = SPI_Recibir();
+	}
+
+
+	SPI_Recibir();
+ 130:	0e 94 08 01 	call	0x210	; 0x210 <SPI_Recibir>
+
+	PORTD = 0xF4;;
+ 134:	84 ef       	ldi	r24, 0xF4	; 244
+ 136:	8b b9       	out	0x0b, r24	; 11
+
+	SD_CS_DEASSERT;
+ 138:	2a 9a       	sbi	0x05, 2	; 5
+
+	SPI_Enviar(0xFF);
+ 13a:	8f ef       	ldi	r24, 0xFF	; 255
+ 13c:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(0xFF);
+ 140:	8f ef       	ldi	r24, 0xFF	; 255
+ 142:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	return res;
+
+
+
+
+}
+ 146:	80 2f       	mov	r24, r16
+ 148:	1f 91       	pop	r17
+ 14a:	0f 91       	pop	r16
+ 14c:	ff 90       	pop	r15
+ 14e:	ef 90       	pop	r14
+ 150:	df 90       	pop	r13
+ 152:	cf 90       	pop	r12
+ 154:	08 95       	ret
+
+00000156 <SD_init>:
+#include "SPI.h"
+
+
+
+
+uint8_t SD_init(void){
+ 156:	0f 93       	push	r16
+ 158:	1f 93       	push	r17
+
+	uint8_t SD_res;
+	uint8_t retry=0x00;
+
+
+	SD_CS_DEASSERT;
+ 15a:	2a 9a       	sbi	0x05, 2	; 5
+
+
+	SD_CS_ASSERT;
+ 15c:	2a 98       	cbi	0x05, 2	; 5
+ 15e:	88 ec       	ldi	r24, 0xC8	; 200
+ 160:	90 e0       	ldi	r25, 0x00	; 0
+ 162:	01 97       	sbiw	r24, 0x01	; 1
+ 164:	f1 f7       	brne	.-4      	; 0x162 <SD_init+0xc>
+ 166:	00 e0       	ldi	r16, 0x00	; 0
+	_delay_us(100);
+	
+	uint8_t i;
+	for(i=0; i<10; i++){
+		SPI_Enviar(0xFF);
+ 168:	8f ef       	ldi	r24, 0xFF	; 255
+ 16a:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+
+	SD_CS_ASSERT;
+	_delay_us(100);
+	
+	uint8_t i;
+	for(i=0; i<10; i++){
+ 16e:	0f 5f       	subi	r16, 0xFF	; 255
+ 170:	0a 30       	cpi	r16, 0x0A	; 10
+ 172:	d1 f7       	brne	.-12     	; 0x168 <SD_init+0x12>
+ 174:	08 ec       	ldi	r16, 0xC8	; 200
+ 176:	10 e0       	ldi	r17, 0x00	; 0
+ 178:	c8 01       	movw	r24, r16
+ 17a:	01 97       	sbiw	r24, 0x01	; 1
+ 17c:	f1 f7       	brne	.-4      	; 0x17a <SD_init+0x24>
+		SPI_Enviar(0xFF);
+	}
+	_delay_us(100);
+	SD_CS_DEASSERT;
+ 17e:	2a 9a       	sbi	0x05, 2	; 5
+ 180:	c8 01       	movw	r24, r16
+ 182:	01 97       	sbiw	r24, 0x01	; 1
+ 184:	f1 f7       	brne	.-4      	; 0x182 <SD_init+0x2c>
+	_delay_us(100);
+
+	SPI_Enviar(0xFF);
+ 186:	8f ef       	ldi	r24, 0xFF	; 255
+ 188:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+	SPI_Enviar(0xFF);
+ 18c:	8f ef       	ldi	r24, 0xFF	; 255
+ 18e:	0e 94 02 01 	call	0x204	; 0x204 <SPI_Enviar>
+ 192:	c8 01       	movw	r24, r16
+ 194:	01 97       	sbiw	r24, 0x01	; 1
+ 196:	f1 f7       	brne	.-4      	; 0x194 <SD_init+0x3e>
+
+	_delay_us(100);
+
+	PORTD = 0xFF;
+ 198:	8f ef       	ldi	r24, 0xFF	; 255
+ 19a:	8b b9       	out	0x0b, r24	; 11
+ 19c:	00 e0       	ldi	r16, 0x00	; 0
+	SD_res = 0xFF;
+
+
+
+	do{
+		SD_res = SD_EnviarComando(1, 0);
+ 19e:	81 e0       	ldi	r24, 0x01	; 1
+ 1a0:	40 e0       	ldi	r20, 0x00	; 0
+ 1a2:	50 e0       	ldi	r21, 0x00	; 0
+ 1a4:	60 e0       	ldi	r22, 0x00	; 0
+ 1a6:	70 e0       	ldi	r23, 0x00	; 0
+ 1a8:	0e 94 58 00 	call	0xb0	; 0xb0 <SD_EnviarComando>
+		retry++;
+ 1ac:	0f 5f       	subi	r16, 0xFF	; 255
+		if(retry>0x20){
+ 1ae:	01 32       	cpi	r16, 0x21	; 33
+ 1b0:	19 f4       	brne	.+6      	; 0x1b8 <SD_init+0x62>
+			PORTD = SD_res;
+ 1b2:	8b b9       	out	0x0b, r24	; 11
+ 1b4:	81 e0       	ldi	r24, 0x01	; 1
+ 1b6:	04 c0       	rjmp	.+8      	; 0x1c0 <SD_init+0x6a>
+			return 1;
+		}
+
+	}while(SD_res != 0x01 );
+ 1b8:	81 30       	cpi	r24, 0x01	; 1
+ 1ba:	89 f7       	brne	.-30     	; 0x19e <SD_init+0x48>
+	
+	PORTD = SD_res;
+ 1bc:	8b b9       	out	0x0b, r24	; 11
+ 1be:	80 e0       	ldi	r24, 0x00	; 0
+
+	return 0;
+
+}
+ 1c0:	1f 91       	pop	r17
+ 1c2:	0f 91       	pop	r16
+ 1c4:	08 95       	ret
+
+000001c6 <SPI_init>:
+void SPI_init(void){
+
+	if(SPI_MSTR){
+		// Se inicializa el microcontrolador como Maestro
+		// Se configura el pin MISO como entrada; SCK, MOSI y SS como salida
+		SPI_DDR &= ~_BV(SPI_MISO);
+ 1c6:	24 98       	cbi	0x04, 4	; 4
+		SPI_DDR |= _BV(SPI_SS)|_BV(SPI_SCK)|_BV(SPI_MOSI);
+ 1c8:	84 b1       	in	r24, 0x04	; 4
+ 1ca:	8c 62       	ori	r24, 0x2C	; 44
+ 1cc:	84 b9       	out	0x04, r24	; 4
+		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
+ 1ce:	85 b1       	in	r24, 0x05	; 5
+ 1d0:	8c 63       	ori	r24, 0x3C	; 60
+ 1d2:	85 b9       	out	0x05, r24	; 5
+		SPI_DDR |= _BV(SPI_MISO);
+		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
+
+	}
+
+	SPCR = 0x00;
+ 1d4:	1c bc       	out	0x2c, r1	; 44
+	SPCR |= (SPI_INT)?_BV(SPIE):0;
+ 1d6:	8c b5       	in	r24, 0x2c	; 44
+ 1d8:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_DATA_ORDER)?_BV(DORD):0;
+ 1da:	8c b5       	in	r24, 0x2c	; 44
+ 1dc:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_MSTR)?_BV(MSTR):0;
+ 1de:	8c b5       	in	r24, 0x2c	; 44
+ 1e0:	80 61       	ori	r24, 0x10	; 16
+ 1e2:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_CPOL)?_BV(CPOL):0;
+ 1e4:	8c b5       	in	r24, 0x2c	; 44
+ 1e6:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_CHPA)?_BV(CPHA):0;
+ 1e8:	8c b5       	in	r24, 0x2c	; 44
+ 1ea:	8c bd       	out	0x2c, r24	; 44
+
+	switch(SPI_SPR){
+		case 16:SPCR |= _BV(SPR0);break;
+		case 64:SPCR |= _BV(SPR1);break;
+ 1ec:	8c b5       	in	r24, 0x2c	; 44
+ 1ee:	82 60       	ori	r24, 0x02	; 2
+ 1f0:	8c bd       	out	0x2c, r24	; 44
+		case 128:SPCR |= _BV(SPR0)|_BV(SPR1);break;
+		default:break;
+	}
+
+	SPSR = 0x00;
+ 1f2:	1d bc       	out	0x2d, r1	; 45
+	SPSR |= (SPI_2X)?_BV(SPI2X):0;
+ 1f4:	8d b5       	in	r24, 0x2d	; 45
+ 1f6:	8d bd       	out	0x2d, r24	; 45
+
+	SPCR |= _BV(SPE);
+ 1f8:	8c b5       	in	r24, 0x2c	; 44
+ 1fa:	80 64       	ori	r24, 0x40	; 64
+ 1fc:	8c bd       	out	0x2c, r24	; 44
+
+	SPCR = 0x052;
+ 1fe:	82 e5       	ldi	r24, 0x52	; 82
+ 200:	8c bd       	out	0x2c, r24	; 44
+
+}
+ 202:	08 95       	ret
+
+00000204 <SPI_Enviar>:
+ * @RETURN: Void
+ */
+uint8_t SPI_Enviar(uint8_t dato){
+	
+	// Se inicializa la transmision
+	SPDR = dato;
+ 204:	8e bd       	out	0x2e, r24	; 46
+	// Se espera a que la transmision se complete
+	while(!(SPSR & _BV(SPIF)));
+ 206:	0d b4       	in	r0, 0x2d	; 45
+ 208:	07 fe       	sbrs	r0, 7
+ 20a:	fd cf       	rjmp	.-6      	; 0x206 <SPI_Enviar+0x2>
+	dato = SPDR;
+ 20c:	8e b5       	in	r24, 0x2e	; 46
+	return dato;
+}
+ 20e:	08 95       	ret
+
+00000210 <SPI_Recibir>:
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t SPI_Recibir(){
+
+	uint8_t data;
+	SPDR = 0xFF;
+ 210:	8f ef       	ldi	r24, 0xFF	; 255
+ 212:	8e bd       	out	0x2e, r24	; 46
+	// Se espera a que la transmision se complete
+	while(!(SPSR & _BV(SPIF)));
+ 214:	0d b4       	in	r0, 0x2d	; 45
+ 216:	07 fe       	sbrs	r0, 7
+ 218:	fd cf       	rjmp	.-6      	; 0x214 <SPI_Recibir+0x4>
+	data = SPDR;
+ 21a:	8e b5       	in	r24, 0x2e	; 46
+	return data;
+}
+ 21c:	08 95       	ret
+
+0000021e <USART0_init>:
+ * @RETURN: Void
+ */
+void USART0_init(){
+
+	// Nos aseguramos que la USART se encuentre inactiva y configuracion default
+	UCSR0A = 0x20;
+ 21e:	80 e2       	ldi	r24, 0x20	; 32
+ 220:	80 93 c0 00 	sts	0x00C0, r24
+	UCSR0B = 0x00;
+ 224:	e1 ec       	ldi	r30, 0xC1	; 193
+ 226:	f0 e0       	ldi	r31, 0x00	; 0
+ 228:	10 82       	st	Z, r1
+	UCSR0C = 0x06;
+ 22a:	a2 ec       	ldi	r26, 0xC2	; 194
+ 22c:	b0 e0       	ldi	r27, 0x00	; 0
+ 22e:	86 e0       	ldi	r24, 0x06	; 6
+ 230:	8c 93       	st	X, r24
+	
+
+	// Asignamos el valor del valor de la tasa de transmision en baudios
+	UBRR0L=UBRRVAL;			//Parte baja del byte
+ 232:	8f ec       	ldi	r24, 0xCF	; 207
+ 234:	80 93 c4 00 	sts	0x00C4, r24
+	UBRR0H=(UBRRVAL>>8);	//Parte alta del byte
+ 238:	10 92 c5 00 	sts	0x00C5, r1
+		case 7: UCSR0C &= ~(_BV(UCSZ00));break;
+		case 9: UCSR0B|= _BV(UCSZ02);break;
+		default:break;
+	}
+
+	UCSR0B |= (INT_TX_COMPLETA)?_BV(TXCIE0):0;
+ 23c:	80 81       	ld	r24, Z
+ 23e:	80 64       	ori	r24, 0x40	; 64
+ 240:	80 83       	st	Z, r24
+	UCSR0B |= (INT_RX_COMPLETA)?_BV(RXCIE0):0;
+ 242:	80 81       	ld	r24, Z
+ 244:	80 83       	st	Z, r24
+
+	switch(CONTROL_PARIEDAD){
+		case 1: UCSR0C |= _BV(UPM01); break;
+ 246:	8c 91       	ld	r24, X
+ 248:	80 62       	ori	r24, 0x20	; 32
+ 24a:	8c 93       	st	X, r24
+		default: break;
+	}
+
+	if(NUM_STOP==2) UCSR0C |= _BV(USBS0);
+	if(CLK_POL) UCSR0C |= _BV(UCPOL0);
+}
+ 24c:	08 95       	ret
+
+0000024e <USART0_EnableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_EnableTx(){
+	UCSR0B |= _BV(TXEN0);
+ 24e:	e1 ec       	ldi	r30, 0xC1	; 193
+ 250:	f0 e0       	ldi	r31, 0x00	; 0
+ 252:	80 81       	ld	r24, Z
+ 254:	88 60       	ori	r24, 0x08	; 8
+ 256:	80 83       	st	Z, r24
+}
+ 258:	08 95       	ret
+
+0000025a <USART0_DisableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_DisableTx(){
+	UCSR0B &= ~_BV(TXEN0);
+ 25a:	e1 ec       	ldi	r30, 0xC1	; 193
+ 25c:	f0 e0       	ldi	r31, 0x00	; 0
+ 25e:	80 81       	ld	r24, Z
+ 260:	87 7f       	andi	r24, 0xF7	; 247
+ 262:	80 83       	st	Z, r24
+}
+ 264:	08 95       	ret
+
+00000266 <USART0_EnableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para Recepsion 
+ * @RETURN: Void
+ */
+void USART0_EnableRx(){
+	UCSR0B |= _BV(RXEN0);
+ 266:	e1 ec       	ldi	r30, 0xC1	; 193
+ 268:	f0 e0       	ldi	r31, 0x00	; 0
+ 26a:	80 81       	ld	r24, Z
+ 26c:	80 61       	ori	r24, 0x10	; 16
+ 26e:	80 83       	st	Z, r24
+}
+ 270:	08 95       	ret
+
+00000272 <USART0_DisableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para Recepcion 
+ * @RETURN: Void
+ */
+ void USART0_DisableRx(){
+ 	UCSR0B &= ~_BV(RXEN0);
+ 272:	e1 ec       	ldi	r30, 0xC1	; 193
+ 274:	f0 e0       	ldi	r31, 0x00	; 0
+ 276:	80 81       	ld	r24, Z
+ 278:	8f 7e       	andi	r24, 0xEF	; 239
+ 27a:	80 83       	st	Z, r24
+ }
+ 27c:	08 95       	ret
+
+0000027e <USART0_Enviar>:
+  * @PARAMS uint8_t dato -> Dato que se desea enviar
+  * @PRE:   El puerto USART0 se encuentra configurado y habilitado para el envio de mensajes+
+  * @POST:  Se coloca el mensaje en el buffer de salida de la USART0
+  * @RETURN: Void
+  */
+void USART0_Enviar(uint8_t dato){
+ 27e:	98 2f       	mov	r25, r24
+
+	// Espera a que se se termina la transmision anterior si esta en curso
+	while ( !( UCSR0A & (1<<UDRE0)) );
+ 280:	80 91 c0 00 	lds	r24, 0x00C0
+ 284:	85 ff       	sbrs	r24, 5
+ 286:	fc cf       	rjmp	.-8      	; 0x280 <USART0_Enviar+0x2>
+
+	// Coloca el dato a enviar en el buffer de salida
+	UDR0 = dato;
+ 288:	90 93 c6 00 	sts	0x00C6, r25
+
+}
+ 28c:	08 95       	ret
+
+0000028e <USART0_Recibir>:
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t USART0_Recibir(){
+
+	// Se espera a que se reciba un mensaje si esta no ha llegado todavia
+	while ( !(UCSR0A & (1<<RXC0)) );
+ 28e:	80 91 c0 00 	lds	r24, 0x00C0
+ 292:	87 ff       	sbrs	r24, 7
+ 294:	fc cf       	rjmp	.-8      	; 0x28e <USART0_Recibir>
+
+	return UDR0;
+ 296:	80 91 c6 00 	lds	r24, 0x00C6
+}
+ 29a:	08 95       	ret
+
+0000029c <_exit>:
+ 29c:	f8 94       	cli
+
+0000029e <__stop_program>:
+ 29e:	ff cf       	rjmp	.-2      	; 0x29e <__stop_program>
