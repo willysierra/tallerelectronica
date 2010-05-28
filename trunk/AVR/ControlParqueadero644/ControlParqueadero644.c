@@ -28,6 +28,9 @@
 
 #include "includes/lcd_HD44780_4.h"
 #include "includes/USART.h"
+#include "includes/SPI.h"
+#include "includes/I2C.h"
+#include "includes/SDCard.h"
 
 //  ------------------------------------------------------------------------
 //	VARIABLES GLOBALES DEL SISTEMA / BUFFERS
@@ -50,9 +53,7 @@ ISR(USART0_RX_vect)
 
 ISR(USART0_TX_vect) 
 {
-	uint8_t dato;
 	LCD_enviarDTA(0xFF);LCD_esperarListo();
-
 }
 
 

@@ -19,7 +19,8 @@ ControlParqueadero644.o: ../ControlParqueadero644.c ../includes/defines.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h \
-  ../includes/lcd_HD44780_4.h ../includes/USART.h
+  ../includes/lcd_HD44780_4.h ../includes/USART.h ../includes/SPI.h \
+  ../includes/I2C.h ../includes/SDCard.h
 
 ../includes/defines.h:
 
@@ -66,3 +67,9 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h:
 ../includes/lcd_HD44780_4.h:
 
 ../includes/USART.h:
+
+../includes/SPI.h:
+
+../includes/I2C.h:
+
+../includes/SDCard.h:

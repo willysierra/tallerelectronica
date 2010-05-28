@@ -1,0 +1,56 @@
+/**
+ * -------------------------------------------------------------------
+ * Copyright (c) 2010 - Todos los derechos reservados
+ * Manuel Eduardo Vieda Salomon <me.vieda372@gmail.com
+ * Ingeniero Electronico, Ingeniero de Sistemas y Computacion
+ * Universidad de los Andes. Bogota, Colombia.
+ * -------------------------------------------------------------------
+ *
+ * Archivo:				SDCard.h
+ * Fecha Creacion:		Mayo  28 de 2010
+ * Fecha Modificacion:	Mayo  28 de 2010
+ * Version (Revision):	0.1 (1)
+ *
+ * Descripcion:	Libreria que facilita el uso de un modulo de memoria con
+ *              una tarjeta SD en modo SPI con un microcontroladores ATmega
+ *
+ *
+ * --------------------------------------------------------------------
+ * LICENCIA:
+ * 
+ * Se encuentra totalmente permitido el uso y distribucion en forma de codigo y
+ * binario bajo la condicion de cumplir con las siguientes condiciones de uso:
+ *
+ *   - Toda redistribucion del codigo fuente debe mantener sin ningun cambio la
+ *     presente notificacion de copyright, la lista de condiciones y la descripcion
+ *     del archivo.
+ *
+ *   - Ni el nombre del poseedor del presente copyright o el nombre
+ *     de cualquier colaborador puede ser usado para la promocion de productos
+ *     derivados de este programa/codigo sin una autorizacion escrita y especifica
+ *     por parte del autor.
+ *
+ *   - Si considera que este contenido le ha sido bastante util, puedes invitarme
+ *     a una ronda de cervezas. (The Beer-Ware License, Revision 42)
+ * ---------------------------------------------------------------------
+ */
+
+
+#ifndef _SDCard_H_
+#define _SDCard_H_
+
+
+
+//-------------------------------------------------------------------------------
+//  PARAMAETROS DE CONFIGURACION QUE PUEDEN SER MODIFICADOS POR EL USUARIO
+//-------------------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------------------
+//  FUNCIONES OFRECIDAS QUE PUEDEN SER LLAMADAS POR EL USUARIO
+//-------------------------------------------------------------------------------
+
+
+
+#endif /* _SDCard_H_ */
