@@ -1,0 +1,19 @@
+[Eagle]
+Version="05 07 00"
+Platform="Windows"
+Serial="41D9B559A6-LSR-WLM-NCP"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+
+[Win_1]
+Type="Control Panel"
+Loc="75 75 674 474"
+State=2
+Number=0
+
+[Desktop]
+Screen="1366 768"
+Window="Win_1"
