@@ -3,25 +3,25 @@ ControlParqueadero644.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000003d0  00000000  00000000  00000054  2**1
+  0 .text         0000041e  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .debug_aranges 00000060  00000000  00000000  00000424  2**0
+  1 .debug_aranges 00000080  00000000  00000000  00000472  2**0
                   CONTENTS, READONLY, DEBUGGING
-  2 .debug_pubnames 00000140  00000000  00000000  00000484  2**0
+  2 .debug_pubnames 0000017e  00000000  00000000  000004f2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_info   0000094e  00000000  00000000  000005c4  2**0
+  3 .debug_info   00000ab4  00000000  00000000  00000670  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_abbrev 00000348  00000000  00000000  00000f12  2**0
+  4 .debug_abbrev 0000040c  00000000  00000000  00001124  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_line   00000750  00000000  00000000  0000125a  2**0
+  5 .debug_line   00000910  00000000  00000000  00001530  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_frame  00000140  00000000  00000000  000019ac  2**2
+  6 .debug_frame  00000180  00000000  00000000  00001e40  2**2
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_str    0000025e  00000000  00000000  00001aec  2**0
+  7 .debug_str    000002b3  00000000  00000000  00001fc0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_loc    0000035d  00000000  00000000  00001d4a  2**0
+  8 .debug_loc    0000035d  00000000  00000000  00002273  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_ranges 00000048  00000000  00000000  000020a7  2**0
+  9 .debug_ranges 00000048  00000000  00000000  000025d0  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -64,7 +64,7 @@ Disassembly of section .text:
   78:	de bf       	out	0x3e, r29	; 62
   7a:	cd bf       	out	0x3d, r28	; 61
   7c:	0e 94 9e 00 	call	0x13c	; 0x13c <main>
-  80:	0c 94 e6 01 	jmp	0x3cc	; 0x3cc <_exit>
+  80:	0c 94 0d 02 	jmp	0x41a	; 0x41a <_exit>
 
 00000084 <__bad_interrupt>:
   84:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -117,13 +117,11 @@ ISR(USART0_TX_vect)
   b8:	bf 93       	push	r27
   ba:	ef 93       	push	r30
   bc:	ff 93       	push	r31
-	uint8_t dato;
 	LCD_enviarDTA(0xFF);LCD_esperarListo();
   be:	8f ef       	ldi	r24, 0xFF	; 255
   c0:	61 e0       	ldi	r22, 0x01	; 1
   c2:	0e 94 21 01 	call	0x242	; 0x242 <LCD_enviarByte>
   c6:	0e 94 56 01 	call	0x2ac	; 0x2ac <LCD_esperarListo>
-
 }
   ca:	ff 91       	pop	r31
   cc:	ef 91       	pop	r30
@@ -886,8 +884,103 @@ uint8_t USART0_Recibir(){
 }
  3ca:	08 95       	ret
 
-000003cc <_exit>:
- 3cc:	f8 94       	cli
+000003cc <SPI_init>:
+void SPI_init(void){
 
-000003ce <__stop_program>:
- 3ce:	ff cf       	rjmp	.-2      	; 0x3ce <__stop_program>
+	if(SPI_MSTR){
+		// Se inicializa el microcontrolador como Maestro
+		// Se configura el pin MISO como entrada; SCK, MOSI y SS como salida
+		SPI_DDR &= ~_BV(SPI_MISO);
+ 3cc:	24 98       	cbi	0x04, 4	; 4
+		SPI_DDR |= _BV(SPI_SS)|_BV(SPI_SCK)|_BV(SPI_MOSI);
+ 3ce:	84 b1       	in	r24, 0x04	; 4
+ 3d0:	8a 62       	ori	r24, 0x2A	; 42
+ 3d2:	84 b9       	out	0x04, r24	; 4
+		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
+ 3d4:	85 b1       	in	r24, 0x05	; 5
+ 3d6:	8a 63       	ori	r24, 0x3A	; 58
+ 3d8:	85 b9       	out	0x05, r24	; 5
+		SPI_DDR |= _BV(SPI_MISO);
+		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
+
+	}
+
+	SPCR = 0x00;
+ 3da:	1c bc       	out	0x2c, r1	; 44
+	SPCR |= (SPI_INT)?_BV(SPIE):0;
+ 3dc:	8c b5       	in	r24, 0x2c	; 44
+ 3de:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_DATA_ORDER)?_BV(DORD):0;
+ 3e0:	8c b5       	in	r24, 0x2c	; 44
+ 3e2:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_MSTR)?_BV(MSTR):0;
+ 3e4:	8c b5       	in	r24, 0x2c	; 44
+ 3e6:	80 61       	ori	r24, 0x10	; 16
+ 3e8:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_CPOL)?_BV(CPOL):0;
+ 3ea:	8c b5       	in	r24, 0x2c	; 44
+ 3ec:	8c bd       	out	0x2c, r24	; 44
+	SPCR |= (SPI_CHPA)?_BV(CPHA):0;
+ 3ee:	8c b5       	in	r24, 0x2c	; 44
+ 3f0:	8c bd       	out	0x2c, r24	; 44
+
+	switch(SPI_SPR){
+		case 16:SPCR |= _BV(SPR0);break;
+		case 64:SPCR |= _BV(SPR1);break;
+ 3f2:	8c b5       	in	r24, 0x2c	; 44
+ 3f4:	82 60       	ori	r24, 0x02	; 2
+ 3f6:	8c bd       	out	0x2c, r24	; 44
+		case 128:SPCR |= _BV(SPR0)|_BV(SPR1);break;
+		default:break;
+	}
+
+	SPSR = 0x00;
+ 3f8:	1d bc       	out	0x2d, r1	; 45
+	SPSR |= (SPI_2X)?_BV(SPI2X):0;
+ 3fa:	8d b5       	in	r24, 0x2d	; 45
+ 3fc:	8d bd       	out	0x2d, r24	; 45
+
+	SPCR |= _BV(SPE);
+ 3fe:	8c b5       	in	r24, 0x2c	; 44
+ 400:	80 64       	ori	r24, 0x40	; 64
+ 402:	8c bd       	out	0x2c, r24	; 44
+
+}
+ 404:	08 95       	ret
+
+00000406 <SPI_Enviar>:
+ * @RETURN: Void
+ */
+void SPI_Enviar(uint8_t dato){
+	
+	// Se inicializa la transmision
+	SPDR = dato;
+ 406:	8e bd       	out	0x2e, r24	; 46
+	// Se espera a que la transmision se complete
+	while(!(SPSR & _BV(SPIF)));
+ 408:	0d b4       	in	r0, 0x2d	; 45
+ 40a:	07 fe       	sbrs	r0, 7
+ 40c:	fd cf       	rjmp	.-6      	; 0x408 <SPI_Enviar+0x2>
+}
+ 40e:	08 95       	ret
+
+00000410 <SPI_Recibir>:
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t SPI_Recibir(){
+
+	// Se espera a que la transmision se complete
+	while(!(SPSR & _BV(SPIF)));
+ 410:	0d b4       	in	r0, 0x2d	; 45
+ 412:	07 fe       	sbrs	r0, 7
+ 414:	fd cf       	rjmp	.-6      	; 0x410 <SPI_Recibir>
+	return SPDR;
+ 416:	8e b5       	in	r24, 0x2e	; 46
+}
+ 418:	08 95       	ret
+
+0000041a <_exit>:
+ 41a:	f8 94       	cli
+
+0000041c <__stop_program>:
+ 41c:	ff cf       	rjmp	.-2      	; 0x41c <__stop_program>
