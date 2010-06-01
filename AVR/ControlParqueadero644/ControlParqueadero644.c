@@ -30,7 +30,9 @@
 #include "includes/USART.h"
 #include "includes/SPI.h"
 #include "includes/I2C.h"
+#include "includes/DS1307.h"
 #include "includes/SDCard.h"
+
 
 //  ------------------------------------------------------------------------
 //	VARIABLES GLOBALES DEL SISTEMA / BUFFERS
@@ -47,13 +49,23 @@ void initHardware();
  */
 ISR(USART0_RX_vect) 
 {
-	LCD_enviarDTA('X');LCD_esperarListo();
+	uint8_t dato = USART0_Recibir();
+	LCD_enviarDTA(dato);LCD_esperarListo();
+	USART0_Enviar(dato);
 }
 
 
 ISR(USART0_TX_vect) 
 {
-	LCD_enviarDTA(0xFF);LCD_esperarListo();
+	//LCD_enviarDTA(0xFF);LCD_esperarListo();
+}
+
+ISR(TWI_vect)
+{
+	LCD_enviarDTA('T');LCD_esperarListo();
+	LCD_enviarDTA('W');LCD_esperarListo();
+	LCD_enviarDTA('I');LCD_esperarListo();
+
 }
 
 
@@ -70,11 +82,12 @@ int main(void) {
 
 	
 	LCD_linea1Pos0();LCD_esperarListo();
-	uint8_t dato = '0';
+	//uint8_t dato = '0';
 	
 	while(1){
 		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		USART0_Enviar(dato++);
+		//	USART0_Enviar(dato++);
+
 
 	}
 
@@ -103,6 +116,12 @@ void initHardware(){
 	// Inicializamos Puerto Serial Sincrono (USART0) para comunicacion por modulo RF
 	USART0_init();
 	USART0_EnableTx();
+	USART0_EnableRx();
+
+	// Inicializamos el modulo I2C/TWI y el reloj de tiempo real (DS1307)
+	sei();
+	I2C_Init();
+	DS1307_Init();
 }
 
 

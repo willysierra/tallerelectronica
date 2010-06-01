@@ -46,7 +46,7 @@
 /**
  *  Tasa de transmision en Baudios
  */
-#define BAUDRATE 2400
+#define BAUDRATE 9600
 
 /**
  * ASY_SYN=1  Selecciona el modo de operacion asincrono de la USART
@@ -67,7 +67,7 @@
  *                    se completa la recepcion de un dato en la USART
  * INT_RX_COMPLETA=0  No se genera la interrupcion
  */
-#define INT_RX_COMPLETA 0
+#define INT_RX_COMPLETA 1
 
 /**
  * SPEED_2X=1  Se habilita el doble de velocidad de transmision si se esta trabajanod en modo
@@ -84,7 +84,7 @@
  * CONTROL_PARIEDAD=2  Se genera automaticamente un bit de pariedad IMPAR al enviar un dato y el
  *                     receptor se encarga de comprobarlo. Esta dato se revisa manualmente.
  */
-#define CONTROL_PARIEDAD 1
+#define CONTROL_PARIEDAD 0
 
 /**
  * Se define el numero de bits de STOP que se envia en cada comunicacion. Puede tomar el valor de 1 o 2
@@ -185,5 +185,12 @@ void USART0_Enviar(uint8_t dato);
  * @RETURN: uint8_t dato -> El dato recibido en la transmision
  */
 uint8_t USART0_Recibir();
+
+#define USART0_EnviarStr(str) USART0_EnviarStrLen(sizeof(str)-1, str)
+#define USART0_EnviarLn(str) USART0_EnviarStrLen(sizeof(str)-1, str); USART0_Enviar(0x0D)
+
+void USART0_EnviarStrLen(int len, uint8_t *buf);
+
+
 
 #endif /* _USART_H */

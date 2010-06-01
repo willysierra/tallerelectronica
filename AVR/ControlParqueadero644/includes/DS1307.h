@@ -6,13 +6,13 @@
  * Universidad de los Andes. Bogota, Colombia.
  * -------------------------------------------------------------------
  *
- * Archivo:				I2C.h
- * Fecha Creacion:		Mayo  28 de 2010
- * Fecha Modificacion:	Mayo  28 de 2010
+ * Archivo:				DS1307.h
+ * Fecha Creacion:		Junio 01 de 2010
+ * Fecha Modificacion:	Junio 01 de 2010
  * Version (Revision):	0.1 (1)
  *
- * Descripcion:	Libreria que facilita el uso del modulo de comunicación
- *              bajo el protocolo I2C/TWI de los microcontroladores ATmega
+ * Descripcion:	Libreria que facilita la interaccion con el reloj de tiempo
+ *              real DS1307 bajo el protocolo I2C/TWI
  *
  *
  * --------------------------------------------------------------------
@@ -36,9 +36,8 @@
  */
 
 
-#ifndef _I2C_H_
-#define _I2C_H_
-
+#ifndef _DS1307_H_
+#define _DS1307_H_
 
 
 //-------------------------------------------------------------------------------
@@ -46,41 +45,29 @@
 //-------------------------------------------------------------------------------
 
 
-/**  Definimos la frecuencia del reloj para la interfaz I2C/TWI
- *  Fcsl = Fcpu/(16+2*I2C_TWBR*1)   Asumiendo un presacler de 0
- * Con I2C_TWBR 0x20 obtenemos una frecuancia de 100kHz, pero para tener un margen 
- * de error escogemos  I2C_TWBR 0x21 que nos da una frecuencia de 97.56KHz.
- * , sin embargo, 
+/**
+ * Definimos el ID y la direccion de esclavo para el reloj de tiempo real DS1307
  */
-#define I2C_TWBR 0x21	
-	
+#define DS1307_ID 0x0D
+#define DS1307_ADDR 0x00
 
-/** Direccion de esclavo del dispositivo
- * Corresponde a un valor de 7 bits, sin incluir el valor 0000000, correspondiente
- * a un llamado a todos los dispositivos conectados al bus (llamado general). 
- */
-#define I2C_ADDR 0x01
 
 /**
- * Define si se quiere habilitar (I2C_GENCAL=1) o deshabilitar (I2C_GENCAL=0) el 
- * reconocimiento de llamadas generales hechas en el bus al cual se encuentra conectado
+ *
  */
-#define I2C_GENCAL 0
+#define DS1307_AM_PM 1
+
+#define DS1307_12_24 1
 
 
-/** 
- * Definimos el numero maximo de intentos que se hacen para intentar comenzar una transmision
- */
-#define I2C_MAX_TRIES 100
 
 //-------------------------------------------------------------------------------
 //  FUNCIONES OFRECIDAS QUE PUEDEN SER LLAMADAS POR EL USUARIO
 //-------------------------------------------------------------------------------
 
-void I2C_Init(void);
-uint8_t I2C_Enviar(uint8_t type);
-int I2C_EscribirBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf);
-int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf);
+
+void DS1307_Init(void);
+
+#endif /*_DS1301_H*/
 
 
-#endif /* _I2C_H */
