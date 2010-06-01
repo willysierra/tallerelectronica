@@ -1,4 +1,4 @@
-I2C.o: ../includes/I2C.c ../includes/defines.h \
+DS1307.o: ../includes/DS1307.c ../includes/defines.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdint.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h \
@@ -12,10 +12,9 @@ I2C.o: ../includes/I2C.c ../includes/defines.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h \
   c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h \
+  ../includes/I2C.h ../includes/DS1307.h ../includes/USART.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/util/twi.h \
-  ../includes/I2C.h
+  c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h
 
 ../includes/defines.h:
 
@@ -45,10 +44,12 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h:
 
 c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h:
 
+../includes/I2C.h:
+
+../includes/DS1307.h:
+
+../includes/USART.h:
+
 c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h:
-
-c:/winavr-20100110/lib/gcc/../../avr/include/util/twi.h:
-
-../includes/I2C.h:

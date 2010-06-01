@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = ControlParqueadero644.o lcd_HD44780_4.o USART.o I2C.o SPI.o SDCard.o 
+OBJECTS = lcd_HD44780_4.o USART.o SPI.o SDCard.o ControlParqueadero644.o I2C.o DS1307.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -46,22 +46,25 @@ LINKONLYOBJECTS =
 all: $(TARGET) ControlParqueadero644.hex ControlParqueadero644.eep ControlParqueadero644.lss size
 
 ## Compile
-ControlParqueadero644.o: ../ControlParqueadero644.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
 lcd_HD44780_4.o: ../includes/lcd_HD44780_4.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 USART.o: ../includes/USART.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-I2C.o: ../includes/I2C.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
 SPI.o: ../includes/SPI.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 SDCard.o: ../includes/SDCard.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+ControlParqueadero644.o: ../ControlParqueadero644.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+I2C.o: ../includes/I2C.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+DS1307.o: ../includes/DS1307.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
