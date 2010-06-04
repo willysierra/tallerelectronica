@@ -86,7 +86,11 @@ int main(void) {
 	
 	while(1){
 		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		//	USART0_Enviar(dato++);
+		//USART0_Enviar('M');
+		LCD_enviarDTA('T');LCD_esperarListo();
+		LCD_enviarDTA('H');LCD_esperarListo();
+		LCD_enviarDTA('D');LCD_esperarListo();
+		LCD_enviarDTA(' ');LCD_esperarListo();
 
 
 	}
