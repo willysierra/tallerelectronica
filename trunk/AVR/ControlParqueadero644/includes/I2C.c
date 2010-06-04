@@ -305,3 +305,26 @@ int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int le
 		return -1;
 }
 
+
+void atenderInterrupcio(void){
+
+	// 0x60  -> Se recibio SLA+W  y se envio ACK
+	// 0x68  -> Maestro perdio control, se recibio SLA+W y se envio ACK ()
+	
+
+	uint8_t I2C_TWSR;
+	uint8_t I2C_TWCR;
+	I2C_TWSR = TW_STATUS;
+
+	switch(I2C_TWSR){
+
+
+		case TW_REP_START:		break;
+		case TW_START:			break;
+		case TW_MT_ARB_LOST:	goto begin;
+		default:				return -1; break;
+	}
+
+
+}
+
