@@ -186,12 +186,10 @@ void USART0_Enviar(uint8_t dato);
  */
 uint8_t USART0_Recibir();
 
-void USART0_EnviarStrLen(int len, char *buf);
-
 #define USART0_EnviarStr(str) USART0_EnviarStrLen(sizeof(str)-1, str)
 #define USART0_EnviarLn(str) USART0_EnviarStrLen(sizeof(str)-1, str); USART0_Enviar(0x0D)
 
-
+void USART0_EnviarStrLen(int len, uint8_t *buf);
 
 
 

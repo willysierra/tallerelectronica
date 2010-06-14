@@ -95,6 +95,20 @@ void LCD_enviarByte(uint8_t by, uint8_t rs);
 void LCD_esperarListo(void);
 
 
+/**
+ * LCD_EnviarStrLen
+ * Este metodo se encarga de enviar una cadena de caracteres al LCD, iniciando desde
+ * donde se encuentra el pointer de este. .
+ *
+ * @PARAMS: int len -> La cantidad de caracteres que se desean enviar
+ *			char *buf -> Apuntador a la cadena que se desea enviar 
+ * @PRE: Los parametros se encuentran bien definidos
+ * @POS: Se enviaron los caracteres al LCD
+ * @RETURN: Void
+ */
+void LCD_EnviarStrLen(int len, char *buf);
+
+
 /*
  * Enviar un comando al controlador del LCD (RS->0)
  */
@@ -105,6 +119,15 @@ void LCD_esperarListo(void);
  */
 #define LCD_enviarDTA(n) LCD_enviarByte((n), 1)
 
+/**
+ * Envia un dato al controlador del LCD (RS->1) y espera a que este sea admitido
+ */
+#define LCD_enviarDTA_Wait(n) LCD_enviarByte((n), 1);LCD_esperarListo()
+
+/**
+ * Enviar una cadena de caracterese como datos al controlador del LCD (RS->1) y espera a que estos sean admitidos
+ */
+#define LCD_EnviarStr(str)	LCD_EnviarStrLen(sizeof(str)-1, str)
 
 #define LCD_borrarPantalla() LCD_enviarCMD(0x01)
 #define LCD_retornarOrigen() LCD_enviarCMD(0x02)
@@ -114,6 +137,8 @@ void LCD_esperarListo(void);
 #define LCD_linea2Pos0() LCD_enviarCMD(0xC0)
 #define LCD_linea3Pos0() LCD_enviarCMD(0x94)
 #define LCD_linea4Pos0() LCD_enviarCMD(0xD4)
+
+
 
 
 

@@ -266,3 +266,24 @@ void LCD_init(void){
 	LCD_esperarListo();
 
 }
+
+
+/**
+ * LCD_EnviarStrLen
+ * Este metodo se encarga de enviar una cadena de caracteres al LCD, iniciando desde
+ * donde se encuentra el pointer de este. .
+ *
+ * @PARAMS: int len -> La cantidad de caracteres que se desean enviar
+ *			char *buf -> Apuntador a la cadena que se desea enviar 
+ * @PRE: Los parametros se encuentran bien definidos
+ * @POS: Se enviaron los caracteres al LCD
+ * @RETURN: Void
+ */
+void LCD_EnviarStrLen(int len, char *buf){
+	for (; len > 0; len--){
+		LCD_enviarByte(*buf++, 1);
+		LCD_esperarListo();
+	}
+
+}
+

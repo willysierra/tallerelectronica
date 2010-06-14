@@ -48,69 +48,161 @@
 
 
 
-uint8_t hora[10];	// XXpm:XX:XX
-uint8_t fecha[10];	// dd/mm/aaaa;
+char DS1307_hora[10] = {' ', ' ', ':', ' ', ' ', ':', ' ', ' ', ' ', ' '};	// XX:XX:XXp
+char DS1307_fecha[10] = {' ',' ',' ',' ',' ',' ','/',' ',' ',' ',};	// mmm dd/aa
 
 
-void DS1307_Init(void){
-
-	
+uint8_t DS1307_Init(void){
 
 	uint8_t DS1307_data[8];
-	int error;
-	USART0_EnviarLn("  - Comienza leer");
-	error = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x00, 8, DS1307_data);
 
-	if(error == -1){
-		USART0_EnviarLn("ERROR!!");
-		}
-	else{
-		USART0_EnviarLn("Leer OK");
-		}
+	int bytesLeidos;
+	bytesLeidos = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x00, 8, DS1307_data);
 
+	// No fue posible leer del reloj
+	if(bytesLeidos != 8)
+		return 1;
 
-//	USART0_EnviarLn("CODIGO ERROR: ");USART0_EnviarLn(error);
+	// Verificamos el bit de control CH (Oscilador)
+	if((DS1307_data[0]&0x80))
+	{
+		
+		// El oscilador no estaba encendido, asi que inicialiamos toda la configuracion por defecto
+		DS1307_data[0] = 0x00;
+		DS1307_data[1] = 0x00;
+		DS1307_data[2] = (DS1307_12_24==1)?0x52:0x00;
+		DS1307_data[3] = 0x06;	// Viernes
+		DS1307_data[4] = 0x01;	// Dia = 01
+		DS1307_data[5] = 0x01;	// Mes = Enero (01)
+		DS1307_data[6] = 0x10;	// Ano = 2010 (10)
+		DS1307_data[7] = 0x00;	// Sin salida
 
-	
-	USART0_EnviarLn("Datos del Reloj:");
-	USART0_EnviarLn(DS1307_data[0]);
-	USART0_EnviarLn(DS1307_data[1]);
-	USART0_EnviarLn(DS1307_data[2]);
-	USART0_EnviarLn(DS1307_data[3]);
-	USART0_EnviarLn(DS1307_data[4]);
-	USART0_EnviarLn(DS1307_data[5]);
-	USART0_EnviarLn(DS1307_data[6]);
-	USART0_EnviarLn(DS1307_data[7]);
-	USART0_EnviarLn("Fin Datos Reloj");
+		bytesLeidos = I2C_EscribirBytes(DS1307_ID, DS1307_ADDR, 0x00, 8, DS1307_data);
 
-	uint8_t DS1307_data2[8];
-
-	DS1307_data2[0] = 0x00;
-	DS1307_data2[1] = 0x00;
-	DS1307_data2[2] = 0x00;
-	DS1307_data2[3] = 0x00;
-	DS1307_data2[4] = 0x00;
-	DS1307_data2[5] = 0x00;
-	DS1307_data2[6] = 0x00;
-	DS1307_data2[7] = 0x00;
-
-
-	error = I2C_EscribirBytes(DS1307_ID, DS1307_ADDR, 0x00, 1, DS1307_data2);
-
-
-
-
-	while(1){
-			_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-			_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-
-
-
-			error = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x00, 8, DS1307_data);
-			USART0_Enviar(DS1307_data[1]);USART0_Enviar(':');USART0_Enviar(DS1307_data[0]);USART0_Enviar(0x0D);
-
+		if(bytesLeidos!=8)
+			return 1;
 	}
 
+	return 0;
+}
 
+
+
+
+
+
+void DS1307_ActualizarFecha(void){
+
+	uint8_t data[3];
+	int bytesLeidos;
+	bytesLeidos = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x04, 3, data);
+
+	if(bytesLeidos==3){
+
+		DS1307_fecha[8] = ((data[2]&0x0F))+0x30;
+		DS1307_fecha[7] = ((data[2]&0xF0)>>4)+0x30;
+		DS1307_fecha[5] = ((data[0]&0x0F))+0x30;
+		DS1307_fecha[4] = ((data[0]&0xF0)>>4)+0x30;
+		switch(data[1]&0x1F){
+			case 0x01:
+				DS1307_fecha[0] = 'E';
+				DS1307_fecha[1] = 'n';
+				DS1307_fecha[2] = 'e';
+				break;
+			case 0x02:
+				DS1307_fecha[0] = 'F';
+				DS1307_fecha[1] = 'e';
+				DS1307_fecha[2] = 'b';
+				break;
+			case 0x03:
+				DS1307_fecha[0] = 'M';
+				DS1307_fecha[1] = 'a';
+				DS1307_fecha[2] = 'r';
+				break;
+			case 0x04:
+				DS1307_fecha[0] = 'A';
+				DS1307_fecha[1] = 'b';
+				DS1307_fecha[2] = 'r';
+				break;
+			case 0x05:
+				DS1307_fecha[0] = 'M';
+				DS1307_fecha[1] = 'a';
+				DS1307_fecha[2] = 'y';
+				break;
+			case 0x06:
+				DS1307_fecha[0] = 'J';
+				DS1307_fecha[1] = 'u';
+				DS1307_fecha[2] = 'n';
+				break;
+			case 0x07:
+				DS1307_fecha[0] = 'J';
+				DS1307_fecha[1] = 'u';
+				DS1307_fecha[2] = 'l';
+				break;
+			case 0x08:
+				DS1307_fecha[0] = 'A';
+				DS1307_fecha[1] = 'g';
+				DS1307_fecha[2] = 'o';
+				break;
+			case 0x09:
+				DS1307_fecha[0] = 'S';
+				DS1307_fecha[1] = 'e';
+				DS1307_fecha[2] = 'p';
+				break;
+			case 0x10:
+				DS1307_fecha[0] = 'O';
+				DS1307_fecha[1] = 'c';
+				DS1307_fecha[2] = 't';
+				break;
+			case 0x11:
+				DS1307_fecha[0] = 'N';
+				DS1307_fecha[1] = 'o';
+				DS1307_fecha[2] = 'v';
+				break;
+			case 0x12:
+				DS1307_fecha[0] = 'D';
+				DS1307_fecha[1] = 'i';
+				DS1307_fecha[2] = 'c';
+				break;
+
+		}
+	}
+
+}
+
+
+/**
+ * Formato retornado (ss=segundos, mm=minutos, hh=horas, ap=AM o PM)
+ * Si esta en formato 12 horas: ap hh mm ss
+ * Si esta en formato 24 horas: 00 hh mm ss
+ */
+void DS1307_ActualizarHora(void){
+
+	uint8_t data[3];
+	int bytesLeidos;
+	bytesLeidos = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x00, 3, data);
+
+	if(bytesLeidos==3){
+
+		DS1307_hora[7] = ((data[0]&0x0F))+0x30;
+		DS1307_hora[6] = ((data[0]&0x70)>>4)+0x30;
+
+		DS1307_hora[4] = ((data[1]&0x0F))+0x30;
+		DS1307_hora[3] = ((data[1]&0x70)>>4)+0x30;
+
+
+		
+		DS1307_hora[1] = ((data[2]&0x0F))+0x30;
+
+		if(data[2]&0x40){
+			DS1307_hora[0] = ((data[2]&0x10)>>4)+0x30;
+			DS1307_hora[8] = (data[2]&0x20)?'p':'a';
+		}
+		else
+			DS1307_hora[0] = ((data[2]&0x30)>>4)+0x30;
+
+		
+		
+	}
 
 }

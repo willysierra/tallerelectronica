@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = ControlParqueadero168.o I2C.o SDCard.o SPI.o USART.o 
+OBJECTS = ControlParqueadero168.o I2C.o USART.o SPI.o SDCard.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -52,13 +52,13 @@ ControlParqueadero168.o: ../ControlParqueadero168.c
 I2C.o: ../includes/I2C.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-SDCard.o: ../includes/SDCard.c
+USART.o: ../includes/USART.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 SPI.o: ../includes/SPI.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-USART.o: ../includes/USART.c
+SDCard.o: ../includes/SDCard.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
