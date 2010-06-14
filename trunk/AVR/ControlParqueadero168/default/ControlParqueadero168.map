@@ -2,6 +2,8 @@ Archive member included because of file (symbol)
 
 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
                               c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o (exit)
+c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                              I2C.o (__do_clear_bss)
 
 Memory Configuration
 
@@ -20,9 +22,9 @@ Address of section .data set to 0x800100
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
 LOAD ControlParqueadero168.o
 LOAD I2C.o
-LOAD SDCard.o
-LOAD SPI.o
 LOAD USART.o
+LOAD SPI.o
+LOAD SDCard.o
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a
 LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
@@ -117,7 +119,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x2a0
+.text           0x00000000      0x6cc
  *(.vectors)
  .vectors       0x00000000       0x68 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
                 0x00000000                __vectors
@@ -155,6 +157,8 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init3)
  *(.init3)
  *(.init4)
+ .init4         0x00000074       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x00000074                __do_clear_bss
  *(.init4)
  *(.init5)
  *(.init5)
@@ -165,64 +169,70 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x00000074        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
+ .init9         0x00000084        0x8 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  *(.init9)
  *(.text)
- .text          0x0000007c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
-                0x0000007c                __vector_22
-                0x0000007c                __vector_1
-                0x0000007c                __vector_24
-                0x0000007c                __vector_12
-                0x0000007c                __bad_interrupt
-                0x0000007c                __vector_6
-                0x0000007c                __vector_3
-                0x0000007c                __vector_23
-                0x0000007c                __vector_25
-                0x0000007c                __vector_11
-                0x0000007c                __vector_13
-                0x0000007c                __vector_17
-                0x0000007c                __vector_19
-                0x0000007c                __vector_7
-                0x0000007c                __vector_5
-                0x0000007c                __vector_4
-                0x0000007c                __vector_9
-                0x0000007c                __vector_2
-                0x0000007c                __vector_21
-                0x0000007c                __vector_15
-                0x0000007c                __vector_8
-                0x0000007c                __vector_14
-                0x0000007c                __vector_10
-                0x0000007c                __vector_16
-                0x0000007c                __vector_18
-                0x0000007c                __vector_20
- .text          0x00000080       0x30 ControlParqueadero168.o
-                0x00000080                initHardware
+ .text          0x0000008c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
+                0x0000008c                __vector_22
+                0x0000008c                __vector_1
+                0x0000008c                __vector_24
+                0x0000008c                __vector_12
+                0x0000008c                __bad_interrupt
+                0x0000008c                __vector_6
+                0x0000008c                __vector_3
+                0x0000008c                __vector_23
+                0x0000008c                __vector_25
+                0x0000008c                __vector_11
+                0x0000008c                __vector_13
+                0x0000008c                __vector_17
+                0x0000008c                __vector_19
+                0x0000008c                __vector_7
+                0x0000008c                __vector_5
+                0x0000008c                __vector_4
+                0x0000008c                __vector_9
+                0x0000008c                __vector_2
+                0x0000008c                __vector_21
+                0x0000008c                __vector_15
+                0x0000008c                __vector_8
+                0x0000008c                __vector_14
+                0x0000008c                __vector_10
+                0x0000008c                __vector_16
+                0x0000008c                __vector_18
+                0x0000008c                __vector_20
+ .text          0x00000090      0x22a ControlParqueadero168.o
+                0x00000090                initHardware
                 0x00000098                main
- .text          0x000000b0        0x0 I2C.o
- .text          0x000000b0      0x116 SDCard.o
-                0x000000b0                SD_EnviarComando
-                0x00000156                SD_init
- .text          0x000001c6       0x58 SPI.o
-                0x00000204                SPI_Enviar
-                0x00000210                SPI_Recibir
-                0x000001c6                SPI_init
- .text          0x0000021e       0x7e USART.o
-                0x0000027e                USART0_Enviar
-                0x00000266                USART0_EnableRx
-                0x0000025a                USART0_DisableTx
-                0x0000024e                USART0_EnableTx
-                0x0000021e                USART0_init
-                0x0000028e                USART0_Recibir
-                0x00000272                USART0_DisableRx
- .text          0x0000029c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x0000029c                . = ALIGN (0x2)
+ .text          0x000002ba      0x326 I2C.o
+                0x00000570                atenderInterrupcio
+                0x000002ba                I2C_Init
+                0x0000030e                I2C_EscribirBytes
+                0x00000412                I2C_LeerBytes
+                0x000002da                I2C_Enviar
+ .text          0x000005e0       0x9a USART.o
+                0x0000063a                USART0_Enviar
+                0x00000622                USART0_EnableRx
+                0x00000616                USART0_DisableTx
+                0x0000060a                USART0_EnableTx
+                0x000005e0                USART0_init
+                0x0000064a                USART0_Recibir
+                0x0000062e                USART0_DisableRx
+                0x00000658                USART0_EnviarStrLen
+ .text          0x0000067a       0x4e SPI.o
+                0x000006b4                SPI_Enviar
+                0x000006be                SPI_Recibir
+                0x0000067a                SPI_init
+ .text          0x000006c8        0x0 SDCard.o
+ .text          0x000006c8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text          0x000006c8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x000006c8                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000029c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x0000029c                . = ALIGN (0x2)
+ .text.libgcc   0x000006c8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x000006c8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+                0x000006c8                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000029c        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x0000029c                exit
-                0x0000029c                _exit
+ .fini9         0x000006c8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x000006c8                exit
+                0x000006c8                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -241,20 +251,21 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000029c        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x000006c8        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000002a0                _etext = .
+                0x000006cc                _etext = .
 
-.data           0x00800100        0x0 load address 0x000002a0
+.data           0x00800100        0x0 load address 0x000006cc
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  .data          0x00800100        0x0 ControlParqueadero168.o
  .data          0x00800100        0x0 I2C.o
- .data          0x00800100        0x0 SDCard.o
- .data          0x00800100        0x0 SPI.o
  .data          0x00800100        0x0 USART.o
+ .data          0x00800100        0x0 SPI.o
+ .data          0x00800100        0x0 SDCard.o
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
@@ -263,28 +274,29 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00800100                _edata = .
                 0x00800100                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x0
+.bss            0x00800100        0x6
                 0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm168.o
  .bss           0x00800100        0x0 ControlParqueadero168.o
- .bss           0x00800100        0x0 I2C.o
- .bss           0x00800100        0x0 SDCard.o
- .bss           0x00800100        0x0 SPI.o
- .bss           0x00800100        0x0 USART.o
- .bss           0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800100        0x6 I2C.o
+ .bss           0x00800106        0x0 USART.o
+ .bss           0x00800106        0x0 SPI.o
+ .bss           0x00800106        0x0 SDCard.o
+ .bss           0x00800106        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800106        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  *(.bss*)
  *(COMMON)
-                0x00800100                PROVIDE (__bss_end, .)
-                0x000002a0                __data_load_start = LOADADDR (.data)
-                0x000002a0                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00800106                PROVIDE (__bss_end, .)
+                0x000006cc                __data_load_start = LOADADDR (.data)
+                0x000006cc                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800100        0x0
-                0x00800100                PROVIDE (__noinit_start, .)
+.noinit         0x00800106        0x0
+                0x00800106                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800100                PROVIDE (__noinit_end, .)
-                0x00800100                _end = .
-                0x00800100                PROVIDE (__heap_start, .)
+                0x00800106                PROVIDE (__noinit_end, .)
+                0x00800106                _end = .
+                0x00800106                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -340,77 +352,80 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .debug_aranges
                 0x00000000       0x20 ControlParqueadero168.o
  .debug_aranges
-                0x00000020       0x20 SDCard.o
+                0x00000020       0x20 I2C.o
  .debug_aranges
-                0x00000040       0x20 SPI.o
+                0x00000040       0x20 USART.o
  .debug_aranges
-                0x00000060       0x20 USART.o
+                0x00000060       0x20 SPI.o
 
 .debug_pubnames
-                0x00000000      0x136
+                0x00000000      0x188
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0x2c ControlParqueadero168.o
  .debug_pubnames
-                0x0000002c       0x33 SDCard.o
+                0x0000002c       0x6d I2C.o
  .debug_pubnames
-                0x0000005f       0x3e SPI.o
+                0x00000099       0xb1 USART.o
  .debug_pubnames
-                0x0000009d       0x99 USART.o
+                0x0000014a       0x3e SPI.o
 
-.debug_info     0x00000000      0x720
+.debug_info     0x00000000     0x10f5
  *(.debug_info)
- .debug_info    0x00000000      0x136 ControlParqueadero168.o
- .debug_info    0x00000136       0x5e I2C.o
- .debug_info    0x00000194      0x3b5 SDCard.o
- .debug_info    0x00000549       0xd0 SPI.o
- .debug_info    0x00000619      0x107 USART.o
+ .debug_info    0x00000000      0xa2c ControlParqueadero168.o
+ .debug_info    0x00000a2c      0x44c I2C.o
+ .debug_info    0x00000e78      0x165 USART.o
+ .debug_info    0x00000fdd       0xba SPI.o
+ .debug_info    0x00001097       0x5e SDCard.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x332
+.debug_abbrev   0x00000000      0x4a3
  *(.debug_abbrev)
- .debug_abbrev  0x00000000       0xd2 ControlParqueadero168.o
- .debug_abbrev  0x000000d2       0x2a I2C.o
- .debug_abbrev  0x000000fc      0x119 SDCard.o
- .debug_abbrev  0x00000215       0x98 SPI.o
- .debug_abbrev  0x000002ad       0x85 USART.o
+ .debug_abbrev  0x00000000      0x129 ControlParqueadero168.o
+ .debug_abbrev  0x00000129      0x1ef I2C.o
+ .debug_abbrev  0x00000318       0xda USART.o
+ .debug_abbrev  0x000003f2       0x87 SPI.o
+ .debug_abbrev  0x00000479       0x2a SDCard.o
 
-.debug_line     0x00000000      0x6ec
+.debug_line     0x00000000      0xd14
  *(.debug_line)
- .debug_line    0x00000000      0x168 ControlParqueadero168.o
- .debug_line    0x00000168       0x3e I2C.o
- .debug_line    0x000001a6      0x26c SDCard.o
- .debug_line    0x00000412      0x15c SPI.o
- .debug_line    0x0000056e      0x17e USART.o
+ .debug_line    0x00000000      0x55b ControlParqueadero168.o
+ .debug_line    0x0000055b      0x485 I2C.o
+ .debug_line    0x000009e0      0x1b2 USART.o
+ .debug_line    0x00000b92      0x144 SPI.o
+ .debug_line    0x00000cd6       0x3e SDCard.o
 
-.debug_frame    0x00000000      0x120
+.debug_frame    0x00000000      0x160
  *(.debug_frame)
  .debug_frame   0x00000000       0x30 ControlParqueadero168.o
- .debug_frame   0x00000030       0x30 SDCard.o
- .debug_frame   0x00000060       0x40 SPI.o
- .debug_frame   0x000000a0       0x80 USART.o
+ .debug_frame   0x00000030       0x60 I2C.o
+ .debug_frame   0x00000090       0x90 USART.o
+ .debug_frame   0x00000120       0x40 SPI.o
 
-.debug_str      0x00000000      0x23d
+.debug_str      0x00000000      0x2fb
  *(.debug_str)
- .debug_str     0x00000000      0x107 ControlParqueadero168.o
-                                0x140 (size before relaxing)
- .debug_str     0x00000107       0x12 I2C.o
-                                 0xdd (size before relaxing)
- .debug_str     0x00000119       0x69 SDCard.o
-                                0x17c (size before relaxing)
- .debug_str     0x00000182       0x3c SPI.o
-                                0x10f (size before relaxing)
- .debug_str     0x000001be       0x7f USART.o
-                                0x157 (size before relaxing)
+ .debug_str     0x00000000      0x134 ControlParqueadero168.o
+                                0x16d (size before relaxing)
+ .debug_str     0x00000134       0xe8 I2C.o
+                                0x216 (size before relaxing)
+ .debug_str     0x0000021c       0x98 USART.o
+                                0x167 (size before relaxing)
+ .debug_str     0x000002b4       0x32 SPI.o
+                                0x106 (size before relaxing)
+ .debug_str     0x000002e6       0x15 SDCard.o
+                                 0xdc (size before relaxing)
 
-.debug_loc      0x00000000      0x1c0
+.debug_loc      0x00000000      0x896
  *(.debug_loc)
- .debug_loc     0x00000000       0x30 ControlParqueadero168.o
- .debug_loc     0x00000030      0x14c SDCard.o
- .debug_loc     0x0000017c       0x26 SPI.o
- .debug_loc     0x000001a2       0x1e USART.o
+ .debug_loc     0x00000000      0x5e0 ControlParqueadero168.o
+ .debug_loc     0x000005e0      0x248 I2C.o
+ .debug_loc     0x00000828       0x6e USART.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(ControlParqueadero168.elf elf32-avr)
 LOAD linker stubs
+
+.debug_ranges   0x00000000       0x60
+ .debug_ranges  0x00000000       0x48 ControlParqueadero168.o
+ .debug_ranges  0x00000048       0x18 USART.o

@@ -41,6 +41,7 @@
  #include <avr/io.h>
  #include <avr/pgmspace.h>
  #include <util/delay.h>		// Convenience functions for busy-wait delay loops
+ #include <util/twi.h>
  #include "I2C.h"
 
 #define I2C_START 0
@@ -61,7 +62,7 @@ void I2C_Init(void){
 	TWAR = (I2C_ADDR<<1) | I2C_GENCAL;
 
 	// Se inicializa como Esclavo, atento a recibir un llamado con ACK
-	TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
+	//TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
 
 }
 
@@ -305,7 +306,7 @@ int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int le
 }
 
 
-void I2C_AtenderInterrupcion(void){
+void atenderInterrupcio(void){
 
 	// 0x60  -> Se recibio SLA+W  y se envio ACK
 	// 0x68  -> Maestro perdio control, se recibio SLA+W y se envio ACK ()
@@ -340,8 +341,9 @@ void I2C_AtenderInterrupcion(void){
 								
 								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
 								TWCR = _BV(TWEN);
-								TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
+
 								// Procesamos los datos recibidos
+
 								break;
 
 		case TW_SR_DATA_NACK:		// Se recibio informacion pero se respondio con NACK

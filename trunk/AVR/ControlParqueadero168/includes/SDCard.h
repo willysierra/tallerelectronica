@@ -6,13 +6,13 @@
  * Universidad de los Andes. Bogota, Colombia.
  * -------------------------------------------------------------------
  *
- * Archivo:				DS1307.h
- * Fecha Creacion:		Junio 01 de 2010
- * Fecha Modificacion:	Junio 11 de 2010
+ * Archivo:				SDCard.h
+ * Fecha Creacion:		Mayo  28 de 2010
+ * Fecha Modificacion:	Mayo  28 de 2010
  * Version (Revision):	0.1 (1)
  *
- * Descripcion:	Libreria que facilita la interaccion con el reloj de tiempo
- *              real DS1307 bajo el protocolo I2C/TWI
+ * Descripcion:	Libreria que facilita el uso de un modulo de memoria con
+ *              una tarjeta SD en modo SPI con un microcontroladores ATmega
  *
  *
  * --------------------------------------------------------------------
@@ -36,8 +36,9 @@
  */
 
 
-#ifndef _DS1307_H_
-#define _DS1307_H_
+#ifndef _SDCard_H_
+#define _SDCard_H_
+
 
 
 //-------------------------------------------------------------------------------
@@ -45,35 +46,11 @@
 //-------------------------------------------------------------------------------
 
 
-/**
- * Definimos el ID y la direccion de esclavo para el reloj de tiempo real DS1307
- */
-#define DS1307_ID 0x0D
-#define DS1307_ADDR 0x00
-
-
-/**
- * Definimos el formato de la Hora
- * DS1307_12_24 = 0 Formato 24 Horas (Militar)
- * DS1307_12_24 = 1 Formato 12 Horas (am/pm)
- */
-#define DS1307_12_24 1
-
-
 
 //-------------------------------------------------------------------------------
 //  FUNCIONES OFRECIDAS QUE PUEDEN SER LLAMADAS POR EL USUARIO
 //-------------------------------------------------------------------------------
 
-extern char DS1307_hora[10];	// XX:XX:XXp
-extern char DS1307_fecha[10];	// dd/mm/aaaa;
 
 
-uint8_t DS1307_Init(void);
-
-void DS1307_ActualizarFecha(void);
-void DS1307_ActualizarHora(void);
-
-#endif /*_DS1301_H*/
-
-
+#endif /* _SDCard_H_ */

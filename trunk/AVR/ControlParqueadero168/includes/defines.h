@@ -7,8 +7,8 @@
  *
  * Archivo:				defines.h
  * Fecha Creacion:		Mayo 10 de 2010
- * Fecha Modificacion:	Junio 11 de 2010
- * Version (Revision):	0.1 (2)
+ * Fecha Modificacion:	Mayo 17 de 2010
+ * Version (Revision):	0.1 (1)
  *
  * Descripcion: Archivo de configuracion de las diferentes propiedades del proyecto,
  *				CPU, perifericos y opciones generales de compilacion.
@@ -34,7 +34,7 @@
  * ---------------------------------------------------------------
  */
 
-#define PUERTO_TECLADO B
+#define PUERTO_TECLADO D
 
 
 #define KBR_PORT PORT(PUERTO_TECLADO)

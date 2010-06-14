@@ -52,9 +52,29 @@ int main(void) {
 	_delay_ms(40);
 	initHardware();
 
+	uint8_t DS1307_data2[8];
+
+	DS1307_data2[0] = 0x05;
+	DS1307_data2[1] = 0x06;
+	DS1307_data2[2] = 0x00;
+	DS1307_data2[3] = 0x00;
+	DS1307_data2[4] = 0x00;
+	DS1307_data2[5] = 0x00;
+	DS1307_data2[6] = 0x00;
+	DS1307_data2[7] = 0x00;
 
 	while(1){
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
 
+		I2C_EscribirBytes(0x00, 0x01, 0x00, 2, DS1307_data2);
+
+		DS1307_data2[0] = DS1307_data2[0]++;
+		DS1307_data2[1] = DS1307_data2[0];
 	}
 
 }
@@ -70,16 +90,31 @@ int main(void) {
  */
 void initHardware(){
 
+	// Deshabilitamos Interrupciones Generales
+	cli();
+
+	// Inicializamos el modulo I2C/TWI
+	I2C_Init();
+
+	// Inicializamos el modulo de comunicacion SPI
+	//SPI_init();
+
+
+	/*
+
 DDRD = 0xFF;
 PORTD = 0xFF;
 PORTD  = 0xAA;
 
 	
-	SPI_init();
+	
 	
 PORTD = 0x55;
 SD_init();
 
+*/
+
 
 }
+
 
