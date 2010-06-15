@@ -27,6 +27,8 @@
 #include <avr/pgmspace.h>	// Program Space Utilities
 #include <avr/eeprom.h>		// EEPROM Handling
 
+#include "funciones.h"		// Contine las rutinas de las diferentes funcionalidades (Req Funcionales)
+
 #include "includes/lcd_HD44780_4.h"	// Manejo del Display LCD
 #include "includes/USART.h"			// Manejo para comunicacion por USART
 #include "includes/SPI.h"			// Manejo de comunicacion por el bus SPI
@@ -35,22 +37,39 @@
 #include "includes/SDCard.h"		// Control de tarjeta de almacenamiento MicroSD
 
 
+
 //  ------------------------------------------------------------------------
 //	VARIABLES GLOBALES DEL SISTEMA / BUFFERS
 //  ------------------------------------------------------------------------
 
-uint8_t estadoTeclado;
-//uint8_t estadoMainProgram;
+unsigned char mascaraFunciones;
+unsigned char estadoMainProgram;
 
-uint8_t lecturaTeclado = 0x00;
-uint8_t teclaPresionada = 0x00;
+static uint8_t estadoTeclado;
+
+unsigned char lecturaTeclado = 0x00;
+unsigned char teclaPresionada = 0x00;
 char nuevaTecla = 0;
+
+
+unsigned char EEMEM passwordROM[10];
+unsigned char password[10];
+
+unsigned int EEMEM totalCuposROM;
+unsigned int totalCupos;
+
+unsigned int cuposOcupados;
+unsigned int cuposDisponibles;
+
+
+
 
 //  ------------------------------------------------------------------------
 //	DECLARACION DE METODOS / PROCEDIMIENTOS INTERNOS
 //  ------------------------------------------------------------------------
 void initHardware(void);
 void initPollingTimer(void);
+void initVariables(void);
 
 void vTeclado(void);
 void vMainProgram(void);
@@ -80,50 +99,7 @@ ISR(USART0_TX_vect)
  */
 ISR(TWI_vect)
 {
-	static unsigned char PtrBuffTWI;
-
-	uint8_t I2C_TWSR;
-	I2C_TWSR = TW_STATUS;
-
-	switch(I2C_TWSR){
-
-		case TW_SR_SLA_ACK: 			// Se recibio SLA+W y se confirmo con ACK (Se recibe informacion del Maestro)
-		case TW_SR_GCALL_ACK:			// Se recibio Llamado general y se respondio con ACK (Recibir informacion del Maestro)
-		case TW_SR_ARB_LOST_SLA_ACK: 	// Se perdio control de bus y se selecciono como SLA+W enviando ACK(Recibe Informacion)
-								// Se inicializan las variables usadas en la recepcion
-								PtrBuffTWI = 0;
-								TWI_BytesRecividos = 0;
-								for(uint8_t i = 0; i<I2C_BUFFER_SIZE; i++)
-									TWI_Buff[i]=0x00;
-								// Se habilita siguiente accion del TWI
-								TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
-								break;
-
-		case TW_SR_DATA_ACK: 	// Se recibio un byte y se respondio con un ACK
-		case TW_SR_GCALL_DATA_ACK:
-								TWI_Buff[PtrBuffTWI++] = TWDR;
-								// Habilitamos TWI de nuevo. Si el buffer esta por llenarse entonces enviamos NACK,
-								// de lo contrario ACK en sigueinte recepcion
-								TWCR = _BV(TWEN)|_BV(TWIE)|_BV(TWINT)|(PtrBuffTWI==I2C_BUFFER_SIZE?0:_BV(TWEA));
-								break;
-		case TW_SR_STOP:		// Se recibnio condicion de STOP o REPEATED START (Se procesa informacionrecibida)
-								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
-								TWCR = _BV(TWEN);
-								PtrBuffTWI = 0;
-								TWI_BytesRecividos = 0;
-								for(uint8_t i = 0; i<I2C_BUFFER_SIZE; i++){
-									TWI_Buff[i]=0x00;
-								}
-								TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
-								// Procesamos los datos recibidos
-								break;
-
-		case TW_SR_DATA_NACK:		// Se recibio informacion pero se respondio con NACK
-		case TW_SR_GCALL_DATA_NACK: // Se recibio informacion de llamado general y se respondio con NACK
-		default:				break;
-	}
-
-
+	I2C_AtenderInterrupcion();
 }
 
 
@@ -134,55 +110,12 @@ ISR(TWI_vect)
 
 int main(void) {
 
-
 	_delay_ms(20);
 	initHardware();
+	initVariables();
 	initPollingTimer();
 	sei();	// Enable the Global Interrupt Enable flag so that interrupts can be processed 
-
-	// Inicializamos las variables que controlan el estado de las tareas
-
-	estadoTeclado = 0x00;
-	//estadoMainProgram = 0x00;
-
-	
-	//uint8_t dato = '0';
-	
-	while(1){
-	/*
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-	
-		LCD_linea4Pos0();LCD_esperarListo();
-		LCD_EnviarStr("Cupos Libres 000/000");
-
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-	
-		LCD_linea4Pos0();LCD_esperarListo();
-		LCD_EnviarStr("Display Externo: OK ");
-
-		//USART0_Enviar('M');
-
-		uint8_t DS1307_data[8];
-		int error;
-		error = I2C_LeerBytes(DS1307_ID, DS1307_ADDR, 0x00, 4, DS1307_data);
-
-		if(error == -1){
-			USART0_EnviarLn("ERROR!!");
-		}
-		else{
-			LCD_linea1Pos0();LCD_esperarListo();
-			LCD_enviarDTA(((DS1307_data[1]&0x70)>>4)+0x30);LCD_esperarListo();
-			LCD_enviarDTA(((DS1307_data[1]&0x0F))+0x30);LCD_esperarListo();
-			LCD_enviarDTA(':');LCD_esperarListo();
-			LCD_enviarDTA(((DS1307_data[0]&0x70)>>4)+0x30);LCD_esperarListo();
-			LCD_enviarDTA(((DS1307_data[0]&0x0F))+0x30);LCD_esperarListo();
-			
-		}
-
-*/
-	}
+	while(1){}
 
 }
 
@@ -198,6 +131,17 @@ ISR(TIMER0_OVF_vect) {
 	vTeclado();
 	vMainProgram();
 
+	if(mascaraFunciones&_BV(CONTRASENA))
+		validarContrasena();
+
+	if(mascaraFunciones&_BV(DATOS_PARQUEADERO))
+		adminDatosParqueadero();
+
+	if(mascaraFunciones&_BV(FECHA_HORA))
+		adminFechaHora();
+
+	if(mascaraFunciones&_BV(CONFIGURACIONES))
+		adminConfiguraciones();
 }
 
 
@@ -248,6 +192,31 @@ void initHardware(void){
 }
 
 
+/**
+ *
+ */
+void initVariables(void){	
+
+	mascaraFunciones = 0x00;
+	estadoMainProgram = 0x00;
+	estadoTeclado = 0x00;
+
+	for(int i=0; i<10; i++)
+		password[i] = eeprom_read_byte((uint8_t*)&passwordROM[i]);
+
+		
+	totalCupos = eeprom_read_word((uint16_t*)&totalCuposROM);
+
+	cuposOcupados = 0;
+	cuposDisponibles = totalCupos;
+
+}
+
+
+
+/**
+ *
+ */
 void initPollingTimer(void){
 
 	// -------------------------------------------------
@@ -259,7 +228,6 @@ void initPollingTimer(void){
 	TIMSK0 = _BV(TOIE0);	// Activamos interrupcion por Overflow del contador
 	TCCR0B = _BV(CS02);
 	TCNT0 = 0xC0;
-
 }
 
 
@@ -344,9 +312,12 @@ void vTeclado(void){
 }
 
 
+
+/**
+ *
+ */
 void vMainProgram(void){
 
-	static uint8_t estadoMainProgram;
 	static uint8_t i;
 	
 	switch(estadoMainProgram){
@@ -370,8 +341,6 @@ void vMainProgram(void){
 			LCD_linea3Pos0();LCD_esperarListo();
 			LCD_EnviarStr("Cupos Libres:000/000");
 
-
-
 			estadoMainProgram++;
 			break;
 
@@ -387,49 +356,31 @@ void vMainProgram(void){
 				LCD_EnviarStr("  ");
 				LCD_EnviarStr(DS1307_hora);
 
+				LCD_linea3Pos0();LCD_esperarListo();
+				LCD_EnviarStr("Cupos Libres:00");
+				LCD_enviarDTA_Wait(cuposOcupados+0x30);
+				LCD_EnviarStr("/000");
+
 				i=0;
 			}
 			estadoMainProgram++;
 			break;
+
 		case 0x02:
 			estadoMainProgram--;
-			if(nuevaTecla)
-			{
+			if(nuevaTecla){
+				nuevaTecla=0;
 				switch(teclaPresionada){
 					case 12: 
 						estadoMainProgram = 0x03;
+						mascaraFunciones |= _BV(CONTRASENA);
 						break;
 					default: break;
 				}
 			}
-		
 			break;
 			
 		case 0x03:
-			LCD_borrarPantalla();
-			LCD_linea1Pos0();LCD_esperarListo();
-			LCD_EnviarStr("INGRESO SEGURO AREA");
-			LCD_linea2Pos0();LCD_esperarListo();
-			LCD_EnviarStr("   ADMINISTRACION");
-			LCD_linea3Pos0();LCD_esperarListo();
-			LCD_EnviarStr(" Ingrese Contrasena");
-			LCD_linea4Pos0();LCD_esperarListo();
-			LCD_EnviarStr("     ----------");
-			
-			estadoMainProgram++;
-			break;
-		
-		case 0x04:
-
-			if(nuevaTecla){
-				switch(teclaPresionada){
-					case 13: 
-						estadoMainProgram = 0x00;
-						break;
-					default: break;
-				}
-			}
-		
 			break;
 
 		default:
