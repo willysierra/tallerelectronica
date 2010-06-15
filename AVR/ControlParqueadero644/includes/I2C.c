@@ -42,13 +42,19 @@
  #include <avr/pgmspace.h>
  #include <util/delay.h>		// Convenience functions for busy-wait delay loops
  #include "I2C.h"
+ #include "USART.h"
 
 #define I2C_START 0
 #define I2C_DATA  1
 #define I2C_STOP  2
 
+unsigned char TWI_Buff[I2C_BUFFER_SIZE];
+unsigned char TWI_BytesRecividos;
 
 
+/**
+ *
+ */
 void I2C_Init(void){
 
 	// Iniciamos todos los registros en sus valores por defecto
@@ -66,6 +72,9 @@ void I2C_Init(void){
 }
 
 
+/**
+ *
+ */
 uint8_t I2C_Enviar(uint8_t type){
 
 	switch(type) {
@@ -90,6 +99,10 @@ uint8_t I2C_Enviar(uint8_t type){
 }
 
 
+
+/**
+ *
+ */
 int I2C_EscribirBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf){
 	
 	uint8_t n=0;
@@ -180,8 +193,9 @@ int I2C_EscribirBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, in
 }
 
 
-
-
+/**
+ *
+ */
 int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf){
 
 	uint8_t n=0;
@@ -305,10 +319,11 @@ int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int le
 }
 
 
+/**
+ *
+ */
 void I2C_AtenderInterrupcion(void){
 
-	// 0x60  -> Se recibio SLA+W  y se envio ACK
-	// 0x68  -> Maestro perdio control, se recibio SLA+W y se envio ACK ()
 	
 	static unsigned char PtrBuffTWI;
 
@@ -336,10 +351,37 @@ void I2C_AtenderInterrupcion(void){
 								// de lo contrario ACK en sigueinte recepcion
 								TWCR = _BV(TWEN)|_BV(TWIE)|_BV(TWINT)|(PtrBuffTWI==I2C_BUFFER_SIZE?0:_BV(TWEA));
 								break;
-		case TW_SR_STOP:		// Se recibnio condicion de STOP o REPEATED START (Se procesa informacionrecibida)
+		case TW_SR_STOP:		// Se recibio condicion de STOP o REPEATED START (Se procesa informacionrecibida)
 								
 								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
 								TWCR = _BV(TWEN);
+
+								cuposOcupados++;
+								cuposDisponibles--;
+
+								switch(TWI_Buff[0]){
+									case 0x01:
+										// Se registro un ingreso o salida de un vehiculo
+
+										if(TWI_Buff[1]==0x00){
+											// Ingresa un Vehiculo Estudiante
+											cuposOcupados++;
+											cuposDisponibles--;
+										}else if(TWI_Buff[1]==0xFF){
+											// Salida de un Vehiculo Estudiantes
+											cuposOcupados--;
+											cuposDisponibles++;
+
+										}
+
+
+										break;
+									default:
+										break;
+
+
+								}
+
 								TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
 								// Procesamos los datos recibidos
 								break;

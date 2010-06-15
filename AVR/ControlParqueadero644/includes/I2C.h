@@ -84,8 +84,8 @@
 //  VARIABLES USADAS POR EL PROTOCOLO DE COMUNICACION I2C/TWI
 //-------------------------------------------------------------------------------
 
-static unsigned char TWI_Buff[I2C_BUFFER_SIZE];
-static unsigned char TWI_BytesRecividos;
+extern unsigned char TWI_Buff[I2C_BUFFER_SIZE];
+extern unsigned char TWI_BytesRecividos;
 
 
 /** \name TWSR values

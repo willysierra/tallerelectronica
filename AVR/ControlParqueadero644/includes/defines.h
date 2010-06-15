@@ -103,5 +103,17 @@
 #define LCD_DSPCTR_C 0
 #define LCD_DSPCTR_B 0
 
+extern unsigned char password[10];
+extern unsigned char lecturaTeclado;
+extern unsigned char teclaPresionada;
+extern char nuevaTecla;
+
+extern unsigned char mascaraFunciones;
+extern unsigned char estadoMainProgram;
+
+
+extern unsigned int totalCupos;
+extern unsigned int cuposOcupados;
+extern unsigned int cuposDisponibles;
 
 #endif /* _DEFINES_H */
