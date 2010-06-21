@@ -3,27 +3,27 @@ ControlParqueadero168.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000006cc  00000000  00000000  00000074  2**1
+  0 .text         00000554  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .bss          00000006  00800100  00800100  00000740  2**0
+  1 .bss          00000006  00800100  00800100  000005c8  2**0
                   ALLOC
-  2 .debug_aranges 00000080  00000000  00000000  00000740  2**0
+  2 .debug_aranges 00000080  00000000  00000000  000005c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  3 .debug_pubnames 00000188  00000000  00000000  000007c0  2**0
+  3 .debug_pubnames 00000188  00000000  00000000  00000648  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_info   000010f5  00000000  00000000  00000948  2**0
+  4 .debug_info   000008ad  00000000  00000000  000007d0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_abbrev 000004a3  00000000  00000000  00001a3d  2**0
+  5 .debug_abbrev 00000480  00000000  00000000  0000107d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_line   00000d14  00000000  00000000  00001ee0  2**0
+  6 .debug_line   000009a0  00000000  00000000  000014fd  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_frame  00000160  00000000  00000000  00002bf4  2**2
+  7 .debug_frame  00000160  00000000  00000000  00001ea0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_str    000002fb  00000000  00000000  00002d54  2**0
+  8 .debug_str    00000307  00000000  00000000  00002000  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    00000896  00000000  00000000  0000304f  2**0
+  9 .debug_loc    00000336  00000000  00000000  00002307  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000060  00000000  00000000  000038e5  2**0
+ 10 .debug_ranges 00000018  00000000  00000000  0000263d  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -77,8 +77,8 @@ Disassembly of section .text:
   7e:	a6 30       	cpi	r26, 0x06	; 6
   80:	b1 07       	cpc	r27, r17
   82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
-  84:	0e 94 4c 00 	call	0x98	; 0x98 <main>
-  88:	0c 94 64 03 	jmp	0x6c8	; 0x6c8 <_exit>
+  84:	0e 94 4e 00 	call	0x9c	; 0x9c <main>
+  88:	0c 94 a8 02 	jmp	0x550	; 0x550 <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -94,38 +94,42 @@ void initHardware(){
 
 	// Inicializamos el modulo I2C/TWI
 	I2C_Init();
-  92:	0e 94 5d 01 	call	0x2ba	; 0x2ba <I2C_Init>
+  92:	0e 94 a1 00 	call	0x142	; 0x142 <I2C_Init>
+
+	//Inicializamos los pines para la entrada de los dos pulsadores
+	PORTD = 0x00;
+  96:	1b b8       	out	0x0b, r1	; 11
+	DDRD  = 0x00;
+  98:	1a b8       	out	0x0a, r1	; 10
 SD_init();
 
 */
 
 
 }
-  96:	08 95       	ret
+  9a:	08 95       	ret
 
-00000098 <main>:
+0000009c <main>:
 
 //  ------------------------------------------------------------------------
 //	PROGRAMA PRINCIPAL DEL SISITEMA
 //  ------------------------------------------------------------------------
 
 int main(void) {
-  98:	cf 92       	push	r12
-  9a:	df 92       	push	r13
-  9c:	ef 92       	push	r14
-  9e:	ff 92       	push	r15
-  a0:	0f 93       	push	r16
-  a2:	1f 93       	push	r17
-  a4:	df 93       	push	r29
-  a6:	cf 93       	push	r28
-  a8:	cd b7       	in	r28, 0x3d	; 61
-  aa:	de b7       	in	r29, 0x3e	; 62
-  ac:	28 97       	sbiw	r28, 0x08	; 8
-  ae:	0f b6       	in	r0, 0x3f	; 63
-  b0:	f8 94       	cli
-  b2:	de bf       	out	0x3e, r29	; 62
-  b4:	0f be       	out	0x3f, r0	; 63
-  b6:	cd bf       	out	0x3d, r28	; 61
+  9c:	af 92       	push	r10
+  9e:	bf 92       	push	r11
+  a0:	cf 92       	push	r12
+  a2:	df 92       	push	r13
+  a4:	ef 92       	push	r14
+  a6:	ff 92       	push	r15
+  a8:	0f 93       	push	r16
+  aa:	1f 93       	push	r17
+  ac:	df 93       	push	r29
+  ae:	cf 93       	push	r28
+  b0:	00 d0       	rcall	.+0      	; 0xb2 <main+0x16>
+  b2:	00 d0       	rcall	.+0      	; 0xb4 <main+0x18>
+  b4:	cd b7       	in	r28, 0x3d	; 61
+  b6:	de b7       	in	r29, 0x3e	; 62
   b8:	80 e9       	ldi	r24, 0x90	; 144
   ba:	91 e0       	ldi	r25, 0x01	; 1
     milliseconds can be achieved.
@@ -138,7 +142,7 @@ _delay_loop_2(uint16_t __count)
   be:	30 e0       	ldi	r19, 0x00	; 0
   c0:	f9 01       	movw	r30, r18
   c2:	31 97       	sbiw	r30, 0x01	; 1
-  c4:	f1 f7       	brne	.-4      	; 0xc2 <main+0x2a>
+  c4:	f1 f7       	brne	.-4      	; 0xc2 <main+0x26>
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
 		{
@@ -152,1555 +156,1082 @@ _delay_loop_2(uint16_t __count)
 		//	__ticks = requested delay in 1/10 ms
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
-  c8:	d9 f7       	brne	.-10     	; 0xc0 <main+0x28>
+  c8:	d9 f7       	brne	.-10     	; 0xc0 <main+0x24>
 
 
 	_delay_ms(40);
 	initHardware();
   ca:	0e 94 48 00 	call	0x90	; 0x90 <initHardware>
 
-	uint8_t DS1307_data2[8];
+	uint8_t EntraCarro[2] = {0x00, 0x00};
+  ce:	19 82       	std	Y+1, r1	; 0x01
+  d0:	1a 82       	std	Y+2, r1	; 0x02
+	uint8_t SaleCarro[2] = {0xff, 0xff};
+  d2:	8f ef       	ldi	r24, 0xFF	; 255
+  d4:	8b 83       	std	Y+3, r24	; 0x03
+  d6:	8c 83       	std	Y+4, r24	; 0x04
+  d8:	20 e9       	ldi	r18, 0x90	; 144
+  da:	31 e0       	ldi	r19, 0x01	; 1
+		_delay_ms(40);
+		if(PIND&0x01){
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, EntraCarro);
+			while(PIND&0x01){}
+		}else if(PIND&0x02){
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, SaleCarro);
+  dc:	93 e0       	ldi	r25, 0x03	; 3
+  de:	a9 2e       	mov	r10, r25
+  e0:	b1 2c       	mov	r11, r1
+  e2:	ac 0e       	add	r10, r28
+  e4:	bd 1e       	adc	r11, r29
+	uint8_t SaleCarro[2] = {0xff, 0xff};
 
-	DS1307_data2[0] = 0x05;
-  ce:	85 e0       	ldi	r24, 0x05	; 5
-  d0:	89 83       	std	Y+1, r24	; 0x01
-	DS1307_data2[1] = 0x06;
-  d2:	86 e0       	ldi	r24, 0x06	; 6
-  d4:	8a 83       	std	Y+2, r24	; 0x02
-	DS1307_data2[2] = 0x00;
-  d6:	1b 82       	std	Y+3, r1	; 0x03
-	DS1307_data2[3] = 0x00;
-  d8:	1c 82       	std	Y+4, r1	; 0x04
-	DS1307_data2[4] = 0x00;
-  da:	1d 82       	std	Y+5, r1	; 0x05
-	DS1307_data2[5] = 0x00;
-  dc:	1e 82       	std	Y+6, r1	; 0x06
-	DS1307_data2[6] = 0x00;
-  de:	1f 82       	std	Y+7, r1	; 0x07
-	DS1307_data2[7] = 0x00;
-  e0:	18 86       	std	Y+8, r1	; 0x08
-  e2:	28 ee       	ldi	r18, 0xE8	; 232
-  e4:	33 e0       	ldi	r19, 0x03	; 3
-  e6:	88 ec       	ldi	r24, 0xC8	; 200
-  e8:	e8 2e       	mov	r14, r24
-  ea:	f1 2c       	mov	r15, r1
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-
-		I2C_EscribirBytes(0x00, 0x01, 0x00, 2, DS1307_data2);
-  ec:	6e 01       	movw	r12, r28
-  ee:	08 94       	sec
-  f0:	c1 1c       	adc	r12, r1
-  f2:	d1 1c       	adc	r13, r1
-  f4:	05 c0       	rjmp	.+10     	; 0x100 <main+0x68>
+	while(1){
+		_delay_ms(40);
+		if(PIND&0x01){
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, EntraCarro);
+  e6:	6e 01       	movw	r12, r28
+  e8:	08 94       	sec
+  ea:	c1 1c       	adc	r12, r1
+  ec:	d1 1c       	adc	r13, r1
+  ee:	88 ec       	ldi	r24, 0xC8	; 200
+  f0:	e8 2e       	mov	r14, r24
+  f2:	f1 2c       	mov	r15, r1
+  f4:	09 c0       	rjmp	.+18     	; 0x108 <main+0x6c>
   f6:	c7 01       	movw	r24, r14
   f8:	01 97       	sbiw	r24, 0x01	; 1
-  fa:	f1 f7       	brne	.-4      	; 0xf8 <main+0x60>
+  fa:	f1 f7       	brne	.-4      	; 0xf8 <main+0x5c>
 		{
 			// wait 1/10 ms
 			_delay_loop_2(((F_CPU) / 4e3) / 10);
 			__ticks --;
   fc:	21 50       	subi	r18, 0x01	; 1
   fe:	30 40       	sbci	r19, 0x00	; 0
+ 100:	03 c0       	rjmp	.+6      	; 0x108 <main+0x6c>
+ 102:	20 e9       	ldi	r18, 0x90	; 144
+ 104:	31 e0       	ldi	r19, 0x01	; 1
+ 106:	f7 cf       	rjmp	.-18     	; 0xf6 <main+0x5a>
 		__ticks = 1;
 	else if (__tmp > 65535)
 	{
 		//	__ticks = requested delay in 1/10 ms
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
- 100:	21 15       	cp	r18, r1
- 102:	31 05       	cpc	r19, r1
- 104:	c1 f7       	brne	.-16     	; 0xf6 <main+0x5e>
- 106:	88 ee       	ldi	r24, 0xE8	; 232
- 108:	93 e0       	ldi	r25, 0x03	; 3
- 10a:	f7 01       	movw	r30, r14
- 10c:	31 97       	sbiw	r30, 0x01	; 1
- 10e:	f1 f7       	brne	.-4      	; 0x10c <main+0x74>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 110:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 112:	d9 f7       	brne	.-10     	; 0x10a <main+0x72>
- 114:	88 ee       	ldi	r24, 0xE8	; 232
- 116:	93 e0       	ldi	r25, 0x03	; 3
- 118:	f7 01       	movw	r30, r14
- 11a:	31 97       	sbiw	r30, 0x01	; 1
- 11c:	f1 f7       	brne	.-4      	; 0x11a <main+0x82>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 11e:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 120:	d9 f7       	brne	.-10     	; 0x118 <main+0x80>
- 122:	88 ee       	ldi	r24, 0xE8	; 232
- 124:	93 e0       	ldi	r25, 0x03	; 3
- 126:	f7 01       	movw	r30, r14
- 128:	31 97       	sbiw	r30, 0x01	; 1
- 12a:	f1 f7       	brne	.-4      	; 0x128 <main+0x90>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 12c:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 12e:	d9 f7       	brne	.-10     	; 0x126 <main+0x8e>
- 130:	88 ee       	ldi	r24, 0xE8	; 232
- 132:	93 e0       	ldi	r25, 0x03	; 3
- 134:	f7 01       	movw	r30, r14
- 136:	31 97       	sbiw	r30, 0x01	; 1
- 138:	f1 f7       	brne	.-4      	; 0x136 <main+0x9e>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 13a:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 13c:	d9 f7       	brne	.-10     	; 0x134 <main+0x9c>
- 13e:	88 ee       	ldi	r24, 0xE8	; 232
- 140:	93 e0       	ldi	r25, 0x03	; 3
- 142:	f7 01       	movw	r30, r14
- 144:	31 97       	sbiw	r30, 0x01	; 1
- 146:	f1 f7       	brne	.-4      	; 0x144 <main+0xac>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 148:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 14a:	d9 f7       	brne	.-10     	; 0x142 <main+0xaa>
- 14c:	88 ee       	ldi	r24, 0xE8	; 232
- 14e:	93 e0       	ldi	r25, 0x03	; 3
- 150:	f7 01       	movw	r30, r14
- 152:	31 97       	sbiw	r30, 0x01	; 1
- 154:	f1 f7       	brne	.-4      	; 0x152 <main+0xba>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 156:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 158:	d9 f7       	brne	.-10     	; 0x150 <main+0xb8>
- 15a:	88 ee       	ldi	r24, 0xE8	; 232
- 15c:	93 e0       	ldi	r25, 0x03	; 3
- 15e:	f7 01       	movw	r30, r14
- 160:	31 97       	sbiw	r30, 0x01	; 1
- 162:	f1 f7       	brne	.-4      	; 0x160 <main+0xc8>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 164:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 166:	d9 f7       	brne	.-10     	; 0x15e <main+0xc6>
- 168:	88 ee       	ldi	r24, 0xE8	; 232
- 16a:	93 e0       	ldi	r25, 0x03	; 3
- 16c:	f7 01       	movw	r30, r14
- 16e:	31 97       	sbiw	r30, 0x01	; 1
- 170:	f1 f7       	brne	.-4      	; 0x16e <main+0xd6>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 172:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 174:	d9 f7       	brne	.-10     	; 0x16c <main+0xd4>
- 176:	88 ee       	ldi	r24, 0xE8	; 232
- 178:	93 e0       	ldi	r25, 0x03	; 3
- 17a:	f7 01       	movw	r30, r14
- 17c:	31 97       	sbiw	r30, 0x01	; 1
- 17e:	f1 f7       	brne	.-4      	; 0x17c <main+0xe4>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 180:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 182:	d9 f7       	brne	.-10     	; 0x17a <main+0xe2>
- 184:	88 ee       	ldi	r24, 0xE8	; 232
- 186:	93 e0       	ldi	r25, 0x03	; 3
- 188:	f7 01       	movw	r30, r14
- 18a:	31 97       	sbiw	r30, 0x01	; 1
- 18c:	f1 f7       	brne	.-4      	; 0x18a <main+0xf2>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 18e:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 190:	d9 f7       	brne	.-10     	; 0x188 <main+0xf0>
- 192:	88 ee       	ldi	r24, 0xE8	; 232
- 194:	93 e0       	ldi	r25, 0x03	; 3
- 196:	f7 01       	movw	r30, r14
- 198:	31 97       	sbiw	r30, 0x01	; 1
- 19a:	f1 f7       	brne	.-4      	; 0x198 <main+0x100>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 19c:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 19e:	d9 f7       	brne	.-10     	; 0x196 <main+0xfe>
- 1a0:	88 ee       	ldi	r24, 0xE8	; 232
- 1a2:	93 e0       	ldi	r25, 0x03	; 3
- 1a4:	f7 01       	movw	r30, r14
- 1a6:	31 97       	sbiw	r30, 0x01	; 1
- 1a8:	f1 f7       	brne	.-4      	; 0x1a6 <main+0x10e>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1aa:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1ac:	d9 f7       	brne	.-10     	; 0x1a4 <main+0x10c>
- 1ae:	88 ee       	ldi	r24, 0xE8	; 232
- 1b0:	93 e0       	ldi	r25, 0x03	; 3
- 1b2:	f7 01       	movw	r30, r14
- 1b4:	31 97       	sbiw	r30, 0x01	; 1
- 1b6:	f1 f7       	brne	.-4      	; 0x1b4 <main+0x11c>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1b8:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1ba:	d9 f7       	brne	.-10     	; 0x1b2 <main+0x11a>
- 1bc:	88 ee       	ldi	r24, 0xE8	; 232
- 1be:	93 e0       	ldi	r25, 0x03	; 3
- 1c0:	f7 01       	movw	r30, r14
- 1c2:	31 97       	sbiw	r30, 0x01	; 1
- 1c4:	f1 f7       	brne	.-4      	; 0x1c2 <main+0x12a>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1c6:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1c8:	d9 f7       	brne	.-10     	; 0x1c0 <main+0x128>
- 1ca:	88 ee       	ldi	r24, 0xE8	; 232
- 1cc:	93 e0       	ldi	r25, 0x03	; 3
- 1ce:	f7 01       	movw	r30, r14
- 1d0:	31 97       	sbiw	r30, 0x01	; 1
- 1d2:	f1 f7       	brne	.-4      	; 0x1d0 <main+0x138>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1d4:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1d6:	d9 f7       	brne	.-10     	; 0x1ce <main+0x136>
- 1d8:	88 ee       	ldi	r24, 0xE8	; 232
- 1da:	93 e0       	ldi	r25, 0x03	; 3
- 1dc:	f7 01       	movw	r30, r14
- 1de:	31 97       	sbiw	r30, 0x01	; 1
- 1e0:	f1 f7       	brne	.-4      	; 0x1de <main+0x146>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1e2:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1e4:	d9 f7       	brne	.-10     	; 0x1dc <main+0x144>
- 1e6:	88 ee       	ldi	r24, 0xE8	; 232
- 1e8:	93 e0       	ldi	r25, 0x03	; 3
- 1ea:	f7 01       	movw	r30, r14
- 1ec:	31 97       	sbiw	r30, 0x01	; 1
- 1ee:	f1 f7       	brne	.-4      	; 0x1ec <main+0x154>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1f0:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 1f2:	d9 f7       	brne	.-10     	; 0x1ea <main+0x152>
- 1f4:	88 ee       	ldi	r24, 0xE8	; 232
- 1f6:	93 e0       	ldi	r25, 0x03	; 3
- 1f8:	f7 01       	movw	r30, r14
- 1fa:	31 97       	sbiw	r30, 0x01	; 1
- 1fc:	f1 f7       	brne	.-4      	; 0x1fa <main+0x162>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 1fe:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 200:	d9 f7       	brne	.-10     	; 0x1f8 <main+0x160>
- 202:	88 ee       	ldi	r24, 0xE8	; 232
- 204:	93 e0       	ldi	r25, 0x03	; 3
- 206:	f7 01       	movw	r30, r14
- 208:	31 97       	sbiw	r30, 0x01	; 1
- 20a:	f1 f7       	brne	.-4      	; 0x208 <main+0x170>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 20c:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 20e:	d9 f7       	brne	.-10     	; 0x206 <main+0x16e>
- 210:	88 ee       	ldi	r24, 0xE8	; 232
- 212:	93 e0       	ldi	r25, 0x03	; 3
- 214:	f7 01       	movw	r30, r14
- 216:	31 97       	sbiw	r30, 0x01	; 1
- 218:	f1 f7       	brne	.-4      	; 0x216 <main+0x17e>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 21a:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 21c:	d9 f7       	brne	.-10     	; 0x214 <main+0x17c>
- 21e:	88 ee       	ldi	r24, 0xE8	; 232
- 220:	93 e0       	ldi	r25, 0x03	; 3
- 222:	f7 01       	movw	r30, r14
- 224:	31 97       	sbiw	r30, 0x01	; 1
- 226:	f1 f7       	brne	.-4      	; 0x224 <main+0x18c>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 228:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 22a:	d9 f7       	brne	.-10     	; 0x222 <main+0x18a>
- 22c:	88 ee       	ldi	r24, 0xE8	; 232
- 22e:	93 e0       	ldi	r25, 0x03	; 3
- 230:	f7 01       	movw	r30, r14
- 232:	31 97       	sbiw	r30, 0x01	; 1
- 234:	f1 f7       	brne	.-4      	; 0x232 <main+0x19a>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 236:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 238:	d9 f7       	brne	.-10     	; 0x230 <main+0x198>
- 23a:	88 ee       	ldi	r24, 0xE8	; 232
- 23c:	93 e0       	ldi	r25, 0x03	; 3
- 23e:	f7 01       	movw	r30, r14
- 240:	31 97       	sbiw	r30, 0x01	; 1
- 242:	f1 f7       	brne	.-4      	; 0x240 <main+0x1a8>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 244:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 246:	d9 f7       	brne	.-10     	; 0x23e <main+0x1a6>
- 248:	88 ee       	ldi	r24, 0xE8	; 232
- 24a:	93 e0       	ldi	r25, 0x03	; 3
- 24c:	f7 01       	movw	r30, r14
- 24e:	31 97       	sbiw	r30, 0x01	; 1
- 250:	f1 f7       	brne	.-4      	; 0x24e <main+0x1b6>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 252:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 254:	d9 f7       	brne	.-10     	; 0x24c <main+0x1b4>
- 256:	88 ee       	ldi	r24, 0xE8	; 232
- 258:	93 e0       	ldi	r25, 0x03	; 3
- 25a:	f7 01       	movw	r30, r14
- 25c:	31 97       	sbiw	r30, 0x01	; 1
- 25e:	f1 f7       	brne	.-4      	; 0x25c <main+0x1c4>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 260:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 262:	d9 f7       	brne	.-10     	; 0x25a <main+0x1c2>
- 264:	88 ee       	ldi	r24, 0xE8	; 232
- 266:	93 e0       	ldi	r25, 0x03	; 3
- 268:	f7 01       	movw	r30, r14
- 26a:	31 97       	sbiw	r30, 0x01	; 1
- 26c:	f1 f7       	brne	.-4      	; 0x26a <main+0x1d2>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 26e:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 270:	d9 f7       	brne	.-10     	; 0x268 <main+0x1d0>
- 272:	88 ee       	ldi	r24, 0xE8	; 232
- 274:	93 e0       	ldi	r25, 0x03	; 3
- 276:	f7 01       	movw	r30, r14
- 278:	31 97       	sbiw	r30, 0x01	; 1
- 27a:	f1 f7       	brne	.-4      	; 0x278 <main+0x1e0>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 27c:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 27e:	d9 f7       	brne	.-10     	; 0x276 <main+0x1de>
- 280:	88 ee       	ldi	r24, 0xE8	; 232
- 282:	93 e0       	ldi	r25, 0x03	; 3
- 284:	f7 01       	movw	r30, r14
- 286:	31 97       	sbiw	r30, 0x01	; 1
- 288:	f1 f7       	brne	.-4      	; 0x286 <main+0x1ee>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 28a:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 28c:	d9 f7       	brne	.-10     	; 0x284 <main+0x1ec>
- 28e:	88 ee       	ldi	r24, 0xE8	; 232
- 290:	93 e0       	ldi	r25, 0x03	; 3
- 292:	f7 01       	movw	r30, r14
- 294:	31 97       	sbiw	r30, 0x01	; 1
- 296:	f1 f7       	brne	.-4      	; 0x294 <main+0x1fc>
-		{
-			// wait 1/10 ms
-			_delay_loop_2(((F_CPU) / 4e3) / 10);
-			__ticks --;
- 298:	01 97       	sbiw	r24, 0x01	; 1
-		__ticks = 1;
-	else if (__tmp > 65535)
-	{
-		//	__ticks = requested delay in 1/10 ms
-		__ticks = (uint16_t) (__ms * 10.0);
-		while(__ticks)
- 29a:	d9 f7       	brne	.-10     	; 0x292 <main+0x1fa>
- 29c:	80 e0       	ldi	r24, 0x00	; 0
- 29e:	61 e0       	ldi	r22, 0x01	; 1
- 2a0:	40 e0       	ldi	r20, 0x00	; 0
- 2a2:	22 e0       	ldi	r18, 0x02	; 2
- 2a4:	30 e0       	ldi	r19, 0x00	; 0
- 2a6:	86 01       	movw	r16, r12
- 2a8:	0e 94 87 01 	call	0x30e	; 0x30e <I2C_EscribirBytes>
+ 108:	21 15       	cp	r18, r1
+ 10a:	31 05       	cpc	r19, r1
+ 10c:	a1 f7       	brne	.-24     	; 0xf6 <main+0x5a>
+	uint8_t EntraCarro[2] = {0x00, 0x00};
+	uint8_t SaleCarro[2] = {0xff, 0xff};
 
-		DS1307_data2[0] = DS1307_data2[0]++;
- 2ac:	89 81       	ldd	r24, Y+1	; 0x01
- 2ae:	8f 5f       	subi	r24, 0xFF	; 255
- 2b0:	89 83       	std	Y+1, r24	; 0x01
-		DS1307_data2[1] = DS1307_data2[0];
- 2b2:	8a 83       	std	Y+2, r24	; 0x02
- 2b4:	28 ee       	ldi	r18, 0xE8	; 232
- 2b6:	33 e0       	ldi	r19, 0x03	; 3
- 2b8:	1e cf       	rjmp	.-452    	; 0xf6 <main+0x5e>
+	while(1){
+		_delay_ms(40);
+		if(PIND&0x01){
+ 10e:	48 9b       	sbis	0x09, 0	; 9
+ 110:	0b c0       	rjmp	.+22     	; 0x128 <main+0x8c>
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, EntraCarro);
+ 112:	80 e0       	ldi	r24, 0x00	; 0
+ 114:	61 e0       	ldi	r22, 0x01	; 1
+ 116:	40 e0       	ldi	r20, 0x00	; 0
+ 118:	22 e0       	ldi	r18, 0x02	; 2
+ 11a:	30 e0       	ldi	r19, 0x00	; 0
+ 11c:	86 01       	movw	r16, r12
+ 11e:	0e 94 cb 00 	call	0x196	; 0x196 <I2C_EscribirBytes>
+			while(PIND&0x01){}
+ 122:	48 99       	sbic	0x09, 0	; 9
+ 124:	fe cf       	rjmp	.-4      	; 0x122 <main+0x86>
+ 126:	ed cf       	rjmp	.-38     	; 0x102 <main+0x66>
+		}else if(PIND&0x02){
+ 128:	49 9b       	sbis	0x09, 1	; 9
+ 12a:	eb cf       	rjmp	.-42     	; 0x102 <main+0x66>
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, SaleCarro);
+ 12c:	80 e0       	ldi	r24, 0x00	; 0
+ 12e:	61 e0       	ldi	r22, 0x01	; 1
+ 130:	40 e0       	ldi	r20, 0x00	; 0
+ 132:	22 e0       	ldi	r18, 0x02	; 2
+ 134:	30 e0       	ldi	r19, 0x00	; 0
+ 136:	85 01       	movw	r16, r10
+ 138:	0e 94 cb 00 	call	0x196	; 0x196 <I2C_EscribirBytes>
+			while(PIND&0x02){}
+ 13c:	49 99       	sbic	0x09, 1	; 9
+ 13e:	fe cf       	rjmp	.-4      	; 0x13c <main+0xa0>
+ 140:	e0 cf       	rjmp	.-64     	; 0x102 <main+0x66>
 
-000002ba <I2C_Init>:
+00000142 <I2C_Init>:
 
 
 void I2C_Init(void){
 
 	// Iniciamos todos los registros en sus valores por defecto
 	TWBR = 0x00;	// TWI Bit Rate Register
- 2ba:	e8 eb       	ldi	r30, 0xB8	; 184
- 2bc:	f0 e0       	ldi	r31, 0x00	; 0
- 2be:	10 82       	st	Z, r1
+ 142:	e8 eb       	ldi	r30, 0xB8	; 184
+ 144:	f0 e0       	ldi	r31, 0x00	; 0
+ 146:	10 82       	st	Z, r1
 	TWCR = 0x00;	// TWI Control Register
- 2c0:	10 92 bc 00 	sts	0x00BC, r1
+ 148:	10 92 bc 00 	sts	0x00BC, r1
 	TWSR = 0xF8;	// TWI Status Register
- 2c4:	88 ef       	ldi	r24, 0xF8	; 248
- 2c6:	80 93 b9 00 	sts	0x00B9, r24
+ 14c:	88 ef       	ldi	r24, 0xF8	; 248
+ 14e:	80 93 b9 00 	sts	0x00B9, r24
 	TWAMR = 0x00;	// TWI Address Mask Register
- 2ca:	10 92 bd 00 	sts	0x00BD, r1
+ 152:	10 92 bd 00 	sts	0x00BD, r1
 
 	TWBR = I2C_TWBR;
- 2ce:	81 e2       	ldi	r24, 0x21	; 33
- 2d0:	80 83       	st	Z, r24
+ 156:	81 e2       	ldi	r24, 0x21	; 33
+ 158:	80 83       	st	Z, r24
 	TWAR = (I2C_ADDR<<1) | I2C_GENCAL;
- 2d2:	84 e0       	ldi	r24, 0x04	; 4
- 2d4:	80 93 ba 00 	sts	0x00BA, r24
+ 15a:	84 e0       	ldi	r24, 0x04	; 4
+ 15c:	80 93 ba 00 	sts	0x00BA, r24
 
 	// Se inicializa como Esclavo, atento a recibir un llamado con ACK
 	//TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
 
 }
- 2d8:	08 95       	ret
+ 160:	08 95       	ret
 
-000002da <I2C_Enviar>:
+00000162 <I2C_Enviar>:
 
 
 uint8_t I2C_Enviar(uint8_t type){
 
 	switch(type) {
- 2da:	81 30       	cpi	r24, 0x01	; 1
- 2dc:	39 f0       	breq	.+14     	; 0x2ec <I2C_Enviar+0x12>
- 2de:	81 30       	cpi	r24, 0x01	; 1
- 2e0:	18 f0       	brcs	.+6      	; 0x2e8 <I2C_Enviar+0xe>
- 2e2:	82 30       	cpi	r24, 0x02	; 2
- 2e4:	61 f4       	brne	.+24     	; 0x2fe <I2C_Enviar+0x24>
- 2e6:	06 c0       	rjmp	.+12     	; 0x2f4 <I2C_Enviar+0x1a>
+ 162:	81 30       	cpi	r24, 0x01	; 1
+ 164:	39 f0       	breq	.+14     	; 0x174 <I2C_Enviar+0x12>
+ 166:	81 30       	cpi	r24, 0x01	; 1
+ 168:	18 f0       	brcs	.+6      	; 0x170 <I2C_Enviar+0xe>
+ 16a:	82 30       	cpi	r24, 0x02	; 2
+ 16c:	61 f4       	brne	.+24     	; 0x186 <I2C_Enviar+0x24>
+ 16e:	06 c0       	rjmp	.+12     	; 0x17c <I2C_Enviar+0x1a>
 		case I2C_START:    // Send Start Condition
 			TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);
- 2e8:	84 ea       	ldi	r24, 0xA4	; 164
- 2ea:	01 c0       	rjmp	.+2      	; 0x2ee <I2C_Enviar+0x14>
+ 170:	84 ea       	ldi	r24, 0xA4	; 164
+ 172:	01 c0       	rjmp	.+2      	; 0x176 <I2C_Enviar+0x14>
 			break;
 			
 		case I2C_DATA:     // Send Data
 			TWCR = _BV(TWINT)|_BV(TWEN);
- 2ec:	84 e8       	ldi	r24, 0x84	; 132
- 2ee:	80 93 bc 00 	sts	0x00BC, r24
- 2f2:	05 c0       	rjmp	.+10     	; 0x2fe <I2C_Enviar+0x24>
+ 174:	84 e8       	ldi	r24, 0x84	; 132
+ 176:	80 93 bc 00 	sts	0x00BC, r24
+ 17a:	05 c0       	rjmp	.+10     	; 0x186 <I2C_Enviar+0x24>
 			break;
 
 		case I2C_STOP:     // Send Stop Condition
 			TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWSTO);
- 2f4:	84 e9       	ldi	r24, 0x94	; 148
- 2f6:	80 93 bc 00 	sts	0x00BC, r24
- 2fa:	80 e0       	ldi	r24, 0x00	; 0
- 2fc:	08 95       	ret
+ 17c:	84 e9       	ldi	r24, 0x94	; 148
+ 17e:	80 93 bc 00 	sts	0x00BC, r24
+ 182:	80 e0       	ldi	r24, 0x00	; 0
+ 184:	08 95       	ret
 			return 0;
 			break;
 	}
 
 	// Wait for TWINT flag set in TWCR Register
 	while (!(TWCR & _BV(TWINT)));
- 2fe:	80 91 bc 00 	lds	r24, 0x00BC
- 302:	87 ff       	sbrs	r24, 7
- 304:	fc cf       	rjmp	.-8      	; 0x2fe <I2C_Enviar+0x24>
+ 186:	80 91 bc 00 	lds	r24, 0x00BC
+ 18a:	87 ff       	sbrs	r24, 7
+ 18c:	fc cf       	rjmp	.-8      	; 0x186 <I2C_Enviar+0x24>
 	// Return TWI Status Register, mask the prescaler bits (TWPS1,TWPS0)
 	return (TW_STATUS);
- 306:	80 91 b9 00 	lds	r24, 0x00B9
- 30a:	88 7f       	andi	r24, 0xF8	; 248
+ 18e:	80 91 b9 00 	lds	r24, 0x00B9
+ 192:	88 7f       	andi	r24, 0xF8	; 248
 }
- 30c:	08 95       	ret
+ 194:	08 95       	ret
 
-0000030e <I2C_EscribirBytes>:
+00000196 <I2C_EscribirBytes>:
 
 
 int I2C_EscribirBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf){
- 30e:	0f 93       	push	r16
- 310:	1f 93       	push	r17
- 312:	f8 01       	movw	r30, r16
+ 196:	0f 93       	push	r16
+ 198:	1f 93       	push	r17
+ 19a:	f8 01       	movw	r30, r16
 	uint8_t n=0;
 	uint8_t I2C_TWSR;
 	int bytesEscritos =0;
 
 	// Deshabilitamos la recepcion de datos
 	TWCR &= ~(_BV(TWEA)|_BV(TWEN)|_BV(TWIE));
- 314:	90 91 bc 00 	lds	r25, 0x00BC
- 318:	9a 7b       	andi	r25, 0xBA	; 186
- 31a:	90 93 bc 00 	sts	0x00BC, r25
+ 19c:	90 91 bc 00 	lds	r25, 0x00BC
+ 1a0:	9a 7b       	andi	r25, 0xBA	; 186
+ 1a2:	90 93 bc 00 	sts	0x00BC, r25
 			case TW_MT_ARB_LOST:	goto begin;
 			default:				return -1; break;
 		}
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
- 31e:	70 e0       	ldi	r23, 0x00	; 0
- 320:	67 70       	andi	r22, 0x07	; 7
- 322:	70 70       	andi	r23, 0x00	; 0
- 324:	66 0f       	add	r22, r22
- 326:	77 1f       	adc	r23, r23
- 328:	58 2f       	mov	r21, r24
- 32a:	52 95       	swap	r21
- 32c:	50 7f       	andi	r21, 0xF0	; 240
- 32e:	56 2b       	or	r21, r22
- 330:	90 e0       	ldi	r25, 0x00	; 0
+ 1a6:	70 e0       	ldi	r23, 0x00	; 0
+ 1a8:	67 70       	andi	r22, 0x07	; 7
+ 1aa:	70 70       	andi	r23, 0x00	; 0
+ 1ac:	66 0f       	add	r22, r22
+ 1ae:	77 1f       	adc	r23, r23
+ 1b0:	58 2f       	mov	r21, r24
+ 1b2:	52 95       	swap	r21
+ 1b4:	50 7f       	andi	r21, 0xF0	; 240
+ 1b6:	56 2b       	or	r21, r22
+ 1b8:	90 e0       	ldi	r25, 0x00	; 0
 		if(n++ >= I2C_MAX_TRIES)
 			return -1;
 		
 	begin:
 		// Enviamos condicion de START
 		TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);		// Enviamos condicion de START
- 332:	74 ea       	ldi	r23, 0xA4	; 164
+ 1ba:	74 ea       	ldi	r23, 0xA4	; 164
 			default:				return -1; break;
 		}
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion del esclavo con el bit R/~W para escribir
- 334:	64 e8       	ldi	r22, 0x84	; 132
+ 1bc:	64 e8       	ldi	r22, 0x84	; 132
 
 	// Deshabilitamos la recepcion de datos
 	TWCR &= ~(_BV(TWEA)|_BV(TWEN)|_BV(TWIE));
 
 	restart:
 		if(n++ >= I2C_MAX_TRIES)
- 336:	9f 5f       	subi	r25, 0xFF	; 255
- 338:	9b 30       	cpi	r25, 0x0B	; 11
- 33a:	09 f4       	brne	.+2      	; 0x33e <I2C_EscribirBytes+0x30>
- 33c:	64 c0       	rjmp	.+200    	; 0x406 <I2C_EscribirBytes+0xf8>
+ 1be:	9f 5f       	subi	r25, 0xFF	; 255
+ 1c0:	9b 30       	cpi	r25, 0x0B	; 11
+ 1c2:	09 f4       	brne	.+2      	; 0x1c6 <I2C_EscribirBytes+0x30>
+ 1c4:	64 c0       	rjmp	.+200    	; 0x28e <I2C_EscribirBytes+0xf8>
 			return -1;
 		
 	begin:
 		// Enviamos condicion de START
 		TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);		// Enviamos condicion de START
- 33e:	70 93 bc 00 	sts	0x00BC, r23
+ 1c6:	70 93 bc 00 	sts	0x00BC, r23
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 342:	80 91 bc 00 	lds	r24, 0x00BC
- 346:	87 ff       	sbrs	r24, 7
- 348:	fc cf       	rjmp	.-8      	; 0x342 <I2C_EscribirBytes+0x34>
+ 1ca:	80 91 bc 00 	lds	r24, 0x00BC
+ 1ce:	87 ff       	sbrs	r24, 7
+ 1d0:	fc cf       	rjmp	.-8      	; 0x1ca <I2C_EscribirBytes+0x34>
 		I2C_TWSR = TW_STATUS;
- 34a:	80 91 b9 00 	lds	r24, 0x00B9
+ 1d2:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 34e:	88 7f       	andi	r24, 0xF8	; 248
- 350:	80 31       	cpi	r24, 0x10	; 16
- 352:	29 f0       	breq	.+10     	; 0x35e <I2C_EscribirBytes+0x50>
- 354:	88 33       	cpi	r24, 0x38	; 56
- 356:	99 f3       	breq	.-26     	; 0x33e <I2C_EscribirBytes+0x30>
- 358:	88 30       	cpi	r24, 0x08	; 8
- 35a:	09 f0       	breq	.+2      	; 0x35e <I2C_EscribirBytes+0x50>
- 35c:	54 c0       	rjmp	.+168    	; 0x406 <I2C_EscribirBytes+0xf8>
+ 1d6:	88 7f       	andi	r24, 0xF8	; 248
+ 1d8:	80 31       	cpi	r24, 0x10	; 16
+ 1da:	29 f0       	breq	.+10     	; 0x1e6 <I2C_EscribirBytes+0x50>
+ 1dc:	88 33       	cpi	r24, 0x38	; 56
+ 1de:	99 f3       	breq	.-26     	; 0x1c6 <I2C_EscribirBytes+0x30>
+ 1e0:	88 30       	cpi	r24, 0x08	; 8
+ 1e2:	09 f0       	breq	.+2      	; 0x1e6 <I2C_EscribirBytes+0x50>
+ 1e4:	54 c0       	rjmp	.+168    	; 0x28e <I2C_EscribirBytes+0xf8>
 			case TW_MT_ARB_LOST:	goto begin;
 			default:				return -1; break;
 		}
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
- 35e:	50 93 bb 00 	sts	0x00BB, r21
+ 1e6:	50 93 bb 00 	sts	0x00BB, r21
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion del esclavo con el bit R/~W para escribir
- 362:	60 93 bc 00 	sts	0x00BC, r22
+ 1ea:	60 93 bc 00 	sts	0x00BC, r22
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 366:	80 91 bc 00 	lds	r24, 0x00BC
- 36a:	87 ff       	sbrs	r24, 7
- 36c:	fc cf       	rjmp	.-8      	; 0x366 <I2C_EscribirBytes+0x58>
+ 1ee:	80 91 bc 00 	lds	r24, 0x00BC
+ 1f2:	87 ff       	sbrs	r24, 7
+ 1f4:	fc cf       	rjmp	.-8      	; 0x1ee <I2C_EscribirBytes+0x58>
 		I2C_TWSR = TWSR & 0xF8;
- 36e:	80 91 b9 00 	lds	r24, 0x00B9
+ 1f6:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 372:	88 7f       	andi	r24, 0xF8	; 248
- 374:	80 32       	cpi	r24, 0x20	; 32
- 376:	f9 f2       	breq	.-66     	; 0x336 <I2C_EscribirBytes+0x28>
- 378:	88 33       	cpi	r24, 0x38	; 56
- 37a:	09 f3       	breq	.-62     	; 0x33e <I2C_EscribirBytes+0x30>
- 37c:	88 31       	cpi	r24, 0x18	; 24
- 37e:	d1 f5       	brne	.+116    	; 0x3f4 <I2C_EscribirBytes+0xe6>
+ 1fa:	88 7f       	andi	r24, 0xF8	; 248
+ 1fc:	80 32       	cpi	r24, 0x20	; 32
+ 1fe:	f9 f2       	breq	.-66     	; 0x1be <I2C_EscribirBytes+0x28>
+ 200:	88 33       	cpi	r24, 0x38	; 56
+ 202:	09 f3       	breq	.-62     	; 0x1c6 <I2C_EscribirBytes+0x30>
+ 204:	88 31       	cpi	r24, 0x18	; 24
+ 206:	d1 f5       	brne	.+116    	; 0x27c <I2C_EscribirBytes+0xe6>
 			case TW_MT_ARB_LOST:	goto begin;		// Se perdio control del bus, se repite todo el proceso
 			default:				goto error;
 		}
 
 		// Enviamos la direccion del esclavo donde desamos comenzar a escribir
 		TWDR = sla_mem_addr;
- 380:	40 93 bb 00 	sts	0x00BB, r20
+ 208:	40 93 bb 00 	sts	0x00BB, r20
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion de memoria del esclavo donde inicia escritura
- 384:	60 93 bc 00 	sts	0x00BC, r22
+ 20c:	60 93 bc 00 	sts	0x00BC, r22
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finalice la transmision
- 388:	80 91 bc 00 	lds	r24, 0x00BC
- 38c:	87 ff       	sbrs	r24, 7
- 38e:	fc cf       	rjmp	.-8      	; 0x388 <I2C_EscribirBytes+0x7a>
+ 210:	80 91 bc 00 	lds	r24, 0x00BC
+ 214:	87 ff       	sbrs	r24, 7
+ 216:	fc cf       	rjmp	.-8      	; 0x210 <I2C_EscribirBytes+0x7a>
 		I2C_TWSR = TW_STATUS;
- 390:	80 91 b9 00 	lds	r24, 0x00B9
+ 218:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 394:	88 7f       	andi	r24, 0xF8	; 248
- 396:	80 33       	cpi	r24, 0x30	; 48
- 398:	29 f0       	breq	.+10     	; 0x3a4 <I2C_EscribirBytes+0x96>
- 39a:	88 33       	cpi	r24, 0x38	; 56
- 39c:	81 f2       	breq	.-96     	; 0x33e <I2C_EscribirBytes+0x30>
- 39e:	88 32       	cpi	r24, 0x28	; 40
- 3a0:	49 f5       	brne	.+82     	; 0x3f4 <I2C_EscribirBytes+0xe6>
- 3a2:	03 c0       	rjmp	.+6      	; 0x3aa <I2C_EscribirBytes+0x9c>
- 3a4:	40 e0       	ldi	r20, 0x00	; 0
- 3a6:	50 e0       	ldi	r21, 0x00	; 0
- 3a8:	1b c0       	rjmp	.+54     	; 0x3e0 <I2C_EscribirBytes+0xd2>
- 3aa:	40 e0       	ldi	r20, 0x00	; 0
- 3ac:	50 e0       	ldi	r21, 0x00	; 0
+ 21c:	88 7f       	andi	r24, 0xF8	; 248
+ 21e:	80 33       	cpi	r24, 0x30	; 48
+ 220:	29 f0       	breq	.+10     	; 0x22c <I2C_EscribirBytes+0x96>
+ 222:	88 33       	cpi	r24, 0x38	; 56
+ 224:	81 f2       	breq	.-96     	; 0x1c6 <I2C_EscribirBytes+0x30>
+ 226:	88 32       	cpi	r24, 0x28	; 40
+ 228:	49 f5       	brne	.+82     	; 0x27c <I2C_EscribirBytes+0xe6>
+ 22a:	03 c0       	rjmp	.+6      	; 0x232 <I2C_EscribirBytes+0x9c>
+ 22c:	40 e0       	ldi	r20, 0x00	; 0
+ 22e:	50 e0       	ldi	r21, 0x00	; 0
+ 230:	1b c0       	rjmp	.+54     	; 0x268 <I2C_EscribirBytes+0xd2>
+ 232:	40 e0       	ldi	r20, 0x00	; 0
+ 234:	50 e0       	ldi	r21, 0x00	; 0
 
 		// Enviamos los bytes que desamos escribir
 		for(;len>0; len--){
 			
 			TWDR = *buf++;
 			TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos el byte apuntado por buf 
- 3ae:	64 e8       	ldi	r22, 0x84	; 132
- 3b0:	11 c0       	rjmp	.+34     	; 0x3d4 <I2C_EscribirBytes+0xc6>
+ 236:	64 e8       	ldi	r22, 0x84	; 132
+ 238:	11 c0       	rjmp	.+34     	; 0x25c <I2C_EscribirBytes+0xc6>
 		}
 
 		// Enviamos los bytes que desamos escribir
 		for(;len>0; len--){
 			
 			TWDR = *buf++;
- 3b2:	80 81       	ld	r24, Z
- 3b4:	80 93 bb 00 	sts	0x00BB, r24
+ 23a:	80 81       	ld	r24, Z
+ 23c:	80 93 bb 00 	sts	0x00BB, r24
 			TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos el byte apuntado por buf 
- 3b8:	60 93 bc 00 	sts	0x00BC, r22
+ 240:	60 93 bc 00 	sts	0x00BC, r22
 			while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 3bc:	80 91 bc 00 	lds	r24, 0x00BC
- 3c0:	87 ff       	sbrs	r24, 7
- 3c2:	fc cf       	rjmp	.-8      	; 0x3bc <I2C_EscribirBytes+0xae>
+ 244:	80 91 bc 00 	lds	r24, 0x00BC
+ 248:	87 ff       	sbrs	r24, 7
+ 24a:	fc cf       	rjmp	.-8      	; 0x244 <I2C_EscribirBytes+0xae>
 			I2C_TWSR = TW_STATUS;
- 3c4:	80 91 b9 00 	lds	r24, 0x00B9
+ 24c:	80 91 b9 00 	lds	r24, 0x00B9
 
 			switch(I2C_TWSR){
- 3c8:	88 7f       	andi	r24, 0xF8	; 248
- 3ca:	88 32       	cpi	r24, 0x28	; 40
- 3cc:	99 f4       	brne	.+38     	; 0x3f4 <I2C_EscribirBytes+0xe6>
+ 250:	88 7f       	andi	r24, 0xF8	; 248
+ 252:	88 32       	cpi	r24, 0x28	; 40
+ 254:	99 f4       	brne	.+38     	; 0x27c <I2C_EscribirBytes+0xe6>
 		}
 
 		// Enviamos los bytes que desamos escribir
 		for(;len>0; len--){
 			
 			TWDR = *buf++;
- 3ce:	31 96       	adiw	r30, 0x01	; 1
+ 256:	31 96       	adiw	r30, 0x01	; 1
 			TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos el byte apuntado por buf 
 			while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
 			I2C_TWSR = TW_STATUS;
 
 			switch(I2C_TWSR){
 				case TW_MT_DATA_ACK:	bytesEscritos++; break;
- 3d0:	4f 5f       	subi	r20, 0xFF	; 255
- 3d2:	5f 4f       	sbci	r21, 0xFF	; 255
+ 258:	4f 5f       	subi	r20, 0xFF	; 255
+ 25a:	5f 4f       	sbci	r21, 0xFF	; 255
 	// Return TWI Status Register, mask the prescaler bits (TWPS1,TWPS0)
 	return (TW_STATUS);
 }
 
 
 int I2C_EscribirBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf){
- 3d4:	c9 01       	movw	r24, r18
- 3d6:	84 1b       	sub	r24, r20
- 3d8:	95 0b       	sbc	r25, r21
+ 25c:	c9 01       	movw	r24, r18
+ 25e:	84 1b       	sub	r24, r20
+ 260:	95 0b       	sbc	r25, r21
 			case TW_MT_ARB_LOST:	goto begin;
 			default:				goto error;
 		}
 
 		// Enviamos los bytes que desamos escribir
 		for(;len>0; len--){
- 3da:	18 16       	cp	r1, r24
- 3dc:	19 06       	cpc	r1, r25
- 3de:	4c f3       	brlt	.-46     	; 0x3b2 <I2C_EscribirBytes+0xa4>
+ 262:	18 16       	cp	r1, r24
+ 264:	19 06       	cpc	r1, r25
+ 266:	4c f3       	brlt	.-46     	; 0x23a <I2C_EscribirBytes+0xa4>
 
 		}
 
 	//Enviamos condicion de STOP y retornamos el numero de bytes escritos
 	quit:
 		TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWSTO);		// Enviamos condicion de STOP
- 3e0:	84 e9       	ldi	r24, 0x94	; 148
- 3e2:	80 93 bc 00 	sts	0x00BC, r24
+ 268:	84 e9       	ldi	r24, 0x94	; 148
+ 26a:	80 93 bc 00 	sts	0x00BC, r24
     can be achieved.
 */
 void
 _delay_loop_1(uint8_t __count)
 {
 	__asm__ volatile (
- 3e6:	8d e0       	ldi	r24, 0x0D	; 13
- 3e8:	8a 95       	dec	r24
- 3ea:	f1 f7       	brne	.-4      	; 0x3e8 <I2C_EscribirBytes+0xda>
+ 26e:	8d e0       	ldi	r24, 0x0D	; 13
+ 270:	8a 95       	dec	r24
+ 272:	f1 f7       	brne	.-4      	; 0x270 <I2C_EscribirBytes+0xda>
 		_delay_us(5);
 		// Se inicializa como Esclavo, atento a recibir un llamado con ACK
 		TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
- 3ec:	85 e4       	ldi	r24, 0x45	; 69
- 3ee:	80 93 bc 00 	sts	0x00BC, r24
- 3f2:	0b c0       	rjmp	.+22     	; 0x40a <I2C_EscribirBytes+0xfc>
+ 274:	85 e4       	ldi	r24, 0x45	; 69
+ 276:	80 93 bc 00 	sts	0x00BC, r24
+ 27a:	0b c0       	rjmp	.+22     	; 0x292 <I2C_EscribirBytes+0xfc>
 
 		return bytesEscritos;
 
 	// Se genera un error, enviamos condicion de STOP para liberar bus y retornamos -1 indicando el error
 	error:
 		TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWSTO);		// Enviamos condicion de STOP
- 3f4:	84 e9       	ldi	r24, 0x94	; 148
- 3f6:	80 93 bc 00 	sts	0x00BC, r24
- 3fa:	8d e0       	ldi	r24, 0x0D	; 13
- 3fc:	8a 95       	dec	r24
- 3fe:	f1 f7       	brne	.-4      	; 0x3fc <I2C_EscribirBytes+0xee>
+ 27c:	84 e9       	ldi	r24, 0x94	; 148
+ 27e:	80 93 bc 00 	sts	0x00BC, r24
+ 282:	8d e0       	ldi	r24, 0x0D	; 13
+ 284:	8a 95       	dec	r24
+ 286:	f1 f7       	brne	.-4      	; 0x284 <I2C_EscribirBytes+0xee>
 		_delay_us(5);
 		// Se inicializa como Esclavo, atento a recibir un llamado con ACK
 		TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
- 400:	85 e4       	ldi	r24, 0x45	; 69
- 402:	80 93 bc 00 	sts	0x00BC, r24
+ 288:	85 e4       	ldi	r24, 0x45	; 69
+ 28a:	80 93 bc 00 	sts	0x00BC, r24
 		return -1;
- 406:	4f ef       	ldi	r20, 0xFF	; 255
- 408:	5f ef       	ldi	r21, 0xFF	; 255
+ 28e:	4f ef       	ldi	r20, 0xFF	; 255
+ 290:	5f ef       	ldi	r21, 0xFF	; 255
 
 }
- 40a:	ca 01       	movw	r24, r20
- 40c:	1f 91       	pop	r17
- 40e:	0f 91       	pop	r16
- 410:	08 95       	ret
+ 292:	ca 01       	movw	r24, r20
+ 294:	1f 91       	pop	r17
+ 296:	0f 91       	pop	r16
+ 298:	08 95       	ret
 
-00000412 <I2C_LeerBytes>:
+0000029a <I2C_LeerBytes>:
 
 
 
 
 int I2C_LeerBytes(uint8_t sla_id, uint8_t sla_addr, uint8_t sla_mem_addr, int len, uint8_t *buf){
- 412:	0f 93       	push	r16
- 414:	1f 93       	push	r17
- 416:	f8 01       	movw	r30, r16
+ 29a:	0f 93       	push	r16
+ 29c:	1f 93       	push	r17
+ 29e:	f8 01       	movw	r30, r16
 	uint8_t I2C_TWSR;
 	uint8_t I2C_TWCR;
 	int bytesLeidos = 0;
 
 	// Deshabilitamos la recepcion de datos
 	TWCR &= ~(_BV(TWEA)|_BV(TWEN)|_BV(TWIE));
- 418:	90 91 bc 00 	lds	r25, 0x00BC
- 41c:	9a 7b       	andi	r25, 0xBA	; 186
- 41e:	90 93 bc 00 	sts	0x00BC, r25
+ 2a0:	90 91 bc 00 	lds	r25, 0x00BC
+ 2a4:	9a 7b       	andi	r25, 0xBA	; 186
+ 2a6:	90 93 bc 00 	sts	0x00BC, r25
 			default:				return -1; break;
 		}
 
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
- 422:	70 e0       	ldi	r23, 0x00	; 0
- 424:	67 70       	andi	r22, 0x07	; 7
- 426:	70 70       	andi	r23, 0x00	; 0
- 428:	66 0f       	add	r22, r22
- 42a:	77 1f       	adc	r23, r23
- 42c:	98 2f       	mov	r25, r24
- 42e:	92 95       	swap	r25
- 430:	90 7f       	andi	r25, 0xF0	; 240
- 432:	96 2b       	or	r25, r22
+ 2aa:	70 e0       	ldi	r23, 0x00	; 0
+ 2ac:	67 70       	andi	r22, 0x07	; 7
+ 2ae:	70 70       	andi	r23, 0x00	; 0
+ 2b0:	66 0f       	add	r22, r22
+ 2b2:	77 1f       	adc	r23, r23
+ 2b4:	98 2f       	mov	r25, r24
+ 2b6:	92 95       	swap	r25
+ 2b8:	90 7f       	andi	r25, 0xF0	; 240
+ 2ba:	96 2b       	or	r25, r22
 			case TW_MR_ARB_LOST:	goto begin;
 			default:				return -1; break;
 		}
 
 		// Enviamos la direccion del esclavo  (SLA+R)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_READ;
- 434:	79 2f       	mov	r23, r25
- 436:	71 60       	ori	r23, 0x01	; 1
- 438:	50 e0       	ldi	r21, 0x00	; 0
+ 2bc:	79 2f       	mov	r23, r25
+ 2be:	71 60       	ori	r23, 0x01	; 1
+ 2c0:	50 e0       	ldi	r21, 0x00	; 0
 			return -1;
 
 
 	begin:
 		// Enviamos condicion de START
 		TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);		// Enviamos condicion de START
- 43a:	a4 ea       	ldi	r26, 0xA4	; 164
+ 2c2:	a4 ea       	ldi	r26, 0xA4	; 164
 		}
 
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion del esclavo con el bit R/~W para escribir
- 43c:	64 e8       	ldi	r22, 0x84	; 132
+ 2c4:	64 e8       	ldi	r22, 0x84	; 132
 
 	// Deshabilitamos la recepcion de datos
 	TWCR &= ~(_BV(TWEA)|_BV(TWEN)|_BV(TWIE));
 
 	restart:
 		if(n++ >= I2C_MAX_TRIES)
- 43e:	5f 5f       	subi	r21, 0xFF	; 255
- 440:	5b 30       	cpi	r21, 0x0B	; 11
- 442:	09 f4       	brne	.+2      	; 0x446 <I2C_LeerBytes+0x34>
- 444:	8f c0       	rjmp	.+286    	; 0x564 <__stack+0x65>
+ 2c6:	5f 5f       	subi	r21, 0xFF	; 255
+ 2c8:	5b 30       	cpi	r21, 0x0B	; 11
+ 2ca:	09 f4       	brne	.+2      	; 0x2ce <I2C_LeerBytes+0x34>
+ 2cc:	8f c0       	rjmp	.+286    	; 0x3ec <I2C_LeerBytes+0x152>
 			return -1;
 
 
 	begin:
 		// Enviamos condicion de START
 		TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);		// Enviamos condicion de START
- 446:	a0 93 bc 00 	sts	0x00BC, r26
+ 2ce:	a0 93 bc 00 	sts	0x00BC, r26
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 44a:	80 91 bc 00 	lds	r24, 0x00BC
- 44e:	87 ff       	sbrs	r24, 7
- 450:	fc cf       	rjmp	.-8      	; 0x44a <I2C_LeerBytes+0x38>
+ 2d2:	80 91 bc 00 	lds	r24, 0x00BC
+ 2d6:	87 ff       	sbrs	r24, 7
+ 2d8:	fc cf       	rjmp	.-8      	; 0x2d2 <I2C_LeerBytes+0x38>
 		I2C_TWSR = TW_STATUS;
- 452:	80 91 b9 00 	lds	r24, 0x00B9
+ 2da:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 456:	88 7f       	andi	r24, 0xF8	; 248
- 458:	80 31       	cpi	r24, 0x10	; 16
- 45a:	29 f0       	breq	.+10     	; 0x466 <I2C_LeerBytes+0x54>
- 45c:	88 33       	cpi	r24, 0x38	; 56
- 45e:	99 f3       	breq	.-26     	; 0x446 <I2C_LeerBytes+0x34>
- 460:	88 30       	cpi	r24, 0x08	; 8
- 462:	09 f0       	breq	.+2      	; 0x466 <I2C_LeerBytes+0x54>
- 464:	7f c0       	rjmp	.+254    	; 0x564 <__stack+0x65>
+ 2de:	88 7f       	andi	r24, 0xF8	; 248
+ 2e0:	80 31       	cpi	r24, 0x10	; 16
+ 2e2:	29 f0       	breq	.+10     	; 0x2ee <I2C_LeerBytes+0x54>
+ 2e4:	88 33       	cpi	r24, 0x38	; 56
+ 2e6:	99 f3       	breq	.-26     	; 0x2ce <I2C_LeerBytes+0x34>
+ 2e8:	88 30       	cpi	r24, 0x08	; 8
+ 2ea:	09 f0       	breq	.+2      	; 0x2ee <I2C_LeerBytes+0x54>
+ 2ec:	7f c0       	rjmp	.+254    	; 0x3ec <I2C_LeerBytes+0x152>
 			default:				return -1; break;
 		}
 
 
 		// Enviamos la direccion del esclavo  (SLA+W)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_WRITE;
- 466:	90 93 bb 00 	sts	0x00BB, r25
+ 2ee:	90 93 bb 00 	sts	0x00BB, r25
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion del esclavo con el bit R/~W para escribir
- 46a:	60 93 bc 00 	sts	0x00BC, r22
+ 2f2:	60 93 bc 00 	sts	0x00BC, r22
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 46e:	80 91 bc 00 	lds	r24, 0x00BC
- 472:	87 ff       	sbrs	r24, 7
- 474:	fc cf       	rjmp	.-8      	; 0x46e <I2C_LeerBytes+0x5c>
+ 2f6:	80 91 bc 00 	lds	r24, 0x00BC
+ 2fa:	87 ff       	sbrs	r24, 7
+ 2fc:	fc cf       	rjmp	.-8      	; 0x2f6 <I2C_LeerBytes+0x5c>
 		I2C_TWSR = TW_STATUS;
- 476:	80 91 b9 00 	lds	r24, 0x00B9
+ 2fe:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 47a:	88 7f       	andi	r24, 0xF8	; 248
- 47c:	80 32       	cpi	r24, 0x20	; 32
- 47e:	f9 f2       	breq	.-66     	; 0x43e <I2C_LeerBytes+0x2c>
- 480:	88 33       	cpi	r24, 0x38	; 56
- 482:	09 f3       	breq	.-62     	; 0x446 <I2C_LeerBytes+0x34>
- 484:	88 31       	cpi	r24, 0x18	; 24
- 486:	09 f0       	breq	.+2      	; 0x48a <I2C_LeerBytes+0x78>
- 488:	64 c0       	rjmp	.+200    	; 0x552 <__stack+0x53>
+ 302:	88 7f       	andi	r24, 0xF8	; 248
+ 304:	80 32       	cpi	r24, 0x20	; 32
+ 306:	f9 f2       	breq	.-66     	; 0x2c6 <I2C_LeerBytes+0x2c>
+ 308:	88 33       	cpi	r24, 0x38	; 56
+ 30a:	09 f3       	breq	.-62     	; 0x2ce <I2C_LeerBytes+0x34>
+ 30c:	88 31       	cpi	r24, 0x18	; 24
+ 30e:	09 f0       	breq	.+2      	; 0x312 <I2C_LeerBytes+0x78>
+ 310:	64 c0       	rjmp	.+200    	; 0x3da <I2C_LeerBytes+0x140>
 			case TW_MT_ARB_LOST:	goto begin;		// Se perdio control del bus, se repite todo el proceso
 			default:				goto error;
 		}
 
 		// Enviamos la direccion del esclavo donde desamos comenzar a leer
 		TWDR = sla_mem_addr;
- 48a:	40 93 bb 00 	sts	0x00BB, r20
+ 312:	40 93 bb 00 	sts	0x00BB, r20
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion de memoria del esclavo donde inicia escritura
- 48e:	60 93 bc 00 	sts	0x00BC, r22
+ 316:	60 93 bc 00 	sts	0x00BC, r22
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finalice la transmision
- 492:	80 91 bc 00 	lds	r24, 0x00BC
- 496:	87 ff       	sbrs	r24, 7
- 498:	fc cf       	rjmp	.-8      	; 0x492 <I2C_LeerBytes+0x80>
+ 31a:	80 91 bc 00 	lds	r24, 0x00BC
+ 31e:	87 ff       	sbrs	r24, 7
+ 320:	fc cf       	rjmp	.-8      	; 0x31a <I2C_LeerBytes+0x80>
 		I2C_TWSR = TW_STATUS;
- 49a:	80 91 b9 00 	lds	r24, 0x00B9
+ 322:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 49e:	88 7f       	andi	r24, 0xF8	; 248
- 4a0:	80 33       	cpi	r24, 0x30	; 48
- 4a2:	09 f4       	brne	.+2      	; 0x4a6 <I2C_LeerBytes+0x94>
- 4a4:	4a c0       	rjmp	.+148    	; 0x53a <__stack+0x3b>
- 4a6:	88 33       	cpi	r24, 0x38	; 56
- 4a8:	71 f2       	breq	.-100    	; 0x446 <I2C_LeerBytes+0x34>
- 4aa:	88 32       	cpi	r24, 0x28	; 40
- 4ac:	09 f0       	breq	.+2      	; 0x4b0 <I2C_LeerBytes+0x9e>
- 4ae:	51 c0       	rjmp	.+162    	; 0x552 <__stack+0x53>
+ 326:	88 7f       	andi	r24, 0xF8	; 248
+ 328:	80 33       	cpi	r24, 0x30	; 48
+ 32a:	09 f4       	brne	.+2      	; 0x32e <I2C_LeerBytes+0x94>
+ 32c:	4a c0       	rjmp	.+148    	; 0x3c2 <I2C_LeerBytes+0x128>
+ 32e:	88 33       	cpi	r24, 0x38	; 56
+ 330:	71 f2       	breq	.-100    	; 0x2ce <I2C_LeerBytes+0x34>
+ 332:	88 32       	cpi	r24, 0x28	; 40
+ 334:	09 f0       	breq	.+2      	; 0x338 <I2C_LeerBytes+0x9e>
+ 336:	51 c0       	rjmp	.+162    	; 0x3da <I2C_LeerBytes+0x140>
 			default:				goto error;
 		}
 
 		// Ahora se debe cambiar de modo Master Transmission al modo Master Receiver
 		// Enviamos condicion de REPEATED START
 		TWCR = _BV(TWINT)|_BV(TWSTA)|_BV(TWEN);		// Enviamos condicion de START
- 4b0:	a0 93 bc 00 	sts	0x00BC, r26
+ 338:	a0 93 bc 00 	sts	0x00BC, r26
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finalice la transmision
- 4b4:	80 91 bc 00 	lds	r24, 0x00BC
- 4b8:	87 ff       	sbrs	r24, 7
- 4ba:	fc cf       	rjmp	.-8      	; 0x4b4 <I2C_LeerBytes+0xa2>
+ 33c:	80 91 bc 00 	lds	r24, 0x00BC
+ 340:	87 ff       	sbrs	r24, 7
+ 342:	fc cf       	rjmp	.-8      	; 0x33c <I2C_LeerBytes+0xa2>
 		I2C_TWSR = TW_STATUS;
- 4bc:	80 91 b9 00 	lds	r24, 0x00B9
+ 344:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 4c0:	88 7f       	andi	r24, 0xF8	; 248
- 4c2:	80 31       	cpi	r24, 0x10	; 16
- 4c4:	31 f0       	breq	.+12     	; 0x4d2 <I2C_LeerBytes+0xc0>
- 4c6:	88 33       	cpi	r24, 0x38	; 56
- 4c8:	09 f4       	brne	.+2      	; 0x4cc <I2C_LeerBytes+0xba>
- 4ca:	bd cf       	rjmp	.-134    	; 0x446 <I2C_LeerBytes+0x34>
- 4cc:	88 30       	cpi	r24, 0x08	; 8
- 4ce:	09 f0       	breq	.+2      	; 0x4d2 <I2C_LeerBytes+0xc0>
- 4d0:	49 c0       	rjmp	.+146    	; 0x564 <__stack+0x65>
+ 348:	88 7f       	andi	r24, 0xF8	; 248
+ 34a:	80 31       	cpi	r24, 0x10	; 16
+ 34c:	31 f0       	breq	.+12     	; 0x35a <I2C_LeerBytes+0xc0>
+ 34e:	88 33       	cpi	r24, 0x38	; 56
+ 350:	09 f4       	brne	.+2      	; 0x354 <I2C_LeerBytes+0xba>
+ 352:	bd cf       	rjmp	.-134    	; 0x2ce <I2C_LeerBytes+0x34>
+ 354:	88 30       	cpi	r24, 0x08	; 8
+ 356:	09 f0       	breq	.+2      	; 0x35a <I2C_LeerBytes+0xc0>
+ 358:	49 c0       	rjmp	.+146    	; 0x3ec <I2C_LeerBytes+0x152>
 			case TW_MR_ARB_LOST:	goto begin;
 			default:				return -1; break;
 		}
 
 		// Enviamos la direccion del esclavo  (SLA+R)
 		TWDR = (((sla_id & 0x0F)<<4) | ((sla_addr & 0x07)<<1)) | TW_READ;
- 4d2:	70 93 bb 00 	sts	0x00BB, r23
+ 35a:	70 93 bb 00 	sts	0x00BB, r23
 		TWCR = _BV(TWINT)|_BV(TWEN);				// Enviamos la direccion del esclavo con el bit R/~W para leer
- 4d6:	60 93 bc 00 	sts	0x00BC, r22
+ 35e:	60 93 bc 00 	sts	0x00BC, r22
 		while (!(TWCR & _BV(TWINT)));				// Esperamos a que finlaice la transmision
- 4da:	80 91 bc 00 	lds	r24, 0x00BC
- 4de:	87 ff       	sbrs	r24, 7
- 4e0:	fc cf       	rjmp	.-8      	; 0x4da <I2C_LeerBytes+0xc8>
+ 362:	80 91 bc 00 	lds	r24, 0x00BC
+ 366:	87 ff       	sbrs	r24, 7
+ 368:	fc cf       	rjmp	.-8      	; 0x362 <I2C_LeerBytes+0xc8>
 		I2C_TWSR = TW_STATUS;
- 4e2:	80 91 b9 00 	lds	r24, 0x00B9
+ 36a:	80 91 b9 00 	lds	r24, 0x00B9
 
 		switch(I2C_TWSR){
- 4e6:	88 7f       	andi	r24, 0xF8	; 248
- 4e8:	80 34       	cpi	r24, 0x40	; 64
- 4ea:	29 f0       	breq	.+10     	; 0x4f6 <I2C_LeerBytes+0xe4>
- 4ec:	88 34       	cpi	r24, 0x48	; 72
- 4ee:	29 f1       	breq	.+74     	; 0x53a <__stack+0x3b>
- 4f0:	88 33       	cpi	r24, 0x38	; 56
- 4f2:	79 f5       	brne	.+94     	; 0x552 <__stack+0x53>
- 4f4:	a8 cf       	rjmp	.-176    	; 0x446 <I2C_LeerBytes+0x34>
- 4f6:	94 ec       	ldi	r25, 0xC4	; 196
- 4f8:	40 e0       	ldi	r20, 0x00	; 0
- 4fa:	50 e0       	ldi	r21, 0x00	; 0
- 4fc:	1a c0       	rjmp	.+52     	; 0x532 <__stack+0x33>
+ 36e:	88 7f       	andi	r24, 0xF8	; 248
+ 370:	80 34       	cpi	r24, 0x40	; 64
+ 372:	29 f0       	breq	.+10     	; 0x37e <I2C_LeerBytes+0xe4>
+ 374:	88 34       	cpi	r24, 0x48	; 72
+ 376:	29 f1       	breq	.+74     	; 0x3c2 <I2C_LeerBytes+0x128>
+ 378:	88 33       	cpi	r24, 0x38	; 56
+ 37a:	79 f5       	brne	.+94     	; 0x3da <I2C_LeerBytes+0x140>
+ 37c:	a8 cf       	rjmp	.-176    	; 0x2ce <I2C_LeerBytes+0x34>
+ 37e:	94 ec       	ldi	r25, 0xC4	; 196
+ 380:	40 e0       	ldi	r20, 0x00	; 0
+ 382:	50 e0       	ldi	r21, 0x00	; 0
+ 384:	1a c0       	rjmp	.+52     	; 0x3ba <I2C_LeerBytes+0x120>
 		}
 
 		for(I2C_TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWEA) ; len>0; len--){
 
 		
 			if(len==1)
- 4fe:	21 30       	cpi	r18, 0x01	; 1
- 500:	31 05       	cpc	r19, r1
- 502:	09 f4       	brne	.+2      	; 0x506 <__stack+0x7>
- 504:	94 e8       	ldi	r25, 0x84	; 132
+ 386:	21 30       	cpi	r18, 0x01	; 1
+ 388:	31 05       	cpc	r19, r1
+ 38a:	09 f4       	brne	.+2      	; 0x38e <I2C_LeerBytes+0xf4>
+ 38c:	94 e8       	ldi	r25, 0x84	; 132
 				I2C_TWCR = _BV(TWINT) | _BV(TWEN); 	// En el ultimo byte a leer enviamos un NACK para terminar comunicacion
 			
 			TWCR = I2C_TWCR;
- 506:	90 93 bc 00 	sts	0x00BC, r25
+ 38e:	90 93 bc 00 	sts	0x00BC, r25
 			while (!(TWCR & _BV(TWINT)));				// Esperamos a que finalice la transmision
- 50a:	80 91 bc 00 	lds	r24, 0x00BC
- 50e:	87 ff       	sbrs	r24, 7
- 510:	fc cf       	rjmp	.-8      	; 0x50a <__stack+0xb>
+ 392:	80 91 bc 00 	lds	r24, 0x00BC
+ 396:	87 ff       	sbrs	r24, 7
+ 398:	fc cf       	rjmp	.-8      	; 0x392 <I2C_LeerBytes+0xf8>
 			I2C_TWSR = TW_STATUS;
- 512:	80 91 b9 00 	lds	r24, 0x00B9
+ 39a:	80 91 b9 00 	lds	r24, 0x00B9
 
 			switch(I2C_TWSR){
- 516:	88 7f       	andi	r24, 0xF8	; 248
- 518:	80 35       	cpi	r24, 0x50	; 80
- 51a:	21 f0       	breq	.+8      	; 0x524 <__stack+0x25>
- 51c:	88 35       	cpi	r24, 0x58	; 88
- 51e:	c9 f4       	brne	.+50     	; 0x552 <__stack+0x53>
- 520:	20 e0       	ldi	r18, 0x00	; 0
- 522:	30 e0       	ldi	r19, 0x00	; 0
+ 39e:	88 7f       	andi	r24, 0xF8	; 248
+ 3a0:	80 35       	cpi	r24, 0x50	; 80
+ 3a2:	21 f0       	breq	.+8      	; 0x3ac <I2C_LeerBytes+0x112>
+ 3a4:	88 35       	cpi	r24, 0x58	; 88
+ 3a6:	c9 f4       	brne	.+50     	; 0x3da <I2C_LeerBytes+0x140>
+ 3a8:	20 e0       	ldi	r18, 0x00	; 0
+ 3aa:	30 e0       	ldi	r19, 0x00	; 0
 				case TW_MR_DATA_NACK:	len=0;
 				case TW_MR_DATA_ACK:	
 										*buf++ = TWDR;
- 524:	80 91 bb 00 	lds	r24, 0x00BB
- 528:	81 93       	st	Z+, r24
+ 3ac:	80 91 bb 00 	lds	r24, 0x00BB
+ 3b0:	81 93       	st	Z+, r24
 										bytesLeidos++;
- 52a:	4f 5f       	subi	r20, 0xFF	; 255
- 52c:	5f 4f       	sbci	r21, 0xFF	; 255
+ 3b2:	4f 5f       	subi	r20, 0xFF	; 255
+ 3b4:	5f 4f       	sbci	r21, 0xFF	; 255
 			case TW_MR_SLA_NACK:	goto quit;		// Se recibio NACK, se reincia handshake para invocar al esclavo
 			case TW_MR_ARB_LOST:	goto begin;		// Se perdio control del bus, se repite todo el proceso
 			default:				goto error;
 		}
 
 		for(I2C_TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWEA) ; len>0; len--){
- 52e:	21 50       	subi	r18, 0x01	; 1
- 530:	30 40       	sbci	r19, 0x00	; 0
- 532:	12 16       	cp	r1, r18
- 534:	13 06       	cpc	r1, r19
- 536:	1c f3       	brlt	.-58     	; 0x4fe <I2C_LeerBytes+0xec>
- 538:	02 c0       	rjmp	.+4      	; 0x53e <__stack+0x3f>
+ 3b6:	21 50       	subi	r18, 0x01	; 1
+ 3b8:	30 40       	sbci	r19, 0x00	; 0
+ 3ba:	12 16       	cp	r1, r18
+ 3bc:	13 06       	cpc	r1, r19
+ 3be:	1c f3       	brlt	.-58     	; 0x386 <I2C_LeerBytes+0xec>
+ 3c0:	02 c0       	rjmp	.+4      	; 0x3c6 <I2C_LeerBytes+0x12c>
 
 				
 		//Enviamos condicion de STOP y retornamos el numero de bytes escritos
 		// Leemos todos los bytes desde el esclavo y los almacenamos en el contenedor apuntado por buf
 
 	quit:
- 53a:	40 e0       	ldi	r20, 0x00	; 0
- 53c:	50 e0       	ldi	r21, 0x00	; 0
+ 3c2:	40 e0       	ldi	r20, 0x00	; 0
+ 3c4:	50 e0       	ldi	r21, 0x00	; 0
 		TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWSTO);		// Enviamos condicion de STOP
- 53e:	84 e9       	ldi	r24, 0x94	; 148
- 540:	80 93 bc 00 	sts	0x00BC, r24
- 544:	8d e0       	ldi	r24, 0x0D	; 13
- 546:	8a 95       	dec	r24
- 548:	f1 f7       	brne	.-4      	; 0x546 <__stack+0x47>
+ 3c6:	84 e9       	ldi	r24, 0x94	; 148
+ 3c8:	80 93 bc 00 	sts	0x00BC, r24
+ 3cc:	8d e0       	ldi	r24, 0x0D	; 13
+ 3ce:	8a 95       	dec	r24
+ 3d0:	f1 f7       	brne	.-4      	; 0x3ce <I2C_LeerBytes+0x134>
 		_delay_us(5);
 		// Se inicializa como Esclavo, atento a recibir un llamado con ACK
 		TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
- 54a:	85 e4       	ldi	r24, 0x45	; 69
- 54c:	80 93 bc 00 	sts	0x00BC, r24
- 550:	0b c0       	rjmp	.+22     	; 0x568 <__stack+0x69>
+ 3d2:	85 e4       	ldi	r24, 0x45	; 69
+ 3d4:	80 93 bc 00 	sts	0x00BC, r24
+ 3d8:	0b c0       	rjmp	.+22     	; 0x3f0 <I2C_LeerBytes+0x156>
 		return bytesLeidos;
 
 	// Se genera un error, enviamos condicion de STOP para liberar bus y retornamos -1 indicando el error
 	error:
 		TWCR = _BV(TWINT)|_BV(TWEN)|_BV(TWSTO);		// Enviamos condicion de STOP
- 552:	84 e9       	ldi	r24, 0x94	; 148
- 554:	80 93 bc 00 	sts	0x00BC, r24
- 558:	8d e0       	ldi	r24, 0x0D	; 13
- 55a:	8a 95       	dec	r24
- 55c:	f1 f7       	brne	.-4      	; 0x55a <__stack+0x5b>
+ 3da:	84 e9       	ldi	r24, 0x94	; 148
+ 3dc:	80 93 bc 00 	sts	0x00BC, r24
+ 3e0:	8d e0       	ldi	r24, 0x0D	; 13
+ 3e2:	8a 95       	dec	r24
+ 3e4:	f1 f7       	brne	.-4      	; 0x3e2 <I2C_LeerBytes+0x148>
 		_delay_us(5);
 		// Se inicializa como Esclavo, atento a recibir un llamado con ACK
 		TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE);
- 55e:	85 e4       	ldi	r24, 0x45	; 69
- 560:	80 93 bc 00 	sts	0x00BC, r24
+ 3e6:	85 e4       	ldi	r24, 0x45	; 69
+ 3e8:	80 93 bc 00 	sts	0x00BC, r24
 		return -1;
- 564:	4f ef       	ldi	r20, 0xFF	; 255
- 566:	5f ef       	ldi	r21, 0xFF	; 255
+ 3ec:	4f ef       	ldi	r20, 0xFF	; 255
+ 3ee:	5f ef       	ldi	r21, 0xFF	; 255
 }
- 568:	ca 01       	movw	r24, r20
- 56a:	1f 91       	pop	r17
- 56c:	0f 91       	pop	r16
- 56e:	08 95       	ret
+ 3f0:	ca 01       	movw	r24, r20
+ 3f2:	1f 91       	pop	r17
+ 3f4:	0f 91       	pop	r16
+ 3f6:	08 95       	ret
 
-00000570 <atenderInterrupcio>:
+000003f8 <atenderInterrupcio>:
 	// 0x68  -> Maestro perdio control, se recibio SLA+W y se envio ACK ()
 	
 	static unsigned char PtrBuffTWI;
 
 	uint8_t I2C_TWSR;
 	I2C_TWSR = TW_STATUS;
- 570:	80 91 b9 00 	lds	r24, 0x00B9
+ 3f8:	80 91 b9 00 	lds	r24, 0x00B9
 
 	switch(I2C_TWSR){
- 574:	88 7f       	andi	r24, 0xF8	; 248
- 576:	80 37       	cpi	r24, 0x70	; 112
- 578:	71 f0       	breq	.+28     	; 0x596 <atenderInterrupcio+0x26>
- 57a:	81 37       	cpi	r24, 0x71	; 113
- 57c:	28 f4       	brcc	.+10     	; 0x588 <atenderInterrupcio+0x18>
- 57e:	80 36       	cpi	r24, 0x60	; 96
- 580:	51 f0       	breq	.+20     	; 0x596 <atenderInterrupcio+0x26>
- 582:	88 36       	cpi	r24, 0x68	; 104
- 584:	61 f5       	brne	.+88     	; 0x5de <atenderInterrupcio+0x6e>
- 586:	07 c0       	rjmp	.+14     	; 0x596 <atenderInterrupcio+0x26>
- 588:	80 39       	cpi	r24, 0x90	; 144
- 58a:	91 f0       	breq	.+36     	; 0x5b0 <atenderInterrupcio+0x40>
- 58c:	80 3a       	cpi	r24, 0xA0	; 160
- 58e:	21 f1       	breq	.+72     	; 0x5d8 <atenderInterrupcio+0x68>
- 590:	80 38       	cpi	r24, 0x80	; 128
- 592:	29 f5       	brne	.+74     	; 0x5de <atenderInterrupcio+0x6e>
- 594:	0d c0       	rjmp	.+26     	; 0x5b0 <atenderInterrupcio+0x40>
+ 3fc:	88 7f       	andi	r24, 0xF8	; 248
+ 3fe:	80 37       	cpi	r24, 0x70	; 112
+ 400:	71 f0       	breq	.+28     	; 0x41e <atenderInterrupcio+0x26>
+ 402:	81 37       	cpi	r24, 0x71	; 113
+ 404:	28 f4       	brcc	.+10     	; 0x410 <atenderInterrupcio+0x18>
+ 406:	80 36       	cpi	r24, 0x60	; 96
+ 408:	51 f0       	breq	.+20     	; 0x41e <atenderInterrupcio+0x26>
+ 40a:	88 36       	cpi	r24, 0x68	; 104
+ 40c:	61 f5       	brne	.+88     	; 0x466 <atenderInterrupcio+0x6e>
+ 40e:	07 c0       	rjmp	.+14     	; 0x41e <atenderInterrupcio+0x26>
+ 410:	80 39       	cpi	r24, 0x90	; 144
+ 412:	91 f0       	breq	.+36     	; 0x438 <atenderInterrupcio+0x40>
+ 414:	80 3a       	cpi	r24, 0xA0	; 160
+ 416:	21 f1       	breq	.+72     	; 0x460 <atenderInterrupcio+0x68>
+ 418:	80 38       	cpi	r24, 0x80	; 128
+ 41a:	29 f5       	brne	.+74     	; 0x466 <atenderInterrupcio+0x6e>
+ 41c:	0d c0       	rjmp	.+26     	; 0x438 <atenderInterrupcio+0x40>
 
 		case TW_SR_SLA_ACK: 			// Se recibio SLA+W y se confirmo con ACK (Se recibe informacion del Maestro)
 		case TW_SR_GCALL_ACK:			// Se recibio Llamado general y se respondio con ACK (Recibir informacion del Maestro)
 		case TW_SR_ARB_LOST_SLA_ACK: 	// Se perdio control de bus y se selecciono como SLA+W enviando ACK(Recibe Informacion)
 								// Se inicializan las variables usadas en la recepcion
 								PtrBuffTWI = 0;
- 596:	10 92 00 01 	sts	0x0100, r1
+ 41e:	10 92 00 01 	sts	0x0100, r1
 								TWI_BytesRecividos = 0;
- 59a:	10 92 05 01 	sts	0x0105, r1
+ 422:	10 92 05 01 	sts	0x0105, r1
 								for(uint8_t i = 0; i<I2C_BUFFER_SIZE; i++)
 									TWI_Buff[i]=0x00;
- 59e:	10 92 01 01 	sts	0x0101, r1
- 5a2:	10 92 02 01 	sts	0x0102, r1
- 5a6:	10 92 03 01 	sts	0x0103, r1
- 5aa:	10 92 04 01 	sts	0x0104, r1
- 5ae:	0e c0       	rjmp	.+28     	; 0x5cc <atenderInterrupcio+0x5c>
+ 426:	10 92 01 01 	sts	0x0101, r1
+ 42a:	10 92 02 01 	sts	0x0102, r1
+ 42e:	10 92 03 01 	sts	0x0103, r1
+ 432:	10 92 04 01 	sts	0x0104, r1
+ 436:	0e c0       	rjmp	.+28     	; 0x454 <atenderInterrupcio+0x5c>
 								TWCR = _BV(TWEA)|_BV(TWEN)|_BV(TWIE)|_BV(TWINT);
 								break;
 
 		case TW_SR_DATA_ACK: 	// Se recibio un byte y se respondio con un ACK
 		case TW_SR_GCALL_DATA_ACK:	
 								TWI_Buff[PtrBuffTWI++] = TWDR;
- 5b0:	80 91 00 01 	lds	r24, 0x0100
- 5b4:	90 91 bb 00 	lds	r25, 0x00BB
- 5b8:	e8 2f       	mov	r30, r24
- 5ba:	f0 e0       	ldi	r31, 0x00	; 0
- 5bc:	ef 5f       	subi	r30, 0xFF	; 255
- 5be:	fe 4f       	sbci	r31, 0xFE	; 254
- 5c0:	90 83       	st	Z, r25
- 5c2:	8f 5f       	subi	r24, 0xFF	; 255
- 5c4:	80 93 00 01 	sts	0x0100, r24
+ 438:	80 91 00 01 	lds	r24, 0x0100
+ 43c:	90 91 bb 00 	lds	r25, 0x00BB
+ 440:	e8 2f       	mov	r30, r24
+ 442:	f0 e0       	ldi	r31, 0x00	; 0
+ 444:	ef 5f       	subi	r30, 0xFF	; 255
+ 446:	fe 4f       	sbci	r31, 0xFE	; 254
+ 448:	90 83       	st	Z, r25
+ 44a:	8f 5f       	subi	r24, 0xFF	; 255
+ 44c:	80 93 00 01 	sts	0x0100, r24
 								// Habilitamos TWI de nuevo. Si el buffer esta por llenarse entonces enviamos NACK,
 								// de lo contrario ACK en sigueinte recepcion
 								TWCR = _BV(TWEN)|_BV(TWIE)|_BV(TWINT)|(PtrBuffTWI==I2C_BUFFER_SIZE?0:_BV(TWEA));
- 5c8:	84 30       	cpi	r24, 0x04	; 4
- 5ca:	11 f0       	breq	.+4      	; 0x5d0 <atenderInterrupcio+0x60>
- 5cc:	85 ec       	ldi	r24, 0xC5	; 197
- 5ce:	01 c0       	rjmp	.+2      	; 0x5d2 <atenderInterrupcio+0x62>
- 5d0:	85 e8       	ldi	r24, 0x85	; 133
- 5d2:	80 93 bc 00 	sts	0x00BC, r24
- 5d6:	08 95       	ret
+ 450:	84 30       	cpi	r24, 0x04	; 4
+ 452:	11 f0       	breq	.+4      	; 0x458 <atenderInterrupcio+0x60>
+ 454:	85 ec       	ldi	r24, 0xC5	; 197
+ 456:	01 c0       	rjmp	.+2      	; 0x45a <atenderInterrupcio+0x62>
+ 458:	85 e8       	ldi	r24, 0x85	; 133
+ 45a:	80 93 bc 00 	sts	0x00BC, r24
+ 45e:	08 95       	ret
 								break;
 		case TW_SR_STOP:		// Se recibnio condicion de STOP o REPEATED START (Se procesa informacionrecibida)
 								
 								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
 								TWCR = _BV(TWEN);
- 5d8:	84 e0       	ldi	r24, 0x04	; 4
- 5da:	80 93 bc 00 	sts	0x00BC, r24
- 5de:	08 95       	ret
+ 460:	84 e0       	ldi	r24, 0x04	; 4
+ 462:	80 93 bc 00 	sts	0x00BC, r24
+ 466:	08 95       	ret
 
-000005e0 <USART0_init>:
- * @RETURN: Void
- */
-void USART0_init(){
-
-	// Nos aseguramos que la USART se encuentre inactiva y configuracion default
-	UCSR0A = 0x20;
- 5e0:	80 e2       	ldi	r24, 0x20	; 32
- 5e2:	80 93 c0 00 	sts	0x00C0, r24
-	UCSR0B = 0x00;
- 5e6:	e1 ec       	ldi	r30, 0xC1	; 193
- 5e8:	f0 e0       	ldi	r31, 0x00	; 0
- 5ea:	10 82       	st	Z, r1
-	UCSR0C = 0x06;
- 5ec:	86 e0       	ldi	r24, 0x06	; 6
- 5ee:	80 93 c2 00 	sts	0x00C2, r24
-	
-
-	// Asignamos el valor del valor de la tasa de transmision en baudios
-	UBRR0L=UBRRVAL;			//Parte baja del byte
- 5f2:	83 e3       	ldi	r24, 0x33	; 51
- 5f4:	80 93 c4 00 	sts	0x00C4, r24
-	UBRR0H=(UBRRVAL>>8);	//Parte alta del byte
- 5f8:	10 92 c5 00 	sts	0x00C5, r1
-		case 7: UCSR0C &= ~(_BV(UCSZ00));break;
-		case 9: UCSR0B|= _BV(UCSZ02);break;
-		default:break;
-	}
-
-	UCSR0B |= (INT_TX_COMPLETA)?_BV(TXCIE0):0;
- 5fc:	80 81       	ld	r24, Z
- 5fe:	80 64       	ori	r24, 0x40	; 64
- 600:	80 83       	st	Z, r24
-	UCSR0B |= (INT_RX_COMPLETA)?_BV(RXCIE0):0;
- 602:	80 81       	ld	r24, Z
- 604:	80 68       	ori	r24, 0x80	; 128
- 606:	80 83       	st	Z, r24
-		default: break;
-	}
-
-	if(NUM_STOP==2) UCSR0C |= _BV(USBS0);
-	if(CLK_POL) UCSR0C |= _BV(UCPOL0);
-}
- 608:	08 95       	ret
-
-0000060a <USART0_EnableTx>:
- * @PRE:    El puerto USART0 se encuentra inicializado
- * @POST:   El puerto USART0 se habilita para transmision 
- * @RETURN: Void
- */
-void USART0_EnableTx(){
-	UCSR0B |= _BV(TXEN0);
- 60a:	e1 ec       	ldi	r30, 0xC1	; 193
- 60c:	f0 e0       	ldi	r31, 0x00	; 0
- 60e:	80 81       	ld	r24, Z
- 610:	88 60       	ori	r24, 0x08	; 8
- 612:	80 83       	st	Z, r24
-}
- 614:	08 95       	ret
-
-00000616 <USART0_DisableTx>:
- * @PRE:    El puerto USART0 se encuentra inicializado
- * @POST:   El puerto USART0 se deshabilita para transmision 
- * @RETURN: Void
- */
-void USART0_DisableTx(){
-	UCSR0B &= ~_BV(TXEN0);
- 616:	e1 ec       	ldi	r30, 0xC1	; 193
- 618:	f0 e0       	ldi	r31, 0x00	; 0
- 61a:	80 81       	ld	r24, Z
- 61c:	87 7f       	andi	r24, 0xF7	; 247
- 61e:	80 83       	st	Z, r24
-}
- 620:	08 95       	ret
-
-00000622 <USART0_EnableRx>:
- * @PRE:    El puerto USART0 se encuentra inicializado
- * @POST:   El puerto USART0 se habilita para Recepsion 
- * @RETURN: Void
- */
-void USART0_EnableRx(){
-	UCSR0B |= _BV(RXEN0);
- 622:	e1 ec       	ldi	r30, 0xC1	; 193
- 624:	f0 e0       	ldi	r31, 0x00	; 0
- 626:	80 81       	ld	r24, Z
- 628:	80 61       	ori	r24, 0x10	; 16
- 62a:	80 83       	st	Z, r24
-}
- 62c:	08 95       	ret
-
-0000062e <USART0_DisableRx>:
- * @PRE:    El puerto USART0 se encuentra inicializado
- * @POST:   El puerto USART0 se deshabilita para Recepcion 
- * @RETURN: Void
- */
- void USART0_DisableRx(){
- 	UCSR0B &= ~_BV(RXEN0);
- 62e:	e1 ec       	ldi	r30, 0xC1	; 193
- 630:	f0 e0       	ldi	r31, 0x00	; 0
- 632:	80 81       	ld	r24, Z
- 634:	8f 7e       	andi	r24, 0xEF	; 239
- 636:	80 83       	st	Z, r24
- }
- 638:	08 95       	ret
-
-0000063a <USART0_Enviar>:
-  * @PARAMS uint8_t dato -> Dato que se desea enviar
-  * @PRE:   El puerto USART0 se encuentra configurado y habilitado para el envio de mensajes+
-  * @POST:  Se coloca el mensaje en el buffer de salida de la USART0
-  * @RETURN: Void
-  */
-void USART0_Enviar(uint8_t dato){
- 63a:	98 2f       	mov	r25, r24
-
-	// Espera a que se se termina la transmision anterior si esta en curso
-	while ( !( UCSR0A & (1<<UDRE0)) );
- 63c:	80 91 c0 00 	lds	r24, 0x00C0
- 640:	85 ff       	sbrs	r24, 5
- 642:	fc cf       	rjmp	.-8      	; 0x63c <USART0_Enviar+0x2>
-
-	// Coloca el dato a enviar en el buffer de salida
-	UDR0 = dato;
- 644:	90 93 c6 00 	sts	0x00C6, r25
-
-}
- 648:	08 95       	ret
-
-0000064a <USART0_Recibir>:
- * @RETURN: uint8_t dato -> El dato recibido en la transmision
- */
-uint8_t USART0_Recibir(){
-
-	// Se espera a que se reciba un mensaje si esta no ha llegado todavia
-	while ( !(UCSR0A & (1<<RXC0)) );
- 64a:	80 91 c0 00 	lds	r24, 0x00C0
- 64e:	87 ff       	sbrs	r24, 7
- 650:	fc cf       	rjmp	.-8      	; 0x64a <USART0_Recibir>
-
-	return UDR0;
- 652:	80 91 c6 00 	lds	r24, 0x00C6
-}
- 656:	08 95       	ret
-
-00000658 <USART0_EnviarStrLen>:
-
-
-void USART0_EnviarStrLen(int len, uint8_t *buf){
- 658:	9c 01       	movw	r18, r24
- 65a:	fb 01       	movw	r30, r22
- 65c:	0a c0       	rjmp	.+20     	; 0x672 <USART0_EnviarStrLen+0x1a>
-
-	for (; len > 0; len--){
-		USART0_Enviar(*buf++);
- 65e:	90 81       	ld	r25, Z
-  * @RETURN: Void
-  */
-void USART0_Enviar(uint8_t dato){
-
-	// Espera a que se se termina la transmision anterior si esta en curso
-	while ( !( UCSR0A & (1<<UDRE0)) );
- 660:	80 91 c0 00 	lds	r24, 0x00C0
- 664:	85 ff       	sbrs	r24, 5
- 666:	fc cf       	rjmp	.-8      	; 0x660 <USART0_EnviarStrLen+0x8>
-
-
-void USART0_EnviarStrLen(int len, uint8_t *buf){
-
-	for (; len > 0; len--){
-		USART0_Enviar(*buf++);
- 668:	31 96       	adiw	r30, 0x01	; 1
-
-	// Espera a que se se termina la transmision anterior si esta en curso
-	while ( !( UCSR0A & (1<<UDRE0)) );
-
-	// Coloca el dato a enviar en el buffer de salida
-	UDR0 = dato;
- 66a:	90 93 c6 00 	sts	0x00C6, r25
-}
-
-
-void USART0_EnviarStrLen(int len, uint8_t *buf){
-
-	for (; len > 0; len--){
- 66e:	21 50       	subi	r18, 0x01	; 1
- 670:	30 40       	sbci	r19, 0x00	; 0
- 672:	12 16       	cp	r1, r18
- 674:	13 06       	cpc	r1, r19
- 676:	9c f3       	brlt	.-26     	; 0x65e <USART0_EnviarStrLen+0x6>
-		USART0_Enviar(*buf++);
-	}
-
-
-}
- 678:	08 95       	ret
-
-0000067a <SPI_init>:
+00000468 <SPI_init>:
 void SPI_init(void){
 
 	if(SPI_MSTR){
 		// Se inicializa el microcontrolador como Maestro
 		// Se configura el pin MISO como entrada; SCK, MOSI y SS como salida
 		SPI_DDR &= ~_BV(SPI_MISO);
- 67a:	24 98       	cbi	0x04, 4	; 4
+ 468:	24 98       	cbi	0x04, 4	; 4
 		SPI_DDR |= _BV(SPI_SS)|_BV(SPI_SCK)|_BV(SPI_MOSI);
- 67c:	84 b1       	in	r24, 0x04	; 4
- 67e:	8a 62       	ori	r24, 0x2A	; 42
- 680:	84 b9       	out	0x04, r24	; 4
+ 46a:	84 b1       	in	r24, 0x04	; 4
+ 46c:	8a 62       	ori	r24, 0x2A	; 42
+ 46e:	84 b9       	out	0x04, r24	; 4
 		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
- 682:	85 b1       	in	r24, 0x05	; 5
- 684:	8a 63       	ori	r24, 0x3A	; 58
- 686:	85 b9       	out	0x05, r24	; 5
+ 470:	85 b1       	in	r24, 0x05	; 5
+ 472:	8a 63       	ori	r24, 0x3A	; 58
+ 474:	85 b9       	out	0x05, r24	; 5
 		SPI_DDR |= _BV(SPI_MISO);
 		SPI_PORT |= _BV(SPI_SS)|_BV(SPI_MOSI)|_BV(SPI_MISO)|_BV(SPI_SCK);
 
 	}
 
 	SPCR = 0x00;
- 688:	1c bc       	out	0x2c, r1	; 44
+ 476:	1c bc       	out	0x2c, r1	; 44
 	SPCR |= (SPI_INT)?_BV(SPIE):0;
- 68a:	8c b5       	in	r24, 0x2c	; 44
- 68c:	8c bd       	out	0x2c, r24	; 44
+ 478:	8c b5       	in	r24, 0x2c	; 44
+ 47a:	8c bd       	out	0x2c, r24	; 44
 	SPCR |= (SPI_DATA_ORDER)?_BV(DORD):0;
- 68e:	8c b5       	in	r24, 0x2c	; 44
- 690:	8c bd       	out	0x2c, r24	; 44
+ 47c:	8c b5       	in	r24, 0x2c	; 44
+ 47e:	8c bd       	out	0x2c, r24	; 44
 	SPCR |= (SPI_MSTR)?_BV(MSTR):0;
- 692:	8c b5       	in	r24, 0x2c	; 44
- 694:	80 61       	ori	r24, 0x10	; 16
- 696:	8c bd       	out	0x2c, r24	; 44
+ 480:	8c b5       	in	r24, 0x2c	; 44
+ 482:	80 61       	ori	r24, 0x10	; 16
+ 484:	8c bd       	out	0x2c, r24	; 44
 	SPCR |= (SPI_CPOL)?_BV(CPOL):0;
- 698:	8c b5       	in	r24, 0x2c	; 44
- 69a:	8c bd       	out	0x2c, r24	; 44
+ 486:	8c b5       	in	r24, 0x2c	; 44
+ 488:	8c bd       	out	0x2c, r24	; 44
 	SPCR |= (SPI_CHPA)?_BV(CPHA):0;
- 69c:	8c b5       	in	r24, 0x2c	; 44
- 69e:	8c bd       	out	0x2c, r24	; 44
+ 48a:	8c b5       	in	r24, 0x2c	; 44
+ 48c:	8c bd       	out	0x2c, r24	; 44
 
 	switch(SPI_SPR){
 		case 16:SPCR |= _BV(SPR0);break;
 		case 64:SPCR |= _BV(SPR1);break;
- 6a0:	8c b5       	in	r24, 0x2c	; 44
- 6a2:	82 60       	ori	r24, 0x02	; 2
- 6a4:	8c bd       	out	0x2c, r24	; 44
+ 48e:	8c b5       	in	r24, 0x2c	; 44
+ 490:	82 60       	ori	r24, 0x02	; 2
+ 492:	8c bd       	out	0x2c, r24	; 44
 		case 128:SPCR |= _BV(SPR0)|_BV(SPR1);break;
 		default:break;
 	}
 
 	SPSR = 0x00;
- 6a6:	1d bc       	out	0x2d, r1	; 45
+ 494:	1d bc       	out	0x2d, r1	; 45
 	SPSR |= (SPI_2X)?_BV(SPI2X):0;
- 6a8:	8d b5       	in	r24, 0x2d	; 45
- 6aa:	8d bd       	out	0x2d, r24	; 45
+ 496:	8d b5       	in	r24, 0x2d	; 45
+ 498:	8d bd       	out	0x2d, r24	; 45
 
 	SPCR |= _BV(SPE);
- 6ac:	8c b5       	in	r24, 0x2c	; 44
- 6ae:	80 64       	ori	r24, 0x40	; 64
- 6b0:	8c bd       	out	0x2c, r24	; 44
+ 49a:	8c b5       	in	r24, 0x2c	; 44
+ 49c:	80 64       	ori	r24, 0x40	; 64
+ 49e:	8c bd       	out	0x2c, r24	; 44
 
 }
- 6b2:	08 95       	ret
+ 4a0:	08 95       	ret
 
-000006b4 <SPI_Enviar>:
+000004a2 <SPI_Enviar>:
  * @RETURN: Void
  */
 void SPI_Enviar(uint8_t dato){
 	
 	// Se inicializa la transmision
 	SPDR = dato;
- 6b4:	8e bd       	out	0x2e, r24	; 46
+ 4a2:	8e bd       	out	0x2e, r24	; 46
 	// Se espera a que la transmision se complete
 	while(!(SPSR & _BV(SPIF)));
- 6b6:	0d b4       	in	r0, 0x2d	; 45
- 6b8:	07 fe       	sbrs	r0, 7
- 6ba:	fd cf       	rjmp	.-6      	; 0x6b6 <SPI_Enviar+0x2>
+ 4a4:	0d b4       	in	r0, 0x2d	; 45
+ 4a6:	07 fe       	sbrs	r0, 7
+ 4a8:	fd cf       	rjmp	.-6      	; 0x4a4 <SPI_Enviar+0x2>
 }
- 6bc:	08 95       	ret
+ 4aa:	08 95       	ret
 
-000006be <SPI_Recibir>:
+000004ac <SPI_Recibir>:
  * @RETURN: uint8_t dato -> El dato recibido en la transmision
  */
 uint8_t SPI_Recibir(){
 
 	// Se espera a que la transmision se complete
 	while(!(SPSR & _BV(SPIF)));
- 6be:	0d b4       	in	r0, 0x2d	; 45
- 6c0:	07 fe       	sbrs	r0, 7
- 6c2:	fd cf       	rjmp	.-6      	; 0x6be <SPI_Recibir>
+ 4ac:	0d b4       	in	r0, 0x2d	; 45
+ 4ae:	07 fe       	sbrs	r0, 7
+ 4b0:	fd cf       	rjmp	.-6      	; 0x4ac <SPI_Recibir>
 	return SPDR;
- 6c4:	8e b5       	in	r24, 0x2e	; 46
+ 4b2:	8e b5       	in	r24, 0x2e	; 46
 }
- 6c6:	08 95       	ret
+ 4b4:	08 95       	ret
 
-000006c8 <_exit>:
- 6c8:	f8 94       	cli
+000004b6 <USART0_init>:
+ * @RETURN: Void
+ */
+void USART0_init(){
 
-000006ca <__stop_program>:
- 6ca:	ff cf       	rjmp	.-2      	; 0x6ca <__stop_program>
+	// Nos aseguramos que la USART se encuentre inactiva y configuracion default
+	UCSR0A = 0x20;
+ 4b6:	80 e2       	ldi	r24, 0x20	; 32
+ 4b8:	80 93 c0 00 	sts	0x00C0, r24
+	UCSR0B = 0x00;
+ 4bc:	e1 ec       	ldi	r30, 0xC1	; 193
+ 4be:	f0 e0       	ldi	r31, 0x00	; 0
+ 4c0:	10 82       	st	Z, r1
+	UCSR0C = 0x06;
+ 4c2:	86 e0       	ldi	r24, 0x06	; 6
+ 4c4:	80 93 c2 00 	sts	0x00C2, r24
+	
+
+	// Asignamos el valor del valor de la tasa de transmision en baudios
+	UBRR0L=UBRRVAL;			//Parte baja del byte
+ 4c8:	83 e3       	ldi	r24, 0x33	; 51
+ 4ca:	80 93 c4 00 	sts	0x00C4, r24
+	UBRR0H=(UBRRVAL>>8);	//Parte alta del byte
+ 4ce:	10 92 c5 00 	sts	0x00C5, r1
+		case 7: UCSR0C &= ~(_BV(UCSZ00));break;
+		case 9: UCSR0B|= _BV(UCSZ02);break;
+		default:break;
+	}
+
+	UCSR0B |= (INT_TX_COMPLETA)?_BV(TXCIE0):0;
+ 4d2:	80 81       	ld	r24, Z
+ 4d4:	80 64       	ori	r24, 0x40	; 64
+ 4d6:	80 83       	st	Z, r24
+	UCSR0B |= (INT_RX_COMPLETA)?_BV(RXCIE0):0;
+ 4d8:	80 81       	ld	r24, Z
+ 4da:	80 68       	ori	r24, 0x80	; 128
+ 4dc:	80 83       	st	Z, r24
+		default: break;
+	}
+
+	if(NUM_STOP==2) UCSR0C |= _BV(USBS0);
+	if(CLK_POL) UCSR0C |= _BV(UCPOL0);
+}
+ 4de:	08 95       	ret
+
+000004e0 <USART0_EnableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_EnableTx(){
+	UCSR0B |= _BV(TXEN0);
+ 4e0:	e1 ec       	ldi	r30, 0xC1	; 193
+ 4e2:	f0 e0       	ldi	r31, 0x00	; 0
+ 4e4:	80 81       	ld	r24, Z
+ 4e6:	88 60       	ori	r24, 0x08	; 8
+ 4e8:	80 83       	st	Z, r24
+}
+ 4ea:	08 95       	ret
+
+000004ec <USART0_DisableTx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para transmision 
+ * @RETURN: Void
+ */
+void USART0_DisableTx(){
+	UCSR0B &= ~_BV(TXEN0);
+ 4ec:	e1 ec       	ldi	r30, 0xC1	; 193
+ 4ee:	f0 e0       	ldi	r31, 0x00	; 0
+ 4f0:	80 81       	ld	r24, Z
+ 4f2:	87 7f       	andi	r24, 0xF7	; 247
+ 4f4:	80 83       	st	Z, r24
+}
+ 4f6:	08 95       	ret
+
+000004f8 <USART0_EnableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se habilita para Recepsion 
+ * @RETURN: Void
+ */
+void USART0_EnableRx(){
+	UCSR0B |= _BV(RXEN0);
+ 4f8:	e1 ec       	ldi	r30, 0xC1	; 193
+ 4fa:	f0 e0       	ldi	r31, 0x00	; 0
+ 4fc:	80 81       	ld	r24, Z
+ 4fe:	80 61       	ori	r24, 0x10	; 16
+ 500:	80 83       	st	Z, r24
+}
+ 502:	08 95       	ret
+
+00000504 <USART0_DisableRx>:
+ * @PRE:    El puerto USART0 se encuentra inicializado
+ * @POST:   El puerto USART0 se deshabilita para Recepcion 
+ * @RETURN: Void
+ */
+ void USART0_DisableRx(){
+ 	UCSR0B &= ~_BV(RXEN0);
+ 504:	e1 ec       	ldi	r30, 0xC1	; 193
+ 506:	f0 e0       	ldi	r31, 0x00	; 0
+ 508:	80 81       	ld	r24, Z
+ 50a:	8f 7e       	andi	r24, 0xEF	; 239
+ 50c:	80 83       	st	Z, r24
+ }
+ 50e:	08 95       	ret
+
+00000510 <USART0_Enviar>:
+  * @PARAMS uint8_t dato -> Dato que se desea enviar
+  * @PRE:   El puerto USART0 se encuentra configurado y habilitado para el envio de mensajes+
+  * @POST:  Se coloca el mensaje en el buffer de salida de la USART0
+  * @RETURN: Void
+  */
+void USART0_Enviar(uint8_t dato){
+ 510:	98 2f       	mov	r25, r24
+
+	// Espera a que se se termina la transmision anterior si esta en curso
+	while ( !( UCSR0A & (1<<UDRE0)) );
+ 512:	80 91 c0 00 	lds	r24, 0x00C0
+ 516:	85 ff       	sbrs	r24, 5
+ 518:	fc cf       	rjmp	.-8      	; 0x512 <USART0_Enviar+0x2>
+
+	// Coloca el dato a enviar en el buffer de salida
+	UDR0 = dato;
+ 51a:	90 93 c6 00 	sts	0x00C6, r25
+
+}
+ 51e:	08 95       	ret
+
+00000520 <USART0_Recibir>:
+ * @RETURN: uint8_t dato -> El dato recibido en la transmision
+ */
+uint8_t USART0_Recibir(){
+
+	// Se espera a que se reciba un mensaje si esta no ha llegado todavia
+	while ( !(UCSR0A & (1<<RXC0)) );
+ 520:	80 91 c0 00 	lds	r24, 0x00C0
+ 524:	87 ff       	sbrs	r24, 7
+ 526:	fc cf       	rjmp	.-8      	; 0x520 <USART0_Recibir>
+
+	return UDR0;
+ 528:	80 91 c6 00 	lds	r24, 0x00C6
+}
+ 52c:	08 95       	ret
+
+0000052e <USART0_EnviarStrLen>:
+
+
+void USART0_EnviarStrLen(int len, uint8_t *buf){
+ 52e:	9c 01       	movw	r18, r24
+ 530:	fb 01       	movw	r30, r22
+ 532:	0a c0       	rjmp	.+20     	; 0x548 <USART0_EnviarStrLen+0x1a>
+
+	for (; len > 0; len--){
+		USART0_Enviar(*buf++);
+ 534:	90 81       	ld	r25, Z
+  * @RETURN: Void
+  */
+void USART0_Enviar(uint8_t dato){
+
+	// Espera a que se se termina la transmision anterior si esta en curso
+	while ( !( UCSR0A & (1<<UDRE0)) );
+ 536:	80 91 c0 00 	lds	r24, 0x00C0
+ 53a:	85 ff       	sbrs	r24, 5
+ 53c:	fc cf       	rjmp	.-8      	; 0x536 <USART0_EnviarStrLen+0x8>
+
+
+void USART0_EnviarStrLen(int len, uint8_t *buf){
+
+	for (; len > 0; len--){
+		USART0_Enviar(*buf++);
+ 53e:	31 96       	adiw	r30, 0x01	; 1
+
+	// Espera a que se se termina la transmision anterior si esta en curso
+	while ( !( UCSR0A & (1<<UDRE0)) );
+
+	// Coloca el dato a enviar en el buffer de salida
+	UDR0 = dato;
+ 540:	90 93 c6 00 	sts	0x00C6, r25
+}
+
+
+void USART0_EnviarStrLen(int len, uint8_t *buf){
+
+	for (; len > 0; len--){
+ 544:	21 50       	subi	r18, 0x01	; 1
+ 546:	30 40       	sbci	r19, 0x00	; 0
+ 548:	12 16       	cp	r1, r18
+ 54a:	13 06       	cpc	r1, r19
+ 54c:	9c f3       	brlt	.-26     	; 0x534 <USART0_EnviarStrLen+0x6>
+		USART0_Enviar(*buf++);
+	}
+
+
+}
+ 54e:	08 95       	ret
+
+00000550 <_exit>:
+ 550:	f8 94       	cli
+
+00000552 <__stop_program>:
+ 552:	ff cf       	rjmp	.-2      	; 0x552 <__stop_program>

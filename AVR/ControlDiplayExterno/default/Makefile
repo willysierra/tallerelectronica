@@ -4,7 +4,7 @@
 
 ## General Flags
 PROJECT = ControlDiplayExterno
-MCU = atmega168
+MCU = atmega88
 TARGET = ControlDiplayExterno.elf
 CC = avr-gcc
 
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99   -O3 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -std=gnu99   -O2 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Users\Manuel Vieda\Documents\tallerelectronica\AVR\ControlDiplayExterno\." 
+INCLUDES = -I"C:\Users\Manuel Vieda\Documents\Taller de Electronica\AVR\ControlDiplayExterno\." 
 
 ## Objects that must be built in order to link
 OBJECTS = ControlDiplayExterno.o USART.o 

@@ -19,7 +19,7 @@ CuposParqueadero.o: ../CuposParqueadero.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h \
   ../funciones.h ../includes/defines.h ../includes/lcd_HD44780_4.h \
-  ../includes/USART.h
+  ../includes/USART.h ../includes/DS1307.h
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdio.h:
 
@@ -66,3 +66,5 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h:
 ../includes/lcd_HD44780_4.h:
 
 ../includes/USART.h:
+
+../includes/DS1307.h:

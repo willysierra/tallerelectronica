@@ -30,5 +30,7 @@ void retiroVehiculoEstudiante(void);
 
 void CUPOS_EscribirInfoLCD(void);
 
+void actualizarDisplayExterno();
+
 
 #endif /* _CUPOSPARQUEADERO_H_*/

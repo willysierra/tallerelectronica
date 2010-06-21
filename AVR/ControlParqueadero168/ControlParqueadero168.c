@@ -52,29 +52,20 @@ int main(void) {
 	_delay_ms(40);
 	initHardware();
 
-	uint8_t DS1307_data2[8];
-
-	DS1307_data2[0] = 0x05;
-	DS1307_data2[1] = 0x06;
-	DS1307_data2[2] = 0x00;
-	DS1307_data2[3] = 0x00;
-	DS1307_data2[4] = 0x00;
-	DS1307_data2[5] = 0x00;
-	DS1307_data2[6] = 0x00;
-	DS1307_data2[7] = 0x00;
+	uint8_t EntraCarro[2] = {0x00, 0x00};
+	uint8_t SaleCarro[2] = {0xff, 0xff};
 
 	while(1){
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
-		_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
+		_delay_ms(40);
+		if(PIND&0x01){
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, EntraCarro);
+			while(PIND&0x01){}
+		}else if(PIND&0x02){
+			I2C_EscribirBytes(0x00, 0x01, 0x00, 2, SaleCarro);
+			while(PIND&0x02){}
 
-		I2C_EscribirBytes(0x00, 0x01, 0x00, 2, DS1307_data2);
+		}
 
-		DS1307_data2[0] = DS1307_data2[0]++;
-		DS1307_data2[1] = DS1307_data2[0];
 	}
 
 }
@@ -96,11 +87,17 @@ void initHardware(){
 	// Inicializamos el modulo I2C/TWI
 	I2C_Init();
 
+	//Inicializamos los pines para la entrada de los dos pulsadores
+	PORTD = 0x00;
+	DDRD  = 0x00;
+
 	// Inicializamos el modulo de comunicacion SPI
 	//SPI_init();
 
 
 	/*
+
+
 
 DDRD = 0xFF;
 PORTD = 0xFF;

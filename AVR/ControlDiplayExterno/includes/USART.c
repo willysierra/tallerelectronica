@@ -175,3 +175,13 @@ uint8_t USART0_Recibir(){
 
 	return UDR0;
 }
+
+
+void USART0_EnviarStrLen(int len, char *buf){
+
+	for (; len > 0; len--){
+		USART0_Enviar(*buf++);
+	}
+
+
+}
