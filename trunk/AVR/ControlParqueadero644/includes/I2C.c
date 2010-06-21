@@ -356,10 +356,16 @@ void I2C_AtenderInterrupcion(void){
 								
 								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
 								TWCR = _BV(TWEN);
-								ingresarVehiculoEstudiante();
+								//ingresarVehiculoEstudiante();
+
+								USART0_Enviar(PtrBuffTWI);
+								USART0_Enviar(TWI_Buff[0]);
+								USART0_Enviar(TWI_Buff[1]);
+								USART0_Enviar(0x0d);
+
 
 								switch(TWI_Buff[0]){
-									case 0x01:
+									case 0x00:
 										// Se registro un ingreso o salida de un vehiculo
 
 										if(TWI_Buff[1]==0x00){

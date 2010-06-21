@@ -152,7 +152,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x20ec
+.text           0x00000000     0x229c
  *(.vectors)
  .vectors       0x00000000       0x70 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
                 0x00000000                __vectors
@@ -254,78 +254,80 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00000318                SPI_Recibir
                 0x000002d4                SPI_init
  .text          0x00000322        0x0 SDCard.o
- .text          0x00000322      0x4f8 ControlParqueadero644.o
+ .text          0x00000322      0x4ea ControlParqueadero644.o
                 0x00000322                __vector_22
-                0x0000066a                initHardware
+                0x0000066e                initHardware
                 0x000004cc                vMainProgram
-                0x00000616                initVariables
-                0x000006d6                main
+                0x0000061a                initVariables
+                0x000006da                main
                 0x00000346                vTeclado
-                0x00000774                __vector_26
+                0x00000778                __vector_26
                 0x00000336                initPollingTimer
-                0x000006f8                __vector_18
-                0x000007bc                __vector_20
- .text          0x0000081a      0x356 I2C.o
-                0x00000ad6                I2C_AtenderInterrupcion
-                0x0000081a                I2C_Init
-                0x00000874                I2C_EscribirBytes
-                0x00000978                I2C_LeerBytes
-                0x00000840                I2C_Enviar
- .text          0x00000b70      0x380 DS1307.o
-                0x00000e62                DS1307_Init
-                0x00000b70                DS1307_CambiarHora
-                0x00000bc2                DS1307_CambiarFecha
-                0x00000bfc                DS1307_ActualizarHora
-                0x00000cca                DS1307_ActualizarFecha
- .text          0x00000ef0      0xfe6 funciones.o
-                0x00001200                adminConfiguraciones
-                0x00001c6c                adminDatosParqueadero
-                0x0000162c                adminFechaHora
-                0x00000ef0                validarContrasena
- .text          0x00001ed6      0x188 CuposParqueadero.o
-                0x00001fec                CUPOS_EscribirInfoLCD
-                0x00001f80                ingresarVehiculoEstudiante
-                0x00001fb8                cambiarTotalCupos
-                0x00001ed6                actualizarInforArrays
-                0x00001fb6                retiroVehiculoEstudiante
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
- .text          0x0000205e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
-                0x0000205e                . = ALIGN (0x2)
+                0x000006fc                __vector_18
+                0x000007c0                __vector_20
+ .text          0x0000080c      0x372 I2C.o
+                0x00000ac8                I2C_AtenderInterrupcion
+                0x0000080c                I2C_Init
+                0x00000866                I2C_EscribirBytes
+                0x0000096a                I2C_LeerBytes
+                0x00000832                I2C_Enviar
+ .text          0x00000b7e      0x380 DS1307.o
+                0x00000e70                DS1307_Init
+                0x00000b7e                DS1307_CambiarHora
+                0x00000bd0                DS1307_CambiarFecha
+                0x00000c0a                DS1307_ActualizarHora
+                0x00000cd8                DS1307_ActualizarFecha
+ .text          0x00000efe      0xfe6 funciones.o
+                0x0000120e                adminConfiguraciones
+                0x00001c7a                adminDatosParqueadero
+                0x0000163a                adminFechaHora
+                0x00000efe                validarContrasena
+ .text          0x00001ee4      0x32a CuposParqueadero.o
+                0x0000219c                CUPOS_EscribirInfoLCD
+                0x000020c6                ingresarVehiculoEstudiante
+                0x00002104                actualizarDisplayExterno
+                0x00002168                cambiarTotalCupos
+                0x00001ee4                actualizarInforArrays
+                0x00001f8e                calcularTiempoEspera
+                0x0000208e                retiroVehiculoEstudiante
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
+ .text          0x0000220e        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
+                0x0000220e                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000205e       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
-                0x0000205e                __udivmodhi4
- .text.libgcc   0x00002086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
- .text.libgcc   0x00002086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
- .text.libgcc   0x00002086        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000220e       0x28 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+                0x0000220e                __udivmodhi4
+ .text.libgcc   0x00002236        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .text.libgcc   0x00002236        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00002236        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x00002086       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
-                0x00002086                __eerd_byte_m644
+                0x00002236       0x10 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
+                0x00002236                __eerd_byte_m644
  .text.avr-libc
-                0x00002096        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
-                0x00002096                __eerd_word_m644
+                0x00002246        0xc c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
+                0x00002246                __eerd_word_m644
  .text.avr-libc
-                0x000020a2       0x1c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
-                0x000020a2                __eewr_byte_m644
-                0x000020a4                __eewr_r18_m644
+                0x00002252       0x1c c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
+                0x00002252                __eewr_byte_m644
+                0x00002254                __eewr_r18_m644
  .text.avr-libc
-                0x000020be        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
-                0x000020be                __eewr_word_m644
+                0x0000226e        0xa c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
+                0x0000226e                __eewr_word_m644
  .text.avr-libc
-                0x000020c8       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
-                0x000020c8                __eerd_block_m644
-                0x000020cc                __eerd_blraw_m644
-                0x000020e8                . = ALIGN (0x2)
+                0x00002278       0x20 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
+                0x00002278                __eerd_block_m644
+                0x0000227c                __eerd_blraw_m644
+                0x00002298                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000020e8        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
-                0x000020e8                exit
-                0x000020e8                _exit
+ .fini9         0x00002298        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+                0x00002298                exit
+                0x00002298                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -344,11 +346,11 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000020e8        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .fini0         0x00002298        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000020ec                _etext = .
+                0x0000229c                _etext = .
 
-.data           0x00800100      0x434 load address 0x000020ec
+.data           0x00800100      0x434 load address 0x0000229c
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
@@ -380,7 +382,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00800534                _edata = .
                 0x00800534                PROVIDE (__data_end, .)
 
-.bss            0x00800534       0x59
+.bss            0x00800534       0x5c
                 0x00800534                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800534        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm644.o
@@ -395,41 +397,42 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .bss           0x00800539        0x1 I2C.o
  .bss           0x0080053a        0x0 DS1307.o
  .bss           0x0080053a       0x36 funciones.o
- .bss           0x00800570        0x0 CuposParqueadero.o
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
- .bss           0x00800570        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
+ .bss           0x00800570        0x3 CuposParqueadero.o
+                0x00800570                tiempoEspera
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_udivmodhi4.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_copy_data.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_clear_bss.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_byte_atmega644.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_word_atmega644.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_byte_atmega644.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eewr_word_atmega644.o)
+ .bss           0x00800573        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a(eerd_block_atmega644.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800570        0xc ControlParqueadero644.o
-                0x00800570                password
-                0x0080057a                estadoMainProgram
-                0x0080057b                mascaraFunciones
- COMMON         0x0080057c        0x5 I2C.o
-                0x0080057c                TWI_Buff
-                0x00800580                TWI_BytesRecividos
- COMMON         0x00800581        0xc CuposParqueadero.o
-                0x00800581                cuposDisponibles
-                0x00800583                totalCupos
-                0x00800585                totalCuposArr
-                0x00800588                cuposDisponiblesArr
-                0x0080058b                cuposOcupados
-                0x0080058d                PROVIDE (__bss_end, .)
-                0x000020ec                __data_load_start = LOADADDR (.data)
-                0x00002520                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800573        0xc ControlParqueadero644.o
+                0x00800573                password
+                0x0080057d                estadoMainProgram
+                0x0080057e                mascaraFunciones
+ COMMON         0x0080057f        0x5 I2C.o
+                0x0080057f                TWI_Buff
+                0x00800583                TWI_BytesRecividos
+ COMMON         0x00800584        0xc CuposParqueadero.o
+                0x00800584                cuposDisponibles
+                0x00800586                totalCupos
+                0x00800588                totalCuposArr
+                0x0080058b                cuposDisponiblesArr
+                0x0080058e                cuposOcupados
+                0x00800590                PROVIDE (__bss_end, .)
+                0x0000229c                __data_load_start = LOADADDR (.data)
+                0x000026d0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0080058d        0x0
-                0x0080058d                PROVIDE (__noinit_start, .)
+.noinit         0x00800590        0x0
+                0x00800590                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0080058d                PROVIDE (__noinit_end, .)
-                0x0080058d                _end = .
-                0x0080058d                PROVIDE (__heap_start, .)
+                0x00800590                PROVIDE (__noinit_end, .)
+                0x00800590                _end = .
+                0x00800590                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0xc
  *(.eeprom*)
@@ -504,7 +507,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x000000e0       0x20 CuposParqueadero.o
 
 .debug_pubnames
-                0x00000000      0x543
+                0x00000000      0x58a
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0x70 lcd_HD44780_4.o
@@ -521,46 +524,46 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .debug_pubnames
                 0x000003cb       0x6e funciones.o
  .debug_pubnames
-                0x00000439      0x10a CuposParqueadero.o
+                0x00000439      0x151 CuposParqueadero.o
 
-.debug_info     0x00000000     0x15bf
+.debug_info     0x00000000     0x162e
  *(.debug_info)
  .debug_info    0x00000000      0x432 lcd_HD44780_4.o
  .debug_info    0x00000432      0x16c USART.o
  .debug_info    0x0000059e       0xba SPI.o
  .debug_info    0x00000658       0x5e SDCard.o
- .debug_info    0x000006b6      0x332 ControlParqueadero644.o
- .debug_info    0x000009e8      0x44e I2C.o
- .debug_info    0x00000e36      0x247 DS1307.o
- .debug_info    0x0000107d      0x3da funciones.o
- .debug_info    0x00001457      0x168 CuposParqueadero.o
+ .debug_info    0x000006b6      0x32e ControlParqueadero644.o
+ .debug_info    0x000009e4      0x44e I2C.o
+ .debug_info    0x00000e32      0x247 DS1307.o
+ .debug_info    0x00001079      0x3da funciones.o
+ .debug_info    0x00001453      0x1db CuposParqueadero.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x955
+.debug_abbrev   0x00000000      0x984
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x19c lcd_HD44780_4.o
  .debug_abbrev  0x0000019c       0xda USART.o
  .debug_abbrev  0x00000276       0x87 SPI.o
  .debug_abbrev  0x000002fd       0x2a SDCard.o
- .debug_abbrev  0x00000327      0x19b ControlParqueadero644.o
- .debug_abbrev  0x000004c2      0x1f1 I2C.o
- .debug_abbrev  0x000006b3       0xcd DS1307.o
- .debug_abbrev  0x00000780      0x124 funciones.o
- .debug_abbrev  0x000008a4       0xb1 CuposParqueadero.o
+ .debug_abbrev  0x00000327      0x18c ControlParqueadero644.o
+ .debug_abbrev  0x000004b3      0x1f1 I2C.o
+ .debug_abbrev  0x000006a4       0xcd DS1307.o
+ .debug_abbrev  0x00000771      0x124 funciones.o
+ .debug_abbrev  0x00000895       0xef CuposParqueadero.o
 
-.debug_line     0x00000000     0x1f58
+.debug_line     0x00000000     0x2168
  *(.debug_line)
  .debug_line    0x00000000      0x30f lcd_HD44780_4.o
  .debug_line    0x0000030f      0x1b2 USART.o
  .debug_line    0x000004c1      0x144 SPI.o
  .debug_line    0x00000605       0x3e SDCard.o
  .debug_line    0x00000643      0x567 ControlParqueadero644.o
- .debug_line    0x00000baa      0x4bf I2C.o
- .debug_line    0x00001069      0x319 DS1307.o
- .debug_line    0x00001382      0xa54 funciones.o
- .debug_line    0x00001dd6      0x182 CuposParqueadero.o
+ .debug_line    0x00000baa      0x4d7 I2C.o
+ .debug_line    0x00001081      0x319 DS1307.o
+ .debug_line    0x0000139a      0xa54 funciones.o
+ .debug_line    0x00001dee      0x37a CuposParqueadero.o
 
-.debug_frame    0x00000000      0x370
+.debug_frame    0x00000000      0x390
  *(.debug_frame)
  .debug_frame   0x00000000       0x80 lcd_HD44780_4.o
  .debug_frame   0x00000080       0x90 USART.o
@@ -569,38 +572,38 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
  .debug_frame   0x00000200       0x60 I2C.o
  .debug_frame   0x00000260       0x60 DS1307.o
  .debug_frame   0x000002c0       0x50 funciones.o
- .debug_frame   0x00000310       0x60 CuposParqueadero.o
+ .debug_frame   0x00000310       0x80 CuposParqueadero.o
 
-.debug_str      0x00000000      0x6c9
+.debug_str      0x00000000      0x711
  *(.debug_str)
- .debug_str     0x00000000      0x1a7 lcd_HD44780_4.o
-                                0x1e0 (size before relaxing)
- .debug_str     0x000001a7       0x93 USART.o
-                                0x16c (size before relaxing)
- .debug_str     0x0000023a       0x32 SPI.o
-                                0x106 (size before relaxing)
- .debug_str     0x0000026c       0x15 SDCard.o
-                                 0xdc (size before relaxing)
- .debug_str     0x00000281      0x153 ControlParqueadero644.o
-                                0x26f (size before relaxing)
- .debug_str     0x000003d4       0xec I2C.o
-                                0x21b (size before relaxing)
- .debug_str     0x000004c0       0x89 DS1307.o
-                                0x195 (size before relaxing)
- .debug_str     0x00000549       0xd6 funciones.o
-                                0x20b (size before relaxing)
- .debug_str     0x0000061f       0xaa CuposParqueadero.o
-                                0x1bc (size before relaxing)
+ .debug_str     0x00000000      0x1ab lcd_HD44780_4.o
+                                0x1e4 (size before relaxing)
+ .debug_str     0x000001ab       0x93 USART.o
+                                0x170 (size before relaxing)
+ .debug_str     0x0000023e       0x32 SPI.o
+                                0x10a (size before relaxing)
+ .debug_str     0x00000270       0x15 SDCard.o
+                                 0xe0 (size before relaxing)
+ .debug_str     0x00000285      0x153 ControlParqueadero644.o
+                                0x273 (size before relaxing)
+ .debug_str     0x000003d8       0xec I2C.o
+                                0x21f (size before relaxing)
+ .debug_str     0x000004c4       0x89 DS1307.o
+                                0x199 (size before relaxing)
+ .debug_str     0x0000054d       0xd6 funciones.o
+                                0x20f (size before relaxing)
+ .debug_str     0x00000623       0xee CuposParqueadero.o
+                                0x210 (size before relaxing)
 
-.debug_loc      0x00000000      0x621
+.debug_loc      0x00000000      0x646
  *(.debug_loc)
  .debug_loc     0x00000000      0x181 lcd_HD44780_4.o
  .debug_loc     0x00000181       0x6e USART.o
- .debug_loc     0x000001ef       0x43 ControlParqueadero644.o
- .debug_loc     0x00000232      0x248 I2C.o
- .debug_loc     0x0000047a       0xb9 DS1307.o
- .debug_loc     0x00000533       0xc6 funciones.o
- .debug_loc     0x000005f9       0x28 CuposParqueadero.o
+ .debug_loc     0x000001ef       0x30 ControlParqueadero644.o
+ .debug_loc     0x0000021f      0x248 I2C.o
+ .debug_loc     0x00000467       0xb9 DS1307.o
+ .debug_loc     0x00000520       0xc6 funciones.o
+ .debug_loc     0x000005e6       0x60 CuposParqueadero.o
 
 .debug_macinfo
  *(.debug_macinfo)

@@ -27,6 +27,7 @@
 #include "includes/defines.h"
 #include "includes/lcd_HD44780_4.h"	// Manejo del Display LCD
 #include "includes/USART.h"			// Manejo para comunicacion por USART
+#include "includes/DS1307.h"
 
 
 unsigned int EEMEM totalCuposROM;
@@ -38,6 +39,9 @@ unsigned int cuposDisponibles;
 uint8_t totalCuposArr[3];
 uint8_t cuposDisponiblesArr[3];
 
+uint8_t tiempoEspera[3]={0,0,0};
+
+void calcularTiempoEspera();
 
 
 void actualizarInforArrays(){
@@ -72,11 +76,23 @@ void ingresarVehiculoEstudiante(void){
 	if(cuposDisponibles>0){
 		cuposOcupados++;
 		cuposDisponibles = totalCupos-cuposOcupados;
+		if(cuposDisponibles==0){
+			calcularTiempoEspera();
+		}
 	}
 }
 
 
 void retiroVehiculoEstudiante(void){
+
+	if(cuposOcupados>0){
+	cuposOcupados--;
+	cuposDisponibles = totalCupos-cuposOcupados;
+		if(cuposDisponibles==1){
+			calcularTiempoEspera();
+		}
+
+	}
 
 }
 
@@ -88,5 +104,100 @@ void cambiarTotalCupos(int cupos){
 	cuposDisponibles =  totalCupos-cuposOcupados;
 }
 
+void actualizarDisplayExterno(){
+
+	actualizarInforArrays();
+	
+	USART0_Enviar('A');
+	USART0_Enviar(cuposDisponiblesArr[0]);
+	USART0_Enviar(cuposDisponiblesArr[1]);
+	USART0_Enviar(cuposDisponiblesArr[2]);
+	USART0_Enviar(tiempoEspera[0]);
+	USART0_Enviar(tiempoEspera[1]);
+	USART0_Enviar(tiempoEspera[2]);
+
+	USART0_Enviar(DS1307_hora[0]-0x30);
+	USART0_Enviar(DS1307_hora[1]-0x30);
+	USART0_Enviar(DS1307_hora[3]-0x30);
+	USART0_Enviar(DS1307_hora[4]-0x030);
 
 
+
+}
+
+
+
+void calcularTiempoEspera(){
+if(cuposDisponibles==0){
+
+	int cualHora = DS1307_hora[8]? 120+(DS1307_hora[0]-0x30)*100+ (DS1307_hora[1]-0x30)*10+ (DS1307_hora[3]-0x30) : (DS1307_hora[0]-0x30)*100+ (DS1307_hora[1]-0x30)*10+ (DS1307_hora[3]-0x30);
+
+	if(cualHora<=70){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 0;
+		tiempoEspera[2] = 1;
+	}
+	else if(cualHora<=75){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 0;
+		tiempoEspera[2] = 3;
+	}
+	else if(cualHora<=83){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 1;
+		tiempoEspera[2] = 5;
+	}
+	else if(cualHora<=93){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 2;
+		tiempoEspera[2] = 5;
+	}
+	else if(cualHora<=100){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 2;
+		tiempoEspera[2] = 5;
+	}
+	else if(cualHora<=110){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 1;
+		tiempoEspera[2] = 5;
+	}
+	else if(cualHora<=130){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 1;
+		tiempoEspera[2] = 0;
+	}
+	else if(cualHora<=143){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 0;
+		tiempoEspera[2] = 8;
+	}
+	else if(cualHora<=163){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 0;
+		tiempoEspera[2] = 5;
+	}
+	
+	else if(cualHora<=173){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 1;
+		tiempoEspera[2] = 5;
+	}
+	else if(cualHora<=203){
+		tiempoEspera[0] = 0;
+		tiempoEspera[1] = 2;
+		tiempoEspera[2] = 5;
+	}
+	
+	else {
+		tiempoEspera[0] = 1;
+		tiempoEspera[1] = 1;
+		tiempoEspera[2] = 1;
+	}
+}else{
+	tiempoEspera[0] = 0;
+	tiempoEspera[1] = 0;
+	tiempoEspera[2] = 0;
+}
+
+}

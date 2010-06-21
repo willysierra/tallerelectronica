@@ -3,7 +3,7 @@ USART.o: ../includes/USART.c ../includes/defines.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/iom168.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/iom88.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/iomx8.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/portpins.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/common.h \
@@ -22,7 +22,7 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h:
 
-c:/winavr-20100110/lib/gcc/../../avr/include/avr/iom168.h:
+c:/winavr-20100110/lib/gcc/../../avr/include/avr/iom88.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/iomx8.h:
 

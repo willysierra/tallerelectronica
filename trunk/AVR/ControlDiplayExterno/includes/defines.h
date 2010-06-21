@@ -87,4 +87,5 @@
 #define DATO2_DDR DDR(PUERTO_DATO_DATOS2)
 #define HORA_DDR DDR(PUERTO_DATO_HORA)
 
+
 #endif /* _DEFINES_H */

@@ -75,7 +75,7 @@ void vMainProgram(void);
 ISR(USART0_RX_vect) 
 {
 	uint8_t dato = USART0_Recibir();
-	LCD_enviarDTA(dato);LCD_esperarListo();
+	//LCD_enviarDTA(dato);LCD_esperarListo();
 	USART0_Enviar(dato);
 }
 
@@ -354,6 +354,7 @@ void vMainProgram(void){
 				LCD_linea3Pos0();LCD_esperarListo();
 				LCD_EnviarStr("Cupos Libres:");
 				CUPOS_EscribirInfoLCD();
+				actualizarDisplayExterno();
 				i=0;
 			}
 			estadoMainProgram++;
