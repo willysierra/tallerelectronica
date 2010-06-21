@@ -206,3 +206,27 @@ void DS1307_ActualizarHora(void){
 	}
 
 }
+
+
+/**
+ * Cambia la fecha en el RTC. 
+ */
+uint8_t DS1307_CambiarFecha(uint8_t dia, uint8_t mes, uint8_t ano){
+
+	uint8_t data[3] = {dia, mes, ano};
+	uint8_t bytesEscritos = 0;
+	bytesEscritos = I2C_EscribirBytes(DS1307_ID, DS1307_ADDR, 0x04, 3, data);
+
+	return bytesEscritos;
+}
+
+/**
+ * Cabia la hora del RTC con los parametros ingresados
+ */
+uint8_t DS1307_CambiarHora(uint8_t seg, uint8_t min, uint8_t hrs, uint8_t formato, uint8_t ap){
+
+	uint8_t data[3] = {seg, min, 0x00};
+	data[2] = formato? (_BV(6)|(hrs&0x1F)|(ap?_BV(5):0)) : (hrs&0x3F); 
+	uint8_t bytesEscritos = I2C_EscribirBytes(DS1307_ID, DS1307_ADDR, 0x00, 3, data);
+	return bytesEscritos;
+}

@@ -41,6 +41,7 @@
  #include <avr/io.h>
  #include <avr/pgmspace.h>
  #include <util/delay.h>		// Convenience functions for busy-wait delay loops
+ #include "../CuposParqueadero.h"
  #include "I2C.h"
  #include "USART.h"
 
@@ -355,9 +356,7 @@ void I2C_AtenderInterrupcion(void){
 								
 								// Colocamos Hardware I2C/TWI en estado pasivo (No responde a ningun llamado)
 								TWCR = _BV(TWEN);
-
-								cuposOcupados++;
-								cuposDisponibles--;
+								ingresarVehiculoEstudiante();
 
 								switch(TWI_Buff[0]){
 									case 0x01:
@@ -365,12 +364,10 @@ void I2C_AtenderInterrupcion(void){
 
 										if(TWI_Buff[1]==0x00){
 											// Ingresa un Vehiculo Estudiante
-											cuposOcupados++;
-											cuposDisponibles--;
+											ingresarVehiculoEstudiante();
 										}else if(TWI_Buff[1]==0xFF){
 											// Salida de un Vehiculo Estudiantes
-											cuposOcupados--;
-											cuposDisponibles++;
+											retiroVehiculoEstudiante();
 
 										}
 

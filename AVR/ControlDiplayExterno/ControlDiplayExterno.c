@@ -18,6 +18,7 @@
 /* Definición de Constantes del Sistema */
 #define F_CPU 8000000UL
 
+#define SEG1 _delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);_delay_ms(100);
 /* Exportación de Librerias */
 #include "includes/defines.h"
 
@@ -40,7 +41,6 @@ uint8_t estado;
 void initHardware();
 void enviarHora(uint8_t numero);
 void enviarDato(uint8_t numero1, uint8_t numero2);
-
 
 
 
@@ -70,10 +70,11 @@ int main(void) {
 	_delay_ms(40);
 	estado = 0x00;
 	initHardware();
-	sei();	// Enable the Global Interrupt Enable flag so that interrupts can be processed
+	//sei();	// Enable the Global Interrupt Enable flag so that interrupts can be processed
 
-	while(1){}
-
+	while(1){
+		testDisplay();
+	}
 
 }
 
@@ -135,3 +136,101 @@ void enviarHora(uint8_t numero){
 
 }
 
+
+
+void testDisplay(){
+	int i =0;
+	while(1)
+	{
+		SEG1
+
+		switch(i++){
+			case 0:
+				enviarHora(NUM0);
+				enviarHora(NUM0);
+				enviarHora(NUM0);
+				enviarDato(NUM0, NUM0);
+				enviarDato(NUM0, NUM0);
+				enviarDato(NUM0, NUM0);
+				break;
+			case 1:
+				enviarHora(NUM1);
+				enviarHora(NUM1);
+				enviarHora(NUM1);
+				enviarDato(NUMOFF, NUM1);
+				enviarDato(NUMOFF, NUM1);
+				enviarDato(NUMOFF, NUM1);
+				break;
+			case 2:
+				enviarHora(NUM2);
+				enviarHora(NUM2);
+				enviarHora(NUM2);
+				enviarDato(NUMOFF, NUM2);
+				enviarDato(NUMOFF, NUM2);
+				enviarDato(NUMOFF, NUM2);
+				break;
+			case 3:
+				enviarHora(NUM3);
+				enviarHora(NUM3);
+				enviarHora(NUM3);
+				enviarDato(NUMOFF, NUM3);
+				enviarDato(NUMOFF, NUM3);
+				enviarDato(NUMOFF, NUM3);
+				break;
+			case 4:
+				enviarHora(NUM4);
+				enviarHora(NUM4);
+				enviarHora(NUM4);
+				enviarDato(NUMOFF, NUM4);
+				enviarDato(NUMOFF, NUM4);
+				enviarDato(NUMOFF, NUM4);
+				break;
+			case 5:
+				enviarHora(NUM5);
+				enviarHora(NUM5);
+				enviarHora(NUM5);
+				enviarDato(NUMOFF, NUM5);
+				enviarDato(NUMOFF, NUM5);
+				enviarDato(NUMOFF, NUM5);
+				break;
+			case 6:
+				enviarHora(NUM6);
+				enviarHora(NUM6);
+				enviarHora(NUM6);
+				enviarDato(NUMOFF, NUM6);
+				enviarDato(NUMOFF, NUM6);
+				enviarDato(NUMOFF, NUM6);
+				break;
+			case 7:
+				enviarHora(NUM7);
+				enviarHora(NUM7);
+				enviarHora(NUM7);
+				enviarDato(NUMOFF, NUM7);
+				enviarDato(NUMOFF, NUM7);
+				enviarDato(NUMOFF, NUM7);
+				break;
+			
+			case 8:
+				enviarHora(NUM8);
+				enviarHora(NUM8);
+				enviarHora(NUM8);
+				enviarDato(NUMOFF, NUM8);
+				enviarDato(NUMOFF, NUM8);
+				enviarDato(NUMOFF, NUM8);
+				break;
+
+			case 9:
+				enviarHora(NUM9);
+				enviarHora(NUM9);
+				enviarHora(NUM9);
+				enviarDato(NUMOFF, NUM9);
+				enviarDato(NUMOFF, NUM9);
+				enviarDato(NUMOFF, NUM9);
+
+			default:
+				i=0;
+				break;
+		}
+
+	}
+}

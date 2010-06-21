@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = lcd_HD44780_4.o USART.o SPI.o SDCard.o ControlParqueadero644.o I2C.o DS1307.o funciones.o 
+OBJECTS = lcd_HD44780_4.o USART.o SPI.o SDCard.o ControlParqueadero644.o I2C.o DS1307.o funciones.o CuposParqueadero.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -68,6 +68,9 @@ DS1307.o: ../includes/DS1307.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 funciones.o: ../funciones.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+CuposParqueadero.o: ../CuposParqueadero.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

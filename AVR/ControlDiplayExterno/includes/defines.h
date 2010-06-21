@@ -35,17 +35,17 @@
  * ---------------------------------------------------------------
  */
 
-#define NUM0 0xF0
-#define NUM1 0x00
-#define NUM2 0xFF
-#define NUM3 0xFF
-#define NUM4 0xFF
-#define NUM5 0xFF
-#define NUM6 0xFF
-#define NUM7 0xFF
+#define NUM0 0xEE
+#define NUM1 0x82
+#define NUM2 0xDC
+#define NUM3 0xD6
+#define NUM4 0xB2
+#define NUM5 0x76
+#define NUM6 0x7E
+#define NUM7 0xC2
 #define NUM8 0xFF
-#define NUM9 0xFF
-
+#define NUM9 0xF6
+#define NUMOFF 0x00
 /*
  * ---------------------------------------------------------------
  * 
