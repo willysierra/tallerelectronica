@@ -1,4 +1,4 @@
-funciones.o: ../funciones.c \
+CuposParqueadero.o: ../CuposParqueadero.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdio.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/stdint.h \
@@ -16,11 +16,10 @@ funciones.o: ../funciones.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h \
-  ../funciones.h ../CuposParqueadero.h ../includes/defines.h \
-  ../includes/lcd_HD44780_4.h ../includes/USART.h ../includes/DS1307.h
+  ../funciones.h ../includes/defines.h ../includes/lcd_HD44780_4.h \
+  ../includes/USART.h
 
 c:/winavr-20100110/lib/gcc/../../avr/include/stdio.h:
 
@@ -56,20 +55,14 @@ c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h:
 
-c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h:
-
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/pgmspace.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/eeprom.h:
 
 ../funciones.h:
 
-../CuposParqueadero.h:
-
 ../includes/defines.h:
 
 ../includes/lcd_HD44780_4.h:
 
 ../includes/USART.h:
-
-../includes/DS1307.h:

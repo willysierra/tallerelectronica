@@ -27,7 +27,8 @@
 #include <avr/pgmspace.h>	// Program Space Utilities
 #include <avr/eeprom.h>		// EEPROM Handling
 
-#include "funciones.h"		// Contine las rutinas de las diferentes funcionalidades (Req Funcionales)
+#include "funciones.h"			// Contiene las rutinas de las diferentes funcionalidades (Req Funcionales)
+#include "CuposParqueadero.h" 	// Contiene las rutinas del manejo de los cupos del parqueadero
 
 #include "includes/lcd_HD44780_4.h"	// Manejo del Display LCD
 #include "includes/USART.h"			// Manejo para comunicacion por USART
@@ -54,12 +55,6 @@ char nuevaTecla = 0;
 
 unsigned char EEMEM passwordROM[10];
 unsigned char password[10];
-
-unsigned int EEMEM totalCuposROM;
-unsigned int totalCupos;
-
-unsigned int cuposOcupados;
-unsigned int cuposDisponibles;
 
 
 
@@ -357,10 +352,8 @@ void vMainProgram(void){
 				LCD_EnviarStr(DS1307_hora);
 
 				LCD_linea3Pos0();LCD_esperarListo();
-				LCD_EnviarStr("Cupos Libres:00");
-				LCD_enviarDTA_Wait(cuposOcupados+0x30);
-				LCD_EnviarStr("/000");
-
+				LCD_EnviarStr("Cupos Libres:");
+				CUPOS_EscribirInfoLCD();
 				i=0;
 			}
 			estadoMainProgram++;

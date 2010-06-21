@@ -74,6 +74,10 @@ uint8_t DS1307_Init(void);
 void DS1307_ActualizarFecha(void);
 void DS1307_ActualizarHora(void);
 
+
+uint8_t DS1307_CambiarFecha(uint8_t dia, uint8_t mes, uint8_t ano);
+uint8_t DS1307_CambiarHora(uint8_t seg, uint8_t min, uint8_t hrs, uint8_t formato, uint8_t ap);
+
 #endif /*_DS1301_H*/
 
 

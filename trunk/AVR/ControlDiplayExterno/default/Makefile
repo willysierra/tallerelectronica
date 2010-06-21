@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Include Directories
-INCLUDES = -I"C:\Users\Manuel Vieda\Documents\Taller de Electronica\AVR\ControlDiplayExterno\." 
+INCLUDES = -I"C:\Users\Manuel Vieda\Documents\tallerelectronica\AVR\ControlDiplayExterno\." 
 
 ## Objects that must be built in order to link
 OBJECTS = ControlDiplayExterno.o USART.o 
